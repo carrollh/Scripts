@@ -1,11 +1,25 @@
 # Test-SwitchoverClusteredLoop.ps1
 # A recommended method of running this would be
-# > Test-SwitchoverClusteredLoop.ps1 | Tee-Object Test-SwitchoverClusteredLoop.log
+# > Stress-SwitchoverLoop.ps1 | Tee-Object Stress-SwitchoverLoop.log
 
 # Find all cluster nodes and the cluster group. We're assuming 
 # that only a single cluster exists, and it contains all nodes.
-$nodeArray = Get-ClusterNode 
-$clusterGroup = Get-ClusterGroup "Available Storage"
+Param(
+	[Parameter(Mandatory=$False)]
+	[System.Array]$nodeArray,
+	
+	[Parameter(Mandatory=$False)]
+	[System.Array]$clusterGroup
+)
+
+if($nodeArray -eq $null) {
+	$nodeArray = Get-ClusterNode
+}
+if($clusterGroup -eq $null) {
+	$clusterGroup = Get-ClusterGroup "Available Storage"
+}
+
+Write-Host "switching over $clusterGroup"
 
 if($clusterGroup -eq $null) {
 	Write-Warning "Cluster not found!"
