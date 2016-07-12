@@ -26,6 +26,7 @@ if($clusterGroup -eq $null) {
 	Exit
 }
 
+
 $resources = $clusterGroup | Get-ClusterResource
 $volumes = $resources | Get-ClusterParameter | where-object { $_.Name -eq "VolumeLetter" }
 
