@@ -1,14 +1,24 @@
 # Get-AWSAMIIds.ps1 ############################################################
 # Requires the AWS CLI to be installed and in the PATH env variable. Also 
 # requires the user running this to have access to the relevant subscription 
-# prior to running this.
+# prior to running this. The ProductID is really the only param needed for this,
+# but having the Windows and DKCE versions in the name will help narrow it down
+# to only one result per region.
+#
+# Examples running this command:
+# PS> Get-AWSAMIIds -ProductID 12345678-1234-abcd-0123456789ab
+# PS> Get-AWSAMIIds -DkVer 8.6 -WinVer 2016 -ProductID 12345678-1234-abcd-0123456789ab
 ################################################################################
 
 [CmdletBinding()]
 Param(
     [string[]] $Regions = @("us-east-1", "us-east-2", "us-west-1", "us-west-2", "ca-central-1", "ap-south-1", "ap-northeast-2", "ap-southeast-1", "ap-southeast-2", "eu-central-1", "eu-west-1", "eu-west-2", "sa-east-1"),
     [string] $Description = "SIOS DataKeeper provides high Availability (HA) and disaster recovery (DR) in AWS. Simply add SIOS DataKeeper software as an ingredient to your Windows Server Failover Clustering (WSFC) environment to eliminate the need for shared storage.",
-    [string] $ProductID = "131676ee-31be-464b-8ae0-ba2495e88b22"
+    [string] $DkVer = "8.5.3",
+    [string] $WinVer = "2012 R2",
+    
+    [Parameter(Mandatory=$True)]
+    [string] $ProductID
 )
 
 function ConvertTo-OrderedHashtable {
@@ -56,7 +66,7 @@ foreach ($region in $Regions) {
     $jsonString = Invoke-Command -ScriptBlock { Param($a) &'aws' ec2 describe-images --region $region --owners 679593333241 --filter $a } -ArgumentList $args
     $json = $jsonString -Join "" 
     $hashtable = ConvertFrom-Json $json | ConvertTo-OrderedHashtable
-    $amiId = ($hashtable."Images" | Where-Object -Property "ImageLocation" -Like "*aws-marketplace*" | Where-Object -Property "Name" -Like ("*" + $ProductID + "*")).ImageId
+    $amiId = ($hashtable."Images" | Where-Object -Property "ImageLocation" -Like "*aws-marketplace*" | Where-Object -Property "Name" -Like ("*" + $DkVer + "*" + $WinVer + "*" + $ProductID + "*")).ImageId
     $ht.Add($region, $amiID)
     $i++
 }
