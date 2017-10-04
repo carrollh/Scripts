@@ -1,8 +1,8 @@
 ﻿# RUN ON SOURCE NODE
 
 $allgood = $true
-$hosts = "sios-0","sios-1"
-$vol = "F"
+$hosts = "cae-qa-v200","cae-qa-v201","cae-qa-v202"
+$vol = "E"
 
 if(-NOT (Test-Path -Path ($PSScriptRoot + "\MD5s.txt"))) {
     Out-File -FilePath ($PSScriptRoot + "\MD5s.txt")

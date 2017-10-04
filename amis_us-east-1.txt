@@ -1,0 +1,286 @@
+{
+    "Images": [
+        {
+            "ProductCodes": [
+                {
+                    "ProductCodeId": "39ui2evyq6bmfxwhpwyci6l06", 
+                    "ProductCodeType": "marketplace"
+                }
+            ], 
+            "Name": "SIOS DataKeeper v8.5.2 with 8.5.3 patch on 2016 PAYG-374b4000-5f0b-4005-92e5-119d4836d1d6-ami-09c6e21f.4", 
+            "VirtualizationType": "hvm", 
+            "Hypervisor": "xen", 
+            "ImageOwnerAlias": "aws-marketplace", 
+            "EnaSupport": true, 
+            "SriovNetSupport": "simple", 
+            "ImageId": "ami-475e7551", 
+            "Platform": "windows", 
+            "State": "available", 
+            "BlockDeviceMappings": [
+                {
+                    "DeviceName": "/dev/sda1", 
+                    "Ebs": {
+                        "DeleteOnTermination": true, 
+                        "SnapshotId": "snap-0443b707be2c4f613", 
+                        "VolumeSize": 127, 
+                        "VolumeType": "gp2", 
+                        "Encrypted": false
+                    }
+                }, 
+                {
+                    "DeviceName": "xvdca", 
+                    "VirtualName": "ephemeral0"
+                }
+            ], 
+            "Architecture": "x86_64", 
+            "ImageLocation": "aws-marketplace/SIOS DataKeeper v8.5.2 with 8.5.3 patch on 2016 PAYG-374b4000-5f0b-4005-92e5-119d4836d1d6-ami-09c6e21f.4", 
+            "RootDeviceType": "ebs", 
+            "OwnerId": "679593333241", 
+            "RootDeviceName": "/dev/sda1", 
+            "CreationDate": "2017-06-22T21:53:51.000Z", 
+            "Public": true, 
+            "ImageType": "machine", 
+            "Description": "SIOS DataKeeper provides high Availability (HA) and disaster recovery (DR) in AWS. Simply add SIOS DataKeeper software as an ingredient to your Windows Server Failover Clustering (WSFC) environment to eliminate the need for shared storage."
+        }, 
+        {
+            "ProductCodes": [
+                {
+                    "ProductCodeId": "a2jlmjto1ke2yrkzspn2gm4xa", 
+                    "ProductCodeType": "marketplace"
+                }
+            ], 
+            "Name": "SIOS DataKeeper v8.5.2 PAYG-aa1b1ab7-8565-431f-91a8-2621fbc5ca6e-ami-b564e6a3.4", 
+            "VirtualizationType": "hvm", 
+            "Hypervisor": "xen", 
+            "ImageOwnerAlias": "aws-marketplace", 
+            "EnaSupport": true, 
+            "SriovNetSupport": "simple", 
+            "ImageId": "ami-61940b77", 
+            "Platform": "windows", 
+            "State": "available", 
+            "BlockDeviceMappings": [
+                {
+                    "DeviceName": "/dev/sda1", 
+                    "Ebs": {
+                        "DeleteOnTermination": true, 
+                        "SnapshotId": "snap-0fe3acba9a8d3f1e6", 
+                        "VolumeSize": 127, 
+                        "VolumeType": "gp2", 
+                        "Encrypted": false
+                    }
+                }, 
+                {
+                    "DeviceName": "xvdb", 
+                    "VirtualName": "ephemeral0"
+                }
+            ], 
+            "Architecture": "x86_64", 
+            "ImageLocation": "aws-marketplace/SIOS DataKeeper v8.5.2 PAYG-aa1b1ab7-8565-431f-91a8-2621fbc5ca6e-ami-b564e6a3.4", 
+            "RootDeviceType": "ebs", 
+            "OwnerId": "679593333241", 
+            "RootDeviceName": "/dev/sda1", 
+            "CreationDate": "2017-04-21T23:31:12.000Z", 
+            "Public": false, 
+            "ImageType": "machine", 
+            "Description": "SIOS DataKeeper provides high Availability (HA) and disaster recovery (DR) in AWS. Simply add SIOS DataKeeper software as an ingredient to your Windows Server Failover Clustering (WSFC) environment to eliminate the need for shared storage."
+        }, 
+        {
+            "VirtualizationType": "hvm", 
+            "Name": "SIOS DataKeeper v8.3.3-9f8a9323-b738-4843-a0d2-4f2642c81873-ami-87ea06ea.3", 
+            "Hypervisor": "xen", 
+            "ImageOwnerAlias": "aws-marketplace", 
+            "SriovNetSupport": "simple", 
+            "ImageId": "ami-800af7ed", 
+            "Platform": "windows", 
+            "State": "available", 
+            "BlockDeviceMappings": [
+                {
+                    "DeviceName": "/dev/sda1", 
+                    "Ebs": {
+                        "DeleteOnTermination": true, 
+                        "SnapshotId": "snap-a8fb3caa", 
+                        "VolumeSize": 30, 
+                        "VolumeType": "gp2", 
+                        "Encrypted": false
+                    }
+                }
+            ], 
+            "Architecture": "x86_64", 
+            "ImageLocation": "aws-marketplace/SIOS DataKeeper v8.3.3-9f8a9323-b738-4843-a0d2-4f2642c81873-ami-87ea06ea.3", 
+            "RootDeviceType": "ebs", 
+            "OwnerId": "679593333241", 
+            "RootDeviceName": "/dev/sda1", 
+            "CreationDate": "2016-06-01T18:35:34.000Z", 
+            "Public": false, 
+            "ImageType": "machine", 
+            "Description": "SIOS DataKeeper provides high Availability (HA) and disaster recovery (DR) in AWS. Simply add SIOS DataKeeper software as an ingredient to your Windows Server Failover Clustering (WSFC) environment to eliminate the need for shared storage."
+        }, 
+        {
+            "ProductCodes": [
+                {
+                    "ProductCodeId": "14oj75sfcidvzwqizi8lzs7c2", 
+                    "ProductCodeType": "marketplace"
+                }
+            ], 
+            "Name": "SIOS DataKeeper v8.5.2 with 8.5.3 patch BYOL-131676ee-31be-464b-8ae0-ba2495e88b22-ami-48fca15e.4", 
+            "VirtualizationType": "hvm", 
+            "Hypervisor": "xen", 
+            "ImageOwnerAlias": "aws-marketplace", 
+            "EnaSupport": true, 
+            "SriovNetSupport": "simple", 
+            "ImageId": "ami-a29ec1b4", 
+            "Platform": "windows", 
+            "State": "available", 
+            "BlockDeviceMappings": [
+                {
+                    "DeviceName": "/dev/sda1", 
+                    "Ebs": {
+                        "DeleteOnTermination": true, 
+                        "SnapshotId": "snap-03ca011645a22e821", 
+                        "VolumeSize": 127, 
+                        "VolumeType": "gp2", 
+                        "Encrypted": false
+                    }
+                }, 
+                {
+                    "DeviceName": "xvdca", 
+                    "VirtualName": "ephemeral0"
+                }
+            ], 
+            "Architecture": "x86_64", 
+            "ImageLocation": "aws-marketplace/SIOS DataKeeper v8.5.2 with 8.5.3 patch BYOL-131676ee-31be-464b-8ae0-ba2495e88b22-ami-48fca15e.4", 
+            "RootDeviceType": "ebs", 
+            "OwnerId": "679593333241", 
+            "RootDeviceName": "/dev/sda1", 
+            "CreationDate": "2017-06-08T23:44:00.000Z", 
+            "Public": true, 
+            "ImageType": "machine", 
+            "Description": "SIOS DataKeeper provides high Availability (HA) and disaster recovery (DR) in AWS. Simply add SIOS DataKeeper software as an ingredient to your Windows Server Failover Clustering (WSFC) environment to eliminate the need for shared storage."
+        }, 
+        {
+            "ProductCodes": [
+                {
+                    "ProductCodeId": "14oj75sfcidvzwqizi8lzs7c2", 
+                    "ProductCodeType": "marketplace"
+                }
+            ], 
+            "Name": "SIOS DataKeeper v8.5.0-131676ee-31be-464b-8ae0-ba2495e88b22-ami-b17d85a7.3", 
+            "VirtualizationType": "hvm", 
+            "Hypervisor": "xen", 
+            "ImageOwnerAlias": "aws-marketplace", 
+            "SriovNetSupport": "simple", 
+            "ImageId": "ami-a4ea2cb2", 
+            "Platform": "windows", 
+            "State": "available", 
+            "BlockDeviceMappings": [
+                {
+                    "DeviceName": "/dev/sda1", 
+                    "Ebs": {
+                        "DeleteOnTermination": true, 
+                        "SnapshotId": "snap-0023537e76aa3606e", 
+                        "VolumeSize": 40, 
+                        "VolumeType": "gp2", 
+                        "Encrypted": false
+                    }
+                }, 
+                {
+                    "DeviceName": "xvdca", 
+                    "VirtualName": "ephemeral0"
+                }
+            ], 
+            "Architecture": "x86_64", 
+            "ImageLocation": "aws-marketplace/SIOS DataKeeper v8.5.0-131676ee-31be-464b-8ae0-ba2495e88b22-ami-b17d85a7.3", 
+            "RootDeviceType": "ebs", 
+            "OwnerId": "679593333241", 
+            "RootDeviceName": "/dev/sda1", 
+            "CreationDate": "2017-02-07T18:00:33.000Z", 
+            "Public": true, 
+            "ImageType": "machine", 
+            "Description": "SIOS DataKeeper provides high Availability (HA) and disaster recovery (DR) in AWS. Simply add SIOS DataKeeper software as an ingredient to your Windows Server Failover Clustering (WSFC) environment to eliminate the need for shared storage."
+        }, 
+        {
+            "ProductCodes": [
+                {
+                    "ProductCodeId": "dvw0k1cslwup93kxyf85trjxm", 
+                    "ProductCodeType": "marketplace"
+                }
+            ], 
+            "Name": "SIOS DataKeeper v8.5.2 with 8.5.3 patch on 2012R2 PAYG-ea8c4f6b-0676-4494-90e9-d595a7444eaa-ami-ace2c6ba.4", 
+            "VirtualizationType": "hvm", 
+            "Hypervisor": "xen", 
+            "ImageOwnerAlias": "aws-marketplace", 
+            "EnaSupport": true, 
+            "SriovNetSupport": "simple", 
+            "ImageId": "ami-befdd3a8", 
+            "Platform": "windows", 
+            "State": "available", 
+            "BlockDeviceMappings": [
+                {
+                    "DeviceName": "/dev/sda1", 
+                    "Ebs": {
+                        "DeleteOnTermination": true, 
+                        "SnapshotId": "snap-01f6b341a0a471655", 
+                        "VolumeSize": 127, 
+                        "VolumeType": "gp2", 
+                        "Encrypted": false
+                    }
+                }, 
+                {
+                    "DeviceName": "xvdca", 
+                    "VirtualName": "ephemeral0"
+                }
+            ], 
+            "Architecture": "x86_64", 
+            "ImageLocation": "aws-marketplace/SIOS DataKeeper v8.5.2 with 8.5.3 patch on 2012R2 PAYG-ea8c4f6b-0676-4494-90e9-d595a7444eaa-ami-ace2c6ba.4", 
+            "RootDeviceType": "ebs", 
+            "OwnerId": "679593333241", 
+            "RootDeviceName": "/dev/sda1", 
+            "CreationDate": "2017-06-21T02:21:14.000Z", 
+            "Public": false, 
+            "ImageType": "machine", 
+            "Description": "SIOS DataKeeper provides high Availability (HA) and disaster recovery (DR) in AWS. Simply add SIOS DataKeeper software as an ingredient to your Windows Server Failover Clustering (WSFC) environment to eliminate the need for shared storage."
+        }, 
+        {
+            "ProductCodes": [
+                {
+                    "ProductCodeId": "a2jlmjto1ke2yrkzspn2gm4xa", 
+                    "ProductCodeType": "marketplace"
+                }
+            ], 
+            "Name": "SIOS DataKeeper v8.5.2 with 8.5.3 patch PAYG-aa1b1ab7-8565-431f-91a8-2621fbc5ca6e-ami-fbf9a4ed.4", 
+            "VirtualizationType": "hvm", 
+            "Hypervisor": "xen", 
+            "ImageOwnerAlias": "aws-marketplace", 
+            "EnaSupport": true, 
+            "SriovNetSupport": "simple", 
+            "ImageId": "ami-c2653ad4", 
+            "Platform": "windows", 
+            "State": "available", 
+            "BlockDeviceMappings": [
+                {
+                    "DeviceName": "/dev/sda1", 
+                    "Ebs": {
+                        "DeleteOnTermination": true, 
+                        "SnapshotId": "snap-094786245bdc01f96", 
+                        "VolumeSize": 127, 
+                        "VolumeType": "gp2", 
+                        "Encrypted": false
+                    }
+                }, 
+                {
+                    "DeviceName": "xvdca", 
+                    "VirtualName": "ephemeral0"
+                }
+            ], 
+            "Architecture": "x86_64", 
+            "ImageLocation": "aws-marketplace/SIOS DataKeeper v8.5.2 with 8.5.3 patch PAYG-aa1b1ab7-8565-431f-91a8-2621fbc5ca6e-ami-fbf9a4ed.4", 
+            "RootDeviceType": "ebs", 
+            "OwnerId": "679593333241", 
+            "RootDeviceName": "/dev/sda1", 
+            "CreationDate": "2017-06-08T23:27:54.000Z", 
+            "Public": true, 
+            "ImageType": "machine", 
+            "Description": "SIOS DataKeeper provides high Availability (HA) and disaster recovery (DR) in AWS. Simply add SIOS DataKeeper software as an ingredient to your Windows Server Failover Clustering (WSFC) environment to eliminate the need for shared storage."
+        }
+    ]
+}
