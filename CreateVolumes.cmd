@@ -1,3 +1,5 @@
+REM Example call: CreateVolumes 1
+
 if "%1"=="" (
 echo Hey I need a disk number
 goto done
