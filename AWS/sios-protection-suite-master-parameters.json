@@ -1,0 +1,82 @@
+[
+    {
+        "ParameterKey": "AdminRemoteAccessCIDR",
+        "ParameterValue": "0.0.0.0/0"
+    },
+    {
+        "ParameterKey": "AvailabilityZones",
+        "ParameterValue": ""
+    },
+    {
+        "ParameterKey": "BastionAMIOS",
+        "ParameterValue": "Amazon-Linux-HVM"
+    },
+    {
+        "ParameterKey": "BastionInstanceType",
+        "ParameterValue": "t2.micro"
+    },
+    {
+        "ParameterKey": "VPCCIDR",
+        "ParameterValue": "10.0.0.0/16"
+    },
+    {
+        "ParameterKey": "PrivateSubnet1CIDR",
+        "ParameterValue": "10.0.0.0/19"
+    },
+    {
+        "ParameterKey": "PrivateSubnet2CIDR",
+        "ParameterValue": "10.0.32.0/19"
+    },
+    {
+        "ParameterKey": "PublicSubnet1CIDR",
+        "ParameterValue": "10.0.128.0/20"
+    },
+    {
+        "ParameterKey": "PublicSubnet2CIDR",
+        "ParameterValue": "10.0.144.0/20"
+    },
+    {
+        "ParameterKey": "LifeKeeperInstanceName",
+        "ParameterValue": "SPS-L"
+    },
+    {
+        "ParameterKey": "LifeKeeperInstanceType",
+        "ParameterValue": "t2.medium"
+    },
+    {
+        "ParameterKey": "Node1PrivateIP",
+        "ParameterValue": "10.0.0.100"
+    },
+    {
+        "ParameterKey": "Node2PrivateIP",
+        "ParameterValue": "10.0.32.100"
+    },
+    {
+        "ParameterKey": "SwitchableVirtualIP",
+        "ParameterValue": "10.0.0.200"
+    },
+    {
+        "ParameterKey": "KeyPairName",
+        "ParameterValue": "AUTOMATION"
+    },
+    {
+        "ParameterKey": "AdminUsername",
+        "ParameterValue": "siosadmin"
+    },
+    {
+        "ParameterKey": "AdminPassword",
+        "ParameterValue": "SIOS!5105"
+    },
+    {
+        "ParameterKey": "SIOSLicenseKeyFtpURL",
+        "ParameterValue": ""
+    },
+    {
+        "ParameterKey": "QSS3BucketName",
+        "ParameterValue": "quickstart-sios-lifekeeper"
+    },
+    {
+        "ParameterKey": "QSS3KeyPrefix",
+        "ParameterValue": "test/"
+    }
+]
