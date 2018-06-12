@@ -7,8 +7,8 @@ Param(
     [string] $TemplateURLBase = "https://s3.amazonaws.com/quickstart-sios-protection-suite/test/templates",
     [string] $LKServerOSVersion  = "RHEL74",
     [string] $AMIType   = "BYOL",
-    [string] $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_Joe_User_joeuser_2018-06-01_SPSLinux/",
-    [string[]] $Regions = @("us-east-1","eu-west-1","eu-west-2","eu-west-3")
+    [string] $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_Joe_USer_joeuser_2018-06-12_SPSLinux/",
+    [string[]] $Regions = @("us-east-1")
 )
 
 function Get-ParametersFromFile() {

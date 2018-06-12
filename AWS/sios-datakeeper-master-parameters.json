@@ -41,7 +41,7 @@
     },
     {
         "ParameterKey": "DomainAdminPassword",
-        "ParameterValue": "SIOS!5105"
+        "ParameterValue": "SIOS!5105?sios"
     },
     {
         "ParameterKey": "DomainAdminUser",
@@ -101,7 +101,7 @@
     },
     {
         "ParameterKey": "SQLServiceAccountPassword",
-        "ParameterValue": "SIOS!5105"
+        "ParameterValue": "SIOS!5105?sios"
     },
     {
         "ParameterKey": "VPCCIDR",

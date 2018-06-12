@@ -1,14 +1,14 @@
 ﻿# Test-AWSDKCETemplate.ps1
 Param(
-    [string] $ParameterFilePath = "C:\Users\hcarroll.STEELEYE",
+    [string] $ParameterFilePath = ".\",
     [string] $StackName = "DKCE",
     [string] $TemplateURLBase = "https://s3.amazonaws.com/quickstart-sios-datakeeper/test/templates",
     [string] $ADServerOSVersion  = "2016",
     [string] $DKServerOSVersion  = "2016",
-    [string] $AMIType   = "PAYG",
-    [string] $SIOSLicenseKeyFtpURL = "",
+    [string] $AMIType   = "BYOL",
+    [string] $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_Joe_User_joeuser_2018-06-12_DKCE/",
     [string] $SQLServerVersion = "2014SP1",
-    [string[]] $Regions = @("us-east-1","eu-west-1","eu-west-2","eu-west-3")
+    [string[]] $Regions = @("us-east-1")
 )
 
 function Get-ParametersFromFile() {
@@ -20,8 +20,20 @@ function Get-ParametersFromFile() {
     return Get-Content $Path | Out-String | ConvertFrom-Json
 }
 
+if( -Not (Test-Path -Path "$ParameterFilePath\\sios-datakeeper-master-parameters.json")) {
+    Write-Host "Parameter file ($ParameterFilePath\\sios-datakeeper-master-parameters.json) does not exist!"
+    exit 0
+} else {
+    Write-Verbose "Param file found"
+}
 
 $parameters = Get-ParametersFromFile -Path "$ParameterFilePath\\sios-datakeeper-master-parameters.json"
+if( -Not $parameters ) {
+    Write-Host "Failed to parse param file"
+} else {
+    Write-Verbose "Param file parsed"
+}
+
 $masterStacks = [ordered]@{}
 
 foreach ($region in $Regions) {
@@ -34,7 +46,7 @@ foreach ($region in $Regions) {
     ($parameters | Where-Object -Property ParameterKey -like ClusterNodeOSServerVersion).ParameterValue = $DKServerOSVersion
     ($parameters | Where-Object -Property ParameterKey -like SQLServerVersion).ParameterValue = $SQLServerVersion
     ($parameters | Where-Object -Property ParameterKey -like AvailabilityZones).ParameterValue = $region+"a,"+$region+"b"
-    
+    $parameters
     $masterStacks.Add($region,(New-CFNStack -Stackname $StackName -TemplateURL "$TemplateURLBase/sios-datakeeper-master.template" -Parameters $parameters -Region $region -Capabilities CAPABILITY_IAM -DisableRollback $True))
 }
 
