@@ -4,12 +4,12 @@
 Param(
     [string] $ParameterFilePath = ".\",
     [string] $StackName = "SPSL",
-    [string] $TemplateURLBase = "https://s3.amazonaws.com/quickstart-sios-protection-suite/test/templates",
+    [string] $TemplateURLBase = "https://s3.amazonaws.com/quickstart-sios-protection-suite",
     [string] $LKServerOSVersion  = "RHEL74",
     [string] $AMIType   = "BYOL",
     [string] $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_Joe_USer_joeuser_2018-06-12_SPSLinux/",
     [string[]] $Regions = @("us-east-1"),
-    [string] $Branch = ""
+    [string] $Branch = $Null
 )
 
 function Get-ParametersFromFile() {
@@ -19,6 +19,12 @@ function Get-ParametersFromFile() {
     )
     
     return Get-Content $Path | Out-String | ConvertFrom-Json
+}
+
+if ($Branch) {
+    $TemplateURLBase += "/$Branch/templates"
+} else {
+    $TemplateURLBase += "/test/templates"
 }
 
 if ( -Not (Test-Path -Path "$ParameterFilePath\\sios-protection-suite-master-parameters$Branch.json") ) {
