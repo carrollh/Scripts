@@ -8,7 +8,8 @@ Param(
     [string] $LKServerOSVersion  = "RHEL74",
     [string] $AMIType   = "BYOL",
     [string] $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_Joe_USer_joeuser_2018-06-12_SPSLinux/",
-    [string[]] $Regions = @("us-east-1")
+    [string[]] $Regions = @("us-east-1"),
+    [string] $Branch = ""
 )
 
 function Get-ParametersFromFile() {
@@ -20,14 +21,14 @@ function Get-ParametersFromFile() {
     return Get-Content $Path | Out-String | ConvertFrom-Json
 }
 
-if ( -Not (Test-Path -Path "$ParameterFilePath\\sios-protection-suite-master-parameters.json") ) {
-    Write-Host "Parameter file ($ParameterFilePath\\sios-protection-suite-master-parameters.json) does not exist!"
+if ( -Not (Test-Path -Path "$ParameterFilePath\\sios-protection-suite-master-parameters$Branch.json") ) {
+    Write-Host "Parameter file ($ParameterFilePath\\sios-protection-suite-master-parameters$Branch.json) does not exist!"
     exit 0
 } else {
     Write-Verbose "Param file found"
 }
 
-$parameters = Get-ParametersFromFile -Path "$ParameterFilePath\\sios-protection-suite-master-parameters.json"
+$parameters = Get-ParametersFromFile -Path "$ParameterFilePath\\sios-protection-suite-master-parameters$Branch.json"
 if( -Not $parameters ) {
     Write-Host "Failed to parse param file"
 } else {

@@ -36,11 +36,11 @@
         "ParameterValue": "10.0.144.0/20"
     },
     {
-        "ParameterKey": "LifeKeeperInstanceName",
+        "ParameterKey": "SPSLInstanceName",
         "ParameterValue": "SPS-L"
     },
     {
-        "ParameterKey": "LifeKeeperInstanceType",
+        "ParameterKey": "SPSLInstanceType",
         "ParameterValue": "t2.medium"
     },
     {
@@ -72,8 +72,16 @@
         "ParameterValue": ""
     },
     {
+        "ParameterKey": "AWSAccessKeyID",
+        "ParameterValue": ""
+    },
+    {
+        "ParameterKey": "AWSSecretAccessKey",
+        "ParameterValue": ""
+    },
+    {
         "ParameterKey": "QSS3BucketName",
-        "ParameterValue": "quickstart-sios-lifekeeper"
+        "ParameterValue": "quickstart-sios-protection-suite"
     },
     {
         "ParameterKey": "QSS3KeyPrefix",
