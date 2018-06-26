@@ -27,14 +27,15 @@ if ($Branch) {
     $TemplateURLBase += "/test/templates"
 }
 
-if ( -Not (Test-Path -Path "$ParameterFilePath\\sios-protection-suite-master-parameters$Branch.json") ) {
-    Write-Host "Parameter file ($ParameterFilePath\\sios-protection-suite-master-parameters$Branch.json) does not exist!"
+$paramFile = "$ParameterFilePath\sios-protection-suite-master-parameters$Branch.json"
+if ( -Not (Test-Path -Path $paramFile) ) {
+    Write-Host "Parameter file ($paramFile) does not exist!"
     exit 0
 } else {
-    Write-Verbose "Param file found"
+    Write-Verbose "Param file found ($paramFile)"
 }
 
-$parameters = Get-ParametersFromFile -Path "$ParameterFilePath\\sios-protection-suite-master-parameters$Branch.json"
+$parameters = Get-ParametersFromFile -Path $paramFile
 if( -Not $parameters ) {
     Write-Host "Failed to parse param file"
 } else {
