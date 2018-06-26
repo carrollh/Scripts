@@ -2,15 +2,24 @@
 
 [CmdletBinding()]
 Param(
-    [string] $ParameterFilePath = ".\",
-    [string] $StackName = "SPSL",
-    [string] $TemplateURLBase = "https://s3.amazonaws.com/quickstart-sios-protection-suite",
-    [string] $LKServerOSVersion  = "RHEL74",
-    [string] $AMIType   = "BYOL",
-    [string] $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_Joe_USer_joeuser_2018-06-12_SPSLinux/",
+    [string]   $ParameterFilePath = $Null,
+    [string]   $StackName = "SPSL",
+    [string]   $TemplateURLBase = "https://s3.amazonaws.com/quickstart-sios-protection-suite",
+    [string]   $LKServerOSVersion  = "RHEL74",
+    [string]   $AMIType   = "BYOL",
+    [string]   $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_Andrew_Glenn_andglenn_2018-06-20_SPSLinux/",
     [string[]] $Regions = @("us-east-1"),
-    [string] $Branch = $Null
+    [string]   $Branch = $Null
 )
+
+function Get-ParametersFromURL() {
+    Param(
+        [Parameter(Mandatory=$False,Position=0)]
+        [string] $URL
+    )
+    
+    return Invoke-WebRequest -Uri $URL | ConvertFrom-Json
+}
 
 function Get-ParametersFromFile() {
     Param(
@@ -22,24 +31,18 @@ function Get-ParametersFromFile() {
 }
 
 if ($Branch) {
-    $TemplateURLBase += "/$Branch/templates"
+    $TemplateURLBase += "/$Branch"
 } else {
-    $TemplateURLBase += "/test/templates"
+    $TemplateURLBase += "/test"
 }
 
-$paramFile = "$ParameterFilePath\sios-protection-suite-master-parameters$Branch.json"
-if ( -Not (Test-Path -Path $paramFile) ) {
-    Write-Host "Parameter file ($paramFile) does not exist!"
-    exit 0
+if (-Not $ParameterFilePath) {
+    # the payg file contains the same thing as the byol one, except for fixes made below based on param values
+    # so we can currently use the payg file as a base
+    $ParameterFilePath = $TemplateURLBase + "/ci/payg.json"
+    $parameters = [System.Collections.ArrayList] (Get-ParametersFromURL -URL $ParameterFilePath)
 } else {
-    Write-Verbose "Param file found ($paramFile)"
-}
-
-$parameters = Get-ParametersFromFile -Path $paramFile
-if( -Not $parameters ) {
-    Write-Host "Failed to parse param file"
-} else {
-    Write-Verbose "Param file parsed"
+    $parameters = [System.Collections.ArrayList] (Get-ParametersFromFile -Path "$ParameterFilePath\\sios-protection-suite-master-parameters$Branch.json")
 }
 
 $masterStacks = [ordered]@{}
@@ -49,11 +52,31 @@ foreach ($region in $Regions) {
         ($parameters | Where-Object -Property ParameterKey -like SIOSLicenseKeyFtpURL).ParameterValue = $SIOSLicenseKeyFtpURL
     }
     
-    #($parameters | Where-Object -Property ParameterKey -like AMIType).ParameterValue = $AMIType
+    ($parameters | Where-Object -Property ParameterKey -like NewRootPassword).ParameterValue = "SIOS!5105"
+    ($parameters | Where-Object -Property ParameterKey -like KeyPairName).ParameterValue = "AUTOMATION"
+    ($parameters | Where-Object -Property ParameterKey -like SIOSAMIType).ParameterValue = $AMIType
     #($parameters | Where-Object -Property ParameterKey -like ClusterNodeOSServerVersion).ParameterValue = $LKServerOSVersion
     ($parameters | Where-Object -Property ParameterKey -like AvailabilityZones).ParameterValue = $region+"a,"+$region+"b"
+    
+    $parameters.Add([PSCustomObject]@{
+        ParameterKey = "QSS3BucketName"
+        ParameterValue = "quickstart-sios-protection-suite"
+    }) > $Null
+    
+    if($Branch) {
+        $parameters.Add([PSCustomObject]@{
+            ParameterKey = "QSS3KeyPrefix"
+            ParameterValue = "$Branch/"
+        }) > $Null
+    } else {
+        $parameters.Add([PSCustomObject]@{
+            ParameterKey = "QSS3KeyPrefix"
+            ParameterValue = "$test/"
+        }) > $Null
+    }
+    
     $parameters
-    $masterStacks.Add($region,(New-CFNStack -Stackname $StackName -TemplateURL "$TemplateURLBase/sios-protection-suite-master.template" -Parameters $parameters -Region $region -Capabilities CAPABILITY_IAM -DisableRollback $True))
+    $masterStacks.Add($region,(New-CFNStack -Stackname $StackName -TemplateURL "$TemplateURLBase/templates/sios-protection-suite-master.template" -Parameters $parameters -Region $region -Capabilities CAPABILITY_IAM -DisableRollback $True))
 }
 
 # $jobHT = [ordered]@{}
