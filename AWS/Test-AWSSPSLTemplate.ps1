@@ -1,4 +1,10 @@
 ﻿# Test-AWSSPSLTemplate.ps1
+# 
+# Example call: 
+#   .\Test-AWSSPSLTemplate.ps1 -Regions eu-west-2 -AMIType BYOL -Verbose
+#
+# Notes:
+#   
 
 [CmdletBinding()]
 Param(
