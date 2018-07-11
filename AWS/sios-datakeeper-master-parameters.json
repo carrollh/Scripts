@@ -41,7 +41,7 @@
     },
     {
         "ParameterKey": "DomainAdminPassword",
-        "ParameterValue": "SIOS!5105?sios"
+        "ParameterValue": ""
     },
     {
         "ParameterKey": "DomainAdminUser",
@@ -85,7 +85,7 @@
     },
     {
         "ParameterKey": "RestoreModePassword",
-        "ParameterValue": "SIOS!5105"
+        "ParameterValue": ""
     },
     {
         "ParameterKey": "SIOSLicenseKeyFtpURL",
@@ -101,7 +101,7 @@
     },
     {
         "ParameterKey": "SQLServiceAccountPassword",
-        "ParameterValue": "SIOS!5105?sios"
+        "ParameterValue": ""
     },
     {
         "ParameterKey": "VPCCIDR",
@@ -158,13 +158,5 @@
     {
         "ParameterKey": "WSFCNode2PrivateIP3",
         "ParameterValue": "10.0.32.200"
-    },
-    {
-        "ParameterKey": "QSS3BucketName",
-        "ParameterValue": "quickstart-sios-datakeeper"
-    },
-    {
-        "ParameterKey": "QSS3KeyPrefix",
-        "ParameterValue": "test/"
     }
 ]

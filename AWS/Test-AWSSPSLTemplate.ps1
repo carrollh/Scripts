@@ -5,8 +5,8 @@ Param(
     [string]   $ParameterFilePath = $Null,
     [string]   $StackName = "SPSL",
     [string]   $TemplateURLBase = "https://s3.amazonaws.com/quickstart-sios-protection-suite",
-    [string]   $LKServerOSVersion  = "RHEL74",
-    [string]   $AMIType   = "BYOL",
+    [string]   $LKServerOSVersion = "RHEL74",
+    [string]   $AMIType = "BYOL",
     [string]   $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_Andrew_Glenn_andglenn_2018-06-20_SPSLinux/",
     [string[]] $Regions = @("us-east-1"),
     [string]   $Branch = $Null
@@ -46,9 +46,10 @@ if (-Not $ParameterFilePath) {
 }
 
 if( -Not $parameters ) {
-    Write-Host "Failed to parse param file"
+    Write-Host "Failed to parse parameters"
+    exit 1
 } else {
-    Write-Verbose "Param file parsed"
+    Write-Verbose "Parameters parsed successfully"
 }
 
 $masterStacks = [ordered]@{}
@@ -77,7 +78,7 @@ foreach ($region in $Regions) {
     } else {
         $parameters.Add([PSCustomObject]@{
             ParameterKey = "QSS3KeyPrefix"
-            ParameterValue = "$test/"
+            ParameterValue = "test/"
         }) > $Null
     }
     
