@@ -18,6 +18,10 @@ Param(
     [string]   $Branch = $Null
 )
 
+if ($Regions -like "all") {
+    $Regions = @("us-east-1","us-east-2","us-west-1","us-west-2","ca-central-1","ap-south-1","ap-northeast-2","ap-southeast-1","ap-southeast-2","eu-central-1","eu-west-1","eu-west-2","eu-west-3","sa-east-1")
+}
+
 function Get-ParametersFromURL() {
     Param(
         [Parameter(Mandatory=$False,Position=0)]
@@ -58,37 +62,37 @@ if( -Not $parameters ) {
     Write-Verbose "Parameters parsed successfully"
 }
 
+if( $AMIType -Like "BYOL" -AND $SIOSLicenseKeyFtpURL ) {
+    ($parameters | Where-Object -Property ParameterKey -like SIOSLicenseKeyFtpURL).ParameterValue = $SIOSLicenseKeyFtpURL
+}
+
+($parameters | Where-Object -Property ParameterKey -like NewRootPassword).ParameterValue = "SIOS!5105"
+($parameters | Where-Object -Property ParameterKey -like KeyPairName).ParameterValue = "AUTOMATION"
+($parameters | Where-Object -Property ParameterKey -like SIOSAMIType).ParameterValue = $AMIType
+#($parameters | Where-Object -Property ParameterKey -like ClusterNodeOSServerVersion).ParameterValue = $LKServerOSVersion
+
+$parameters.Add([PSCustomObject]@{
+    ParameterKey = "QSS3BucketName"
+    ParameterValue = "quickstart-sios-protection-suite"
+}) > $Null
+
+if($Branch) {
+    $parameters.Add([PSCustomObject]@{
+        ParameterKey = "QSS3KeyPrefix"
+        ParameterValue = "$Branch/"
+    }) > $Null
+} else {
+    $parameters.Add([PSCustomObject]@{
+        ParameterKey = "QSS3KeyPrefix"
+        ParameterValue = "test/"
+    }) > $Null
+}
+
 $masterStacks = [ordered]@{}
 
 foreach ($region in $Regions) {
-    if( $AMIType -Like "BYOL" -AND $SIOSLicenseKeyFtpURL ) {
-        ($parameters | Where-Object -Property ParameterKey -like SIOSLicenseKeyFtpURL).ParameterValue = $SIOSLicenseKeyFtpURL
-    }
-    
-    ($parameters | Where-Object -Property ParameterKey -like NewRootPassword).ParameterValue = "SIOS!5105"
-    ($parameters | Where-Object -Property ParameterKey -like KeyPairName).ParameterValue = "AUTOMATION"
-    ($parameters | Where-Object -Property ParameterKey -like SIOSAMIType).ParameterValue = $AMIType
-    #($parameters | Where-Object -Property ParameterKey -like ClusterNodeOSServerVersion).ParameterValue = $LKServerOSVersion
     ($parameters | Where-Object -Property ParameterKey -like AvailabilityZones).ParameterValue = $region+"a,"+$region+"b"
-    
-    $parameters.Add([PSCustomObject]@{
-        ParameterKey = "QSS3BucketName"
-        ParameterValue = "quickstart-sios-protection-suite"
-    }) > $Null
-    
-    if($Branch) {
-        $parameters.Add([PSCustomObject]@{
-            ParameterKey = "QSS3KeyPrefix"
-            ParameterValue = "$Branch/"
-        }) > $Null
-    } else {
-        $parameters.Add([PSCustomObject]@{
-            ParameterKey = "QSS3KeyPrefix"
-            ParameterValue = "test/"
-        }) > $Null
-    }
-    
-    $parameters
+    $parameters | Format-Table | Out-String -Stream | Write-Verbose
     $masterStacks.Add($region,(New-CFNStack -Stackname $StackName -TemplateURL "$TemplateURLBase/templates/sios-protection-suite-master.template" -Parameters $parameters -Region $region -Capabilities CAPABILITY_IAM -DisableRollback $True))
 }
 

@@ -6,9 +6,11 @@ $nodes | foreach {
         $jobs = New-Object System.Collections.Generic.List[System.String];
         $jobs.Add($s[$s.length-1]);
     
-        for ($i = 5; $i -lt $jobinfo.length; $i += 5) {
-            $s = $jobinfo[$i].split();
-            $jobs.Add($s[$s.length-1]);
+        for ($i = 1; $i -lt $jobinfo.length; $i += 1) {
+            if ($jobinfo[$i] -like "ID*") {
+                $s = $jobinfo[$i].split();
+                $jobs.Add($s[$s.length-1]);
+            }
         }
 
         for ($k = 0; $k -lt $jobs.Count; $k++) {

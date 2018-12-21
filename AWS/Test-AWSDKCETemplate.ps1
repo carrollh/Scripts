@@ -1,4 +1,14 @@
 ﻿# Test-AWSDKCETemplate.ps1
+# 
+# Example call: 
+#   .\Test-AWSDKCETemplate.ps1 -Regions eu-west-2 -AMIType BYOL -Verbose
+#   .\Test-AWSDKCETemplate.ps1 -Regions eu-west-3 -AMIType PAYG -Verbose -ParameterFilePath .\
+#
+# Notes:
+#   There aren't any /ci/payg-*.json files in this repo as AWS can't/doesn't test them, so 
+#   you'll need to provide a local path to a parameters file. You can use '.\' for ParameterFilePath,
+#   and it will grab the included sios-datakeeper-master-parameters.json file. The second example 
+#   above works with that file.
 
 [CmdletBinding()]
 Param(
@@ -8,7 +18,7 @@ Param(
     [string]   $ADServerOSVersion = "2016",
     [string]   $DKServerOSVersion = "2016",
     [string]   $AMIType = "BYOL",
-    [string]   $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_Joe_User_joeuser_2018-07-11_DKCE/",
+    [string]   $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_Joe_User_joeuser_2018-08-09_DKCE/",
     [string]   $SQLServerVersion = "2014SP1",
     [string[]] $Regions = @("us-east-1"),
     [string]   $Branch = $Null
@@ -41,11 +51,13 @@ if ($Branch) {
 if (-Not $ParameterFilePath) {
     # the payg file contains the same thing as the byol one, except for fixes made below based on param values
     # so we can currently use the payg file as a base
-    if($SQLServerVersion) {
-        $ParameterFilePath = $TemplateURLBase + "/ci/" + $AMIType.ToLower() + "-sql" + $SQLServerVersion.ToLower() + ".json"
-    } else {
+    if($SQLServerVersion -Like "None") {
         $ParameterFilePath = $TemplateURLBase + "/ci/" + $AMIType.ToLower() + "-nosql.json"
+        $SQLServerVersion = "None"
+    } else {
+        $ParameterFilePath = $TemplateURLBase + "/ci/" + $AMIType.ToLower() + "-sql" + $SQLServerVersion.ToLower() + ".json"
     }
+    Write-Verbose "Attempting parameter read from $ParameterFilePath"
     $parameters = [System.Collections.ArrayList] (Get-ParametersFromURL -URL $ParameterFilePath)
 } else {
     $parameters = [System.Collections.ArrayList] (Get-ParametersFromFile -Path "$ParameterFilePath\\sios-datakeeper-master-parameters$Branch.json")

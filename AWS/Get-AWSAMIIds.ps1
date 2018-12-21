@@ -8,6 +8,7 @@
 # Examples running this command:
 # PS> Get-AWSAMIIds 12345678-1234-abcd-0123456789ab 8.6 2016
 # PS> Get-AWSAMIIds -ProductID 12345678-1234-abcd-0123456789ab -DkVer 8.6 -WinVer 2016 
+# PS> Get-AWSAMIIds -Linux -Verbose -Debug
 ################################################################################
 
 [CmdletBinding()]
@@ -71,7 +72,7 @@ function ConvertTo-OrderedHashtable {
 
 if( -Not $ProductIDs ) {
     if( $Linux ) {
-        $ProductIDs = @("036d4d80-182d-460e-b9cc-01ebc2f842e4")
+        $ProductIDs = @("273a5693-de58-4437-87fa-d3b56f714e95","036d4d80-182d-460e-b9cc-01ebc2f842e4")
     } else {
         $ProductIDs = @("ea8c4f6b-0676-4494-90e9-d595a7444eaa","131676ee-31be-464b-8ae0-ba2495e88b22","374b4000-5f0b-4005-92e5-119d4836d1d6","9a7d70de-0121-4ecf-b190-10e31dd8ad5a")
     }
@@ -79,9 +80,9 @@ if( -Not $ProductIDs ) {
 
 if( -Not $AmiNames ) {
     if( $Linux ) {
-        $AmiNames = @("SIOS Protection Suite for Linux 9.2.2 on RHEL 7.4 BYOL")
+        $AmiNames = @("SIOS Protection Suite for Linux 9.2.2 on RHEL 7.4","SIOS Protection Suite for Linux 9.2.2 on RHEL 7.4 BYOL")
     } else {
-        $AmiNames = @("SIOS DataKeeper v8.6.1 on 2012R2","SIOS DataKeeper v8.6.1 on 2012R2 BYOL","SIOS DataKeeper v8.6.1 on 2016","SIOS DataKeeper v8.6.1 on 2016 BYOL")
+        $AmiNames = @("SIOS DataKeeper v8.6.2 on 2012R2","SIOS DataKeeper v8.6.2 on 2012R2 BYOL","SIOS DataKeeper v8.6.2 on 2016","SIOS DataKeeper v8.6.2 on 2016 BYOL")
     }
 }
 
