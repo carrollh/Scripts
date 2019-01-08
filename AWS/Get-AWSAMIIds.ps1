@@ -6,9 +6,14 @@
 # down to only one result per region.
 #
 # Examples running this command:
+<<<<<<< HEAD
 # PS> Get-AWSAMIIds 12345678-1234-abcd-0123456789ab 8.6 2016
 # PS> Get-AWSAMIIds -ProductID 12345678-1234-abcd-0123456789ab -DkVer 8.6 -WinVer 2016 
 # PS> Get-AWSAMIIds -Linux -Verbose -Debug
+=======
+# PS> Get-AWSAMIIds 12345678-1234-abcd-0123456789ab 9.2.2 -Linux
+# PS> Get-AWSAMIIds -ProductID 12345678-1234-abcd-0123456789ab 8.6.2 
+>>>>>>> 52b17c3eeb1e9189796aba7f30df9169c819508a
 ################################################################################
 
 [CmdletBinding()]
@@ -17,15 +22,12 @@ Param(
     [string[]] $ProductIDs = $Null,
 
     [Parameter(Mandatory=$False, Position=1)]
-    [string[]] $AmiNames = $Null,
-    
-    [Parameter(Mandatory=$False, Position=2)]
-    [string] $Description = $Null,
+    [string[]] $Version = $Null,
 
-    [Parameter(Mandatory=$False, Position=3)]
+    [Parameter(Mandatory=$False, Position=2)]
     [string[]] $Regions = @("us-east-1","us-east-2","us-west-1","us-west-2","ca-central-1","ap-south-1","ap-northeast-2","ap-southeast-1","ap-southeast-2","eu-central-1","eu-west-1","eu-west-2","eu-west-3","sa-east-1"),
     
-    [Parameter(Mandatory=$False, Position=4)]
+    [Parameter(Mandatory=$False)]
     [Switch] $Linux
 )
 
@@ -70,6 +72,11 @@ function ConvertTo-OrderedHashtable {
 
 ################################################################################
 
+if( -Not $Version ) {
+    Write-Host "Software version needed!`nUsage: Get-AWSAMIIds -Version <ver> ...`n"
+    return;
+}
+
 if( -Not $ProductIDs ) {
     if( $Linux ) {
         $ProductIDs = @("273a5693-de58-4437-87fa-d3b56f714e95","036d4d80-182d-460e-b9cc-01ebc2f842e4")
@@ -78,20 +85,32 @@ if( -Not $ProductIDs ) {
     }
 }
 
+<<<<<<< HEAD
 if( -Not $AmiNames ) {
     if( $Linux ) {
         $AmiNames = @("SIOS Protection Suite for Linux 9.2.2 on RHEL 7.4","SIOS Protection Suite for Linux 9.2.2 on RHEL 7.4 BYOL")
     } else {
         $AmiNames = @("SIOS DataKeeper v8.6.2 on 2012R2","SIOS DataKeeper v8.6.2 on 2012R2 BYOL","SIOS DataKeeper v8.6.2 on 2016","SIOS DataKeeper v8.6.2 on 2016 BYOL")
     }
+=======
+$AMIRegionMapping = [System.Collections.Hashtable]@{}
+if( $Linux ) {
+    $AmiNames = @("SIOS Protection Suite for Linux $Version on RHEL 7.4","SIOS Protection Suite for Linux $Version on RHEL 7.4 BYOL")
+    $AMIRegionMapping.Add($AmiNames[0],"SPSLRHEL")
+    $AMIRegionMapping.Add($AmiNames[1],"SPSLRHELBYOL")
+} else {
+    $AmiNames = @("SIOS DataKeeper v$Version on 2012R2","SIOS DataKeeper v$Version on 2012R2 BYOL","SIOS DataKeeper v$Version on 2016","SIOS DataKeeper v$Version on 2016 BYOL")
+    $AMIRegionMapping.Add($AmiNames[0],"SIOS2012R2") > $Null
+    $AMIRegionMapping.Add($AmiNames[1],"SIOS2012R2BYOL") > $Null
+    $AMIRegionMapping.Add($AmiNames[2],"SIOS2016") > $Null
+    $AMIRegionMapping.Add($AmiNames[3],"SIOS2016BYOL") > $Null
+>>>>>>> 52b17c3eeb1e9189796aba7f30df9169c819508a
 }
 
-if( -Not $Description ) {
-    if( $Linux ) {
-        $Description = "SIOS Protection Suite makes Linux clusters easy to build, easy to use, and easy to own. You get out-of-the-box protection for SAP, Oracle, and other business-critical applications. Create a high availability SAN or SANless cluster quickly and easily."
-    } else {
-        $Description = "SIOS DataKeeper provides high Availability (HA) and disaster recovery (DR) in AWS. Simply add SIOS DataKeeper software as an ingredient to your Windows Server Failover Clustering (WSFC) environment to eliminate the need for shared storage."
-    }
+if( $Linux ) {
+    $Description = "SIOS Protection Suite makes Linux clusters easy to build, easy to use, and easy to own. You get out-of-the-box protection for SAP, Oracle, and other business-critical applications. Create a high availability SAN or SANless cluster quickly and easily."
+} else {
+    $Description = "SIOS DataKeeper provides high Availability (HA) and disaster recovery (DR) in AWS. Simply add SIOS DataKeeper software as an ingredient to your Windows Server Failover Clustering (WSFC) environment to eliminate the need for shared storage."
 }
 
 $final = [ordered]@{}
@@ -111,11 +130,11 @@ foreach ($region in $Regions) {
     (0..($AmiNames.Length-1)) | foreach { 
         $amiId = ($hashtable."Images" | Where-Object -Property "Name" -Like ($AmiNames[$_] + "-" + $ProductIDs[$_] + "*")).ImageId
         Write-Verbose ("`t" + $AmiNames[$_] + ": `t`t`t" + $amiId)
-        $ht.Add($AmiNames[$_], $amiID)
+        $ht.Add($AMIRegionMapping.($AmiNames[$_]), $amiID)
     }
     
     $final.Add($region,$ht)
     $i++
 }
 
-$final | Foreach-Object { $_ | Format-Table -AutoSize }
+$final | ConvertTo-Json
