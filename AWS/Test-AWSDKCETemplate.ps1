@@ -18,9 +18,10 @@ Param(
     [string]   $ADServerOSVersion = "2016",
     [string]   $DKServerOSVersion = "2016",
     [string]   $AMIType = "BYOL",
-    [string]   $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_Joe_User_joeuser_2018-08-09_DKCE/",
+    [string]   $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_Aaron_Lima_aarlim_2019-03-19_DKCE/",
     [string]   $SQLServerVersion = "2014SP1",
     [string[]] $Regions = @("us-east-1"),
+    #[string[]] $Regions = @("us-east-1","us-east-2","us-west-1","us-west-2","ca-central-1","ap-northeast-2","ap-southeast-1","ap-southeast-2","eu-central-1","sa-east-1","ap-south-1","eu-west-1","eu-west-2","eu-west-3"),
     [string]   $Branch = $Null
 )
 
@@ -79,12 +80,14 @@ foreach ($region in $Regions) {
     
     ($parameters | Where-Object -Property ParameterKey -like AMIType).ParameterValue = $AMIType
     ($parameters | Where-Object -Property ParameterKey -like KeyPairName).ParameterValue = "AUTOMATION"
-    ($parameters | Where-Object -Property ParameterKey -like ADServerOSVersion).ParameterValue = $ADServerOSVersion
     ($parameters | Where-Object -Property ParameterKey -like ClusterNodeOSServerVersion).ParameterValue = $DKServerOSVersion
     ($parameters | Where-Object -Property ParameterKey -like SQLServerVersion).ParameterValue = $SQLServerVersion
-    ($parameters | Where-Object -Property ParameterKey -like AvailabilityZones).ParameterValue = $region+"a,"+$region+"b"
+    if( $region -like "ap-northeast-2" ) {
+        ($parameters | Where-Object -Property ParameterKey -like AvailabilityZones).ParameterValue = $region+"a,"+$region+"c"
+    } else {
+        ($parameters | Where-Object -Property ParameterKey -like AvailabilityZones).ParameterValue = $region+"a,"+$region+"b"
+    }
     ($parameters | Where-Object -Property ParameterKey -like DomainAdminPassword).ParameterValue = "SIOS!5105?sios"
-    ($parameters | Where-Object -Property ParameterKey -like RestoreModePassword).ParameterValue = "SIOS!5105?sios"
     ($parameters | Where-Object -Property ParameterKey -like SQLServiceAccountPassword).ParameterValue = "SIOS!5105?sios"
 
     $parameters.Add([PSCustomObject]@{
