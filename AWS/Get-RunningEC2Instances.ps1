@@ -23,7 +23,7 @@ $hancockFQDN            = "hancock.sc.steeleye.com"
 $toEmailAddress         = "heath.carroll@us.sios.com"
 
 # The iQ team is currently always running 4 VMs, so as long as that many are running we're good
-$numberOfPersistentVMs  = 4
+$numberOfPersistentVMs  = 0
 
 # Simple email function. Relies on secure password file described in comment header
 function Send-Email() {
@@ -61,28 +61,41 @@ if( -NOT (Test-Path -Path $securePasswordFilePath) ) {
     throw (New-Object System.Exception "PASSWORD FILE DOES NOT EXIST. (Read script header for details.)",$_.Exception)
 }
 
-$totalRunningVMsFound = 0
-$instanceTable = @{}
 $emailMessage = ""
 
 # loop over all regions looking for running instances and build the first part of the message along the way
-$regions = aws ec2 describe-regions | ConvertFrom-Json
-foreach ( $region in $regions.Regions ) {
-    $instances = aws ec2 describe-instance-status --region $region.RegionName --filters "Name=instance-state-code,Values=16" | ConvertFrom-Json
-    
-    # add running instance data to hashtable using region name as key
-    if($instances.InstanceStatuses.Count -gt 0) {
-        $instanceTable.add($region.RegionName, ($instances | ConvertTo-Json))
-        $totalRunningVMsFound += $instances.InstanceStatuses.Count
-    }
-    $emailMessage += "Found " + $instances.InstanceStatuses.Count + " running in " + $region.RegionName + ".`n"
-}
-$emailMessage += "Found a total of " + $totalRunningVMsFound + " VMs running across all " + $regions.Regions.Count + " regions.`n"
+$profs = @("dev","support","qa","ps","ts","currentgen")
+foreach ( $prof in $profs ) {
+    $emailMessage += $prof.ToUpper() + "`n"
+    $regions = aws ec2 describe-regions --profile $prof --output json | ConvertFrom-Json
+    $totalRunningVMsFound = 0
+    $instanceTable = @{}
+    foreach ( $region in $regions.Regions ) {
+        $instances = aws ec2 describe-instance-status --profile $prof --region $region.RegionName --filters "Name=instance-state-code,Values=16" --output json | ConvertFrom-Json
 
-# nicely format the instance hash table for viewing in email 
-foreach ( $key in $instanceTable.Keys ) { 
-    $emailMessage += "REGION: " + $key 
-    $emailMessage += $instanceTable[$key] + "`n" 
+        # add running instance data to hashtable using region name as key
+        if($instances.InstanceStatuses.Count -gt 0) {
+            $instanceTable.add($region.RegionName, $instances)
+            $totalRunningVMsFound += $instances.InstanceStatuses.Count
+        }
+
+        if($instances.InstanceStatuses.Count -gt 0) {
+            $emailMessage += "Found " + $instances.InstanceStatuses.Count + " running in " + $region.RegionName + ".`n"
+        }
+    }
+    $emailMessage += "Found a total of " + $totalRunningVMsFound + " VMs running across all " + $regions.Regions.Count + " regions in the " + $prof.ToUpper() + " account.`n"
+
+    # nicely format the instance hash table for viewing in email 
+    foreach ( $regionKey in $instanceTable.Keys ) { 
+        $insts = $instanceTable[$regionKey].InstanceStatuses
+        foreach ($inst in $insts) {
+            $instId = $inst.InstanceId
+            $instTag = aws ec2 describe-tags --profile $prof --filters "Name=resource-id,Values=$instId"
+            $emailMessage += "REGION: " + $regionKey 
+            $emailMessage += $instId + ": " + $instTag + "`n" 
+        }
+    }
+    $emailMessage += "`n" 
 }
 
 # send an email if an unusual number of VMs are found to be running
