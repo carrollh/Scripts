@@ -1,7 +1,7 @@
 ﻿# Test-AWSSPSLTemplate.ps1
 # 
 # Example call: 
-#   .\Test-AWSSPSLTemplate.ps1 -Regions eu-west-2 -AMIType BYOL -Verbose
+#   .\Test-AWSSPSLTemplate.ps1 -Regions us-east-1 -AMIType BYOL -Branch test -StackName HAC-TEST -Verbose
 #
 # Notes:
 #   
@@ -11,15 +11,14 @@ Param(
     [string]   $ParameterFilePath = $Null,
     [string]   $StackName = "SPSL",
     [string]   $TemplateURLBase = "https://s3.amazonaws.com/quickstart-sios-protection-suite",
-    [string]   $LKServerOSVersion = "RHEL74",
     [string]   $AMIType = "BYOL",
-    [string]   $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_Andrew_Glenn_andglenn_2018-06-20_SPSLinux/",
+    [string]   $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_Joe_User_joeuser_2019-10-01_SPSLinux/",
     [string[]] $Regions = @("us-east-1"),
     [string]   $Branch = $Null
 )
 
 if ($Regions -like "all") {
-    $Regions = @("us-east-1","us-east-2","us-west-1","us-west-2","ca-central-1","ap-south-1","ap-northeast-2","ap-southeast-1","ap-southeast-2","eu-central-1","eu-west-1","eu-west-2","eu-west-3","sa-east-1")
+    $Regions = @("us-east-1","us-east-2","us-west-1","us-west-2","ca-central-1","ap-south-1","ap-northeast-2","ap-southeast-1","ap-southeast-2","eu-central-1","eu-north-1","eu-west-1","eu-west-2","eu-west-3","sa-east-1")
 }
 
 function Get-ParametersFromURL() {
@@ -69,7 +68,6 @@ if( $AMIType -Like "BYOL" -AND $SIOSLicenseKeyFtpURL ) {
 ($parameters | Where-Object -Property ParameterKey -like NewRootPassword).ParameterValue = "SIOS!5105"
 ($parameters | Where-Object -Property ParameterKey -like KeyPairName).ParameterValue = "AUTOMATION"
 ($parameters | Where-Object -Property ParameterKey -like SIOSAMIType).ParameterValue = $AMIType
-#($parameters | Where-Object -Property ParameterKey -like ClusterNodeOSServerVersion).ParameterValue = $LKServerOSVersion
 
 $parameters.Add([PSCustomObject]@{
     ParameterKey = "QSS3BucketName"

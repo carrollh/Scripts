@@ -1,8 +1,4 @@
 # Get-RunningEC2Instances.ps1
-#
-# Should be configured to run daily in Task Scheduler to alert someone that the incorrect
-# number of VMs are running in AWS after COB.
-#
 # Relies on the AWS CLI, which should be installed and configured to point to our CurrentGen account.
 # 
 # The following commands were run to create a secure text password file. The password and username
@@ -12,18 +8,25 @@
 #    $password = "********"
 #    $securePassword = ConvertTo-SecureString $password -AsPlainText -Force 
 #    $securePassword | ConvertFrom-SecureString | Set-Content "C:\password.txt" 
-
+#
 # $securePasswordFilePath should be created using method above, and 
 # the "********" should be the password for the $hancockUser profile 
+
+[CmdletBinding()]
+Param(
+    [Parameter(Mandatory=$False)]
+    [string[]]$Profiles = @("dev","support","qa","ps","ts","currentgen"),
+
+    [Parameter(Mandatory=$False)]
+    [string[]] $Regions = $Null
+)
+
 $hancockUser            = "hcarroll"
 $securePasswordFilePath = "C:\password.txt"
 
 # this is the SMTP server needed for the email, I used hancock
 $hancockFQDN            = "hancock.sc.steeleye.com"
 $toEmailAddress         = "heath.carroll@us.sios.com"
-
-# The iQ team is currently always running 4 VMs, so as long as that many are running we're good
-$numberOfPersistentVMs  = 0
 
 # Simple email function. Relies on secure password file described in comment header
 function Send-Email() {
@@ -63,53 +66,101 @@ if( -NOT (Test-Path -Path $securePasswordFilePath) ) {
 
 $emailMessage = ""
 
-# loop over all regions looking for running instances and build the first part of the message along the way
-$profs = @("dev","support","qa","ps","ts","currentgen")
-foreach ( $prof in $profs ) {
-    $emailMessage += $prof.ToUpper() + "`n"
-    $regions = aws ec2 describe-regions --profile $prof --output json | ConvertFrom-Json
+# loop over regions looking for running instances and build the first part of the message along the way
+$grandTotalRunningVMsFound = 0
+$grandTotalVMsFound = 0
+$finalTable = @{}
+foreach ( $p in $Profiles ) {
+    Write-Verbose ("Scanning the " + $p.ToUpper() + " profile")
+    $emailMessage += $p.ToUpper() + "`n"
+
+    if ($Regions -eq $Null) {
+        $TargetRegions = $(aws ec2 describe-regions --profile $p --output json | ConvertFrom-Json).Regions.RegionName
+    } else {
+        $TargetRegions = $Regions
+    }
+
     $totalRunningVMsFound = 0
+    $totalVMsFound = 0
     $instanceTable = @{}
-    foreach ( $region in $regions.Regions ) {
-        $instances = aws ec2 describe-instance-status --profile $prof --region $region.RegionName --filters "Name=instance-state-code,Values=16" --output json | ConvertFrom-Json
+    foreach ( $region in $TargetRegions ) {
+        $runningVMs = aws ec2 describe-instance-status --profile $p --region $region --filters "Name=instance-state-code,Values=16" --output json | ConvertFrom-Json
+        $instances = aws ec2 describe-instances --profile $p --region $region --output json | ConvertFrom-Json
 
-        # add running instance data to hashtable using region name as key
-        if($instances.InstanceStatuses.Count -gt 0) {
-            $instanceTable.add($region.RegionName, $instances)
-            $totalRunningVMsFound += $instances.InstanceStatuses.Count
-        }
+        $totalRunningVMsFound += $runningVMs.InstanceStatuses.Count
+        $totalVMsFound += $instances.Reservations.Count
 
-        if($instances.InstanceStatuses.Count -gt 0) {
-            $emailMessage += "Found " + $instances.InstanceStatuses.Count + " running in " + $region.RegionName + ".`n"
+        $message = "Found " + $runningVMs.InstanceStatuses.Count + "/" + $instances.Reservations.Count + " running in " + $region + ".`n"
+        $emailMessage += $message
+        Write-Verbose $message
+
+        $instanceTable.add($region, $runningVMs) > $null
+    }
+
+    [System.Collections.ArrayList]$customList = @()
+    foreach ( $regionKey in $instanceTable.Keys ) {
+        $instances = $instanceTable[$regionKey].InstanceStatuses
+
+        for ( $i=0; $i -lt $instances.Length; $i+=1 ) {
+            $instanceId = $instances[$i].InstanceId
+            $instance = aws ec2 describe-instances --profile $p --region $regionKey --instance-id $instanceId | ConvertFrom-Json
+            $instanceType = $instance.Reservations.Instances.InstanceType
+            $instanceAMI = $instance.Reservations.Instances.ImageId
+            $imageDescription = $(aws ec2 describe-images --profile currentgen --region ca-central-1 --filters "Name=image-id,Values=ami-042dc48bab9e693f9" --output json | ConvertFrom-Json).Images.Description
+
+            $epochTime = [DateTimeOffset]::Now.ToUnixTimeSeconds()
+            $startTime = $epochTime - 3600
+            if($instance.Reservations.Instances.Platform -eq "windows") {
+                $costs = aws ec2 describe-spot-price-history --profile $p --region $regionKey --start-time $startTime --end-time $epochTime --product-descriptions="Windows (Amazon VPC)" --instance-types $instanceType --output json | ConvertFrom-Json
+            } else {
+                $costs = aws ec2 describe-spot-price-history --profile $p --region $regionKey --start-time $startTime --end-time $epochTime --product-descriptions="Linux/UNIX (Amazon VPC)" --instance-types $instanceType --output json | ConvertFrom-Json
+            }
+            $monthlyCost = [Math]::Round([float]($costs.SpotPriceHistory | Where-Object AvailabilityZone -eq $instances[$i].AvailabilityZone).SpotPrice * 3000, 2)
+
+            $instanceTags = $(aws ec2 describe-tags --profile $p --region $regionKey --filters "Name=resource-id,Values=$instanceId" | ConvertFrom-Json).Tags
+            if($instanceTags.Key.Contains("Name")) {
+                $nameTag = ($instanceTags | Where-Object Key -eq "Name").Value
+                $instances[$i] | Add-Member -NotePropertyName "NameTag" -NotePropertyValue $nameTag -Force
+                $instances[$i] | Add-Member -NotePropertyName "Identifier" -NotePropertyValue $nameTag -Force
+            } else {
+                $instances[$i] | Add-Member -NotePropertyName "NameTag" -NotePropertyValue "Not defined" -Force
+                $instances[$i] | Add-Member -NotePropertyName "Identifier" -NotePropertyValue $instanceId -Force
+            }
+            if($instanceTags.Key.Contains("ShutdownStrategy")) {
+                $shutdownTag = ($instanceTags | Where-Object Key -eq "ShutdownStrategy").Value
+                $instances[$i] | Add-Member -NotePropertyName "ShutdownStrategy" -NotePropertyValue $shutdownTag -Force
+            }
+
+            $instances[$i] | Add-Member -NotePropertyName "InstanceType" -NotePropertyValue $instanceType -Force
+            $instances[$i] | Add-Member -NotePropertyName "AMI" -NotePropertyValue $instanceAMI -Force
+            $instances[$i] | Add-Member -NotePropertyName "MonthlyCost" -NotePropertyValue $monthlyCost -Force
+
+            $customList.Add($instances[$i]) > $Null
         }
     }
-    $emailMessage += "Found a total of " + $totalRunningVMsFound + " VMs running across all " + $regions.Regions.Count + " regions in the " + $prof.ToUpper() + " account.`n"
 
-    # nicely format the instance hash table for viewing in email 
-    foreach ( $regionKey in $instanceTable.Keys ) { 
-        $insts = $instanceTable[$regionKey].InstanceStatuses
-        foreach ($inst in $insts) {
-            $instId = $inst.InstanceId
-            $instTag = aws ec2 describe-tags --profile $prof --filters "Name=resource-id,Values=$instId"
-            $emailMessage += "REGION: " + $regionKey 
-            $emailMessage += $instId + ": " + $instTag + "`n" 
-        }
-    }
-    $emailMessage += "`n" 
+    $message = "Found a total of " + $totalRunningVMsFound + "(out of " + $totalVMsFound + ") VMs running across all " + $TargetRegions.Count + " regions in the " + $p.ToUpper() + " account.`n"
+    $emailMessage += $message
+    Write-Verbose $message
+    $message = $customList | Sort-Object MonthlyCost -Descending | Format-Table AvailabilityZone,Identifier,InstanceType,MonthlyCost,ShutdownStrategy | Out-String
+    $emailMessage += $message
+    $finalTable.add($p, $customList) > $null
+
+    $grandTotalRunningVMsFound += $totalRunningVMsFound
+    $grandTotalVMsFound += $totalVMsFound
+
+    $emailMessage += "`n"
 }
 
-# send an email if an unusual number of VMs are found to be running
-if( $totalRunningVMsFound -gt $numberOfPersistentVMs ) {
-    $emailSubject           = "HEATH: >4 EC2 INSTANCES ARE RUNNING"
-    Send-Email $hancockUser $hancockFQDN $toEmailAddress $emailMessage $emailSubject
-} elseif( $totalRunningVMsFound -lt $numberOfPersistentVMs ) {
-    $emailSubject           = "HEATH: iQ may have a down production server"
-    Send-Email $hancockUser $hancockFQDN $toEmailAddress $emailMessage $emailSubject
-} else {
-    "Exactly $numberOfPersistentVMs running VMs found. This is correct."
-}
+# send an email
+$emailSubject = "$grandTotalRunningVMsFound/$grandTotalVMsFound EC2 INSTANCES ARE RUNNING"
+Send-Email $hancockUser $hancockFQDN $toEmailAddress $emailMessage $emailSubject
 
-return $emailMessage
+if(-Not $?) {
+    Write-Host "Email failed to send with error $LastExitCode"
+    return $Null
+}
+return $finalTable
 # END
 
 

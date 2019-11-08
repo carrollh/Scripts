@@ -6,14 +6,8 @@
 # down to only one result per region.
 #
 # Examples running this command:
-<<<<<<< HEAD
-# PS> Get-AWSAMIIds 12345678-1234-abcd-0123456789ab 8.6 2016
-# PS> Get-AWSAMIIds -ProductID 12345678-1234-abcd-0123456789ab -DkVer 8.6 -WinVer 2016 
-# PS> Get-AWSAMIIds -Linux -Verbose -Debug
-=======
 # PS> Get-AWSAMIIds 12345678-1234-abcd-0123456789ab 9.2.2 -Linux
 # PS> Get-AWSAMIIds -ProductID 12345678-1234-abcd-0123456789ab 8.6.2 
->>>>>>> 52b17c3eeb1e9189796aba7f30df9169c819508a
 ################################################################################
 
 [CmdletBinding()]
@@ -85,17 +79,9 @@ if( -Not $ProductIDs ) {
     }
 }
 
-<<<<<<< HEAD
-if( -Not $AmiNames ) {
-    if( $Linux ) {
-        $AmiNames = @("SIOS Protection Suite for Linux 9.2.2 on RHEL 7.4","SIOS Protection Suite for Linux 9.2.2 on RHEL 7.4 BYOL")
-    } else {
-        $AmiNames = @("SIOS DataKeeper v8.6.2 on 2012R2","SIOS DataKeeper v8.6.2 on 2012R2 BYOL","SIOS DataKeeper v8.6.2 on 2016","SIOS DataKeeper v8.6.2 on 2016 BYOL")
-    }
-=======
 $AMIRegionMapping = [System.Collections.Hashtable]@{}
 if( $Linux ) {
-    $AmiNames = @("SIOS Protection Suite for Linux $Version on RHEL 7.4","SIOS Protection Suite for Linux $Version on RHEL 7.4 BYOL")
+    $AmiNames = @("SIOS Protection Suite for Linux $Version on RHEL 7.6","SIOS Protection Suite for Linux $Version on RHEL 7.6 BYOL")
     $AMIRegionMapping.Add($AmiNames[0],"SPSLRHEL")
     $AMIRegionMapping.Add($AmiNames[1],"SPSLRHELBYOL")
 } else {
@@ -104,7 +90,6 @@ if( $Linux ) {
     $AMIRegionMapping.Add($AmiNames[1],"SIOS2012R2BYOL") > $Null
     $AMIRegionMapping.Add($AmiNames[2],"SIOS2016") > $Null
     $AMIRegionMapping.Add($AmiNames[3],"SIOS2016BYOL") > $Null
->>>>>>> 52b17c3eeb1e9189796aba7f30df9169c819508a
 }
 
 if( $Linux ) {
@@ -120,7 +105,7 @@ foreach ($region in $Regions) {
     Write-Progress -Activity "Querying $region" -PercentComplete ($i / $Regions.Count * 100)
     
     Write-Debug "Calling 'aws describe-images, this will take a second...`n"
-    $jsonString = Invoke-Command -ScriptBlock { Param($d) &'aws' ec2 describe-images --region $region --owners 679593333241 --filter "Name=description,Values='$d'" } -ArgumentList $Description
+    $jsonString = Invoke-Command -ScriptBlock { Param($d) &'aws' ec2 describe-images --profile currentgen --region $region --owners 679593333241 --filter "Name=description,Values='$d'" } -ArgumentList $Description
     #$jsonString = Invoke-Command -ScriptBlock { Param($a) &'aws' ec2 describe-images --region $region --owners 801119661308 --filter $a } -ArgumentList $args
     $json = $jsonString -Join "" 
     Write-Debug "$json`n"
