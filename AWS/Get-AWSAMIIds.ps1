@@ -7,7 +7,7 @@
 #
 # Examples running this command:
 # PS> Get-AWSAMIIds 12345678-1234-abcd-0123456789ab 9.2.2 -Linux
-# PS> Get-AWSAMIIds -ProductID 12345678-1234-abcd-0123456789ab 8.6.2 
+# PS> Get-AWSAMIIds -ProductID 9a7d70de-0121-4ecf-b190-10e31dd8ad5a 8.7.0 
 ################################################################################
 
 [CmdletBinding()]

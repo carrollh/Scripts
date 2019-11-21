@@ -33,16 +33,16 @@ function Send-Email() {
     Param(
         [Parameter(Mandatory=$True, Position=0)]
         [string]$username,
-        
+
         [Parameter(Mandatory=$True, Position=1)]
         [string]$smtpServer,
-        
+
         [Parameter(Mandatory=$True, Position=2)]
         [string]$recipientEmail,
-        
+
         [Parameter(Mandatory=$True, Position=3)]
         [string]$message,
-        
+
         [Parameter(Mandatory=$True, Position=4)]
         [string]$subject
     )
