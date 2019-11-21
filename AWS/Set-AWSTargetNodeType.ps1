@@ -17,7 +17,6 @@ Param(
     [string] $TargetNode = $Null,
 
     [Parameter(Mandatory=$True, Position=3)]
-    [ValidateSet("c3.large","c3.xlarge","c3.2xlarge","c3.4xlarge","c5d.large","c5d.xlarge","c5d.2xlarge","c5d.4xlarge","c5d.9xlarge","c5d.18xlarge","d2.xlarge","d2.2xlarge","d2.4xlarge","d2.8xlarge","f1.2xlarge","f1.4xlarge","f1.16xlarge","g2.2xlarge","h1.2xlarge","h1.4xlarge","h1.8xlarge","h1.16xlarge","i2.xlarge","i2.2xlarge","i2.4xlarge","i3.large","i3.xlarge","i3.2xlarge","i3.4xlarge","i3.8xlarge","i3.16xlarge","i3.metal","m3.large","m3.xlarge","m3.2xlarge","m5d.large","m5d.xlarge","m5d.2xlarge","m5d.4xlarge","m5d.12xlarge","m5d.24xlarge","m5d.metal","p3dn.24xlarge","r3.large","r3.xlarge","r3.2xlarge","r3.4xlarge","r5d.large","r5d.xlarge","r5d.2xlarge","r5d.4xlarge","r5d.12xlarge","r5d.24xlarge","r5d.metal","x1.16xlarge","x1.32xlarge","x1e.xlarge","x1e.2xlarge","x1e.4xlarge","x1e.8xlarge","x1e.16xlarge","x1e.32xlarge","z1d.large","z1d.xlarge","z1d.2xlarge","z1d.3xlarge","z1d.6xlarge","z1d.12xlarge","z1d.metal")]
     [string] $NewInstanceType = $Null
 )
 
