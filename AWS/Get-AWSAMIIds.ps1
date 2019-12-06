@@ -6,20 +6,23 @@
 # down to only one result per region.
 #
 # Examples running this command:
-# PS> Get-AWSAMIIds 12345678-1234-abcd-0123456789ab 9.2.2 -Linux
-# PS> Get-AWSAMIIds -ProductID 9a7d70de-0121-4ecf-b190-10e31dd8ad5a 8.7.0 
+# PS> Get-AWSAMIIds dev 9.4.0 -Linux
+# PS> Get-AWSAMIIds -Profile dev -Version 8.7.0 
 ################################################################################
 
 [CmdletBinding()]
 Param(
-    [Parameter(Mandatory=$False, Position=0)]
-    [string[]] $ProductIDs = $Null,
+    [Parameter(Mandatory=$True, Position=0)]
+    [string] $Profile = $Null,
 
     [Parameter(Mandatory=$False, Position=1)]
     [string[]] $Version = $Null,
 
-    [Parameter(Mandatory=$False, Position=2)]
-    [string[]] $Regions = @("us-east-1","us-east-2","us-west-1","us-west-2","ca-central-1","ap-south-1","ap-northeast-2","ap-southeast-1","ap-southeast-2","eu-central-1","eu-west-1","eu-west-2","eu-west-3","sa-east-1"),
+    [Parameter(Mandatory=$True, Position=2)]
+    [string[]] $OSVersions = $Null,
+
+    [Parameter(Mandatory=$False, Position=3)]
+    [string[]] $Regions = $Null,
     
     [Parameter(Mandatory=$False)]
     [Switch] $Linux
@@ -63,14 +66,45 @@ function ConvertTo-OrderedHashtable {
     }
 }
 
-
 ################################################################################
-
 if( -Not $Version ) {
     Write-Host "Software version needed!`nUsage: Get-AWSAMIIds -Version <ver> ...`n"
     return;
 }
 
+if( $OSVersions -like "all" ) {
+    if( -Not $Linux ) {
+        $OSVersions = @("2012R2","2012R2 BYOL","2016","2016 BYOL","2019","2019 BYOL")
+    }
+}
+
+if( -Not $Regions -Or $Regions -like "all") {
+    $Regions = @("ap-northeast-1","ap-northeast-2","ap-south-1","ap-southeast-1","ap-southeast-2","ca-central-1","eu-central-1","eu-north-1","eu-west-1","eu-west-2","eu-west-3","sa-east-1","us-east-1","us-east-2","us-west-1","us-west-2")
+}
+
+$amiRegionMapping = [System.Collections.Hashtable]@{}
+foreach ($region in $Regions) {
+    Write-Verbose $region
+    $amis = Get-EC2Image -Owner 679593333241 -ProfileName $Profile -Region $region
+
+    $amiOSVersionMapping = [System.Collections.Hashtable]@{}
+    foreach ($osVersion in $OSVersions) {
+        if ($Linux) {
+            $namePattern = "^SIOS Protection Suite for Linux v$Version on $osVersion-.*"
+        } else {
+            $namePattern = "^SIOS DataKeeper v$Version on $osVersion-.*"
+        }
+
+        $ami = $amis | Where-Object Name -Match $namePattern
+        $amiOSVersionMapping.Add($osVersion.Replace(" ",""),$ami.ImageId)
+    }
+
+    $amiRegionMapping.Add($region, $amiOSVersionMapping)
+}
+
+return $amiRegionMapping
+
+<#
 if( -Not $ProductIDs ) {
     if( $Linux ) {
         $ProductIDs = @("273a5693-de58-4437-87fa-d3b56f714e95","036d4d80-182d-460e-b9cc-01ebc2f842e4")
@@ -123,3 +157,4 @@ foreach ($region in $Regions) {
 }
 
 $final | ConvertTo-Json
+#>

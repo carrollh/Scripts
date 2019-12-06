@@ -1,7 +1,7 @@
 ﻿# Test-AWSDKCETemplate.ps1
 # 
 # Example call: 
-#   .\Test-AWSDKCETemplate.ps1 -Regions eu-west-2 -AMIType BYOL -Verbose
+#   .\Test-AWSDKCETemplate.ps1 -Regions eu-west-2 -AMIType BYOL -OSVersion WS2019 -Verbose
 #   .\Test-AWSDKCETemplate.ps1 -Regions eu-west-3 -AMIType PAYG -Verbose -ParameterFilePath .\
 #
 # Notes:
@@ -12,16 +12,15 @@
 
 [CmdletBinding()]
 Param(
+    [string]   $Profile = "currentgen",
     [string]   $ParameterFilePath = $Null,
-    [string]   $StackName = "DKCE",
+    [string]   $StackName = "HAC-DKCE",
     [string]   $TemplateURLBase = "https://s3.amazonaws.com/quickstart-sios-datakeeper",
-    [string]   $ADServerOSVersion = "2016",
-    [string]   $DKServerOSVersion = "2016",
+    [string]   $OSVersion = "WS2019",
     [string]   $AMIType = "BYOL",
-    [string]   $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_Joe_User_joeuser_2019-08-14_DKCE/",
+    [string]   $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_joe_user_joe_user_2019-11-22_DKCE/",
     [string]   $SQLServerVersion = "2014SP1",
-    [string[]] $Regions = @("us-east-1"),
-    #[string[]] $Regions = @("us-east-1","us-east-2","us-west-1","us-west-2","ca-central-1","ap-northeast-2","ap-southeast-1","ap-southeast-2","eu-central-1","sa-east-1","ap-south-1","eu-west-1","eu-west-2","eu-west-3"),
+    [string[]] $Regions = $Null,
     [string]   $Branch = $Null
 )
 
@@ -47,6 +46,10 @@ if ($Branch) {
     $TemplateURLBase += "/$Branch"
 } else {
     $TemplateURLBase += "/test"
+}
+
+if (-Not $Regions -Or $Regions -like "all") {
+    $Regions = @("us-east-1","us-east-2","us-west-1","us-west-2","ca-central-1","ap-northeast-2","ap-southeast-1","ap-southeast-2","eu-central-1","sa-east-1","ap-south-1","eu-west-1","eu-west-2","eu-west-3")
 }
 
 if (-Not $ParameterFilePath) {
@@ -80,9 +83,9 @@ foreach ($region in $Regions) {
     
     ($parameters | Where-Object -Property ParameterKey -like AMIType).ParameterValue = $AMIType
     ($parameters | Where-Object -Property ParameterKey -like KeyPairName).ParameterValue = "AUTOMATION"
-    ($parameters | Where-Object -Property ParameterKey -like ClusterNodeOSServerVersion).ParameterValue = $DKServerOSVersion
+    ($parameters | Where-Object -Property ParameterKey -like ClusterNodeOSServerVersion).ParameterValue = $OSVersion
     ($parameters | Where-Object -Property ParameterKey -like SQLServerVersion).ParameterValue = $SQLServerVersion
-    if( $region -like "ap-northeast-2" ) {
+    if( $region -like "ap-northeast-2" -Or $region -like "sa-east-1" ) {
         ($parameters | Where-Object -Property ParameterKey -like AvailabilityZones).ParameterValue = $region+"a,"+$region+"c"
     } else {
         ($parameters | Where-Object -Property ParameterKey -like AvailabilityZones).ParameterValue = $region+"a,"+$region+"b"
@@ -90,25 +93,24 @@ foreach ($region in $Regions) {
     ($parameters | Where-Object -Property ParameterKey -like DomainAdminPassword).ParameterValue = "SIOS!5105?sios"
     ($parameters | Where-Object -Property ParameterKey -like SQLServiceAccountPassword).ParameterValue = "SIOS!5105?sios"
 
-    $parameters.Add([PSCustomObject]@{
-        ParameterKey = "QSS3BucketName"
-        ParameterValue = "quickstart-sios-datakeeper"
-    }) > $Null
-    
-    if($Branch) {
-        $parameters.Add([PSCustomObject]@{
-            ParameterKey = "QSS3KeyPrefix"
-            ParameterValue = "$Branch/"
-        }) > $Null
-    } else {
-        $parameters.Add([PSCustomObject]@{
-            ParameterKey = "QSS3KeyPrefix"
-            ParameterValue = "test/"
-        }) > $Null
+    ($parameters | Where-Object -Property ParameterKey -like QSS3BucketName).ParameterValue = "quickstart-sios-datakeeper"
+
+    if(($parameters | Where-Object -Property ParameterKey -like QSS3KeyPrefix) -eq $Null) {
+        if($Branch) {
+            $parameters.Add([PSCustomObject]@{
+                ParameterKey = "QSS3KeyPrefix"
+                ParameterValue = "$Branch/"
+            }) > $Null
+        } else {
+            $parameters.Add([PSCustomObject]@{
+                ParameterKey = "QSS3KeyPrefix"
+                ParameterValue = "test/"
+            }) > $Null
+        }
     }
-    
+
     $parameters
-    $masterStacks.Add($region,(New-CFNStack -Stackname $StackName -TemplateURL "$TemplateURLBase/templates/sios-datakeeper-master.template" -Parameters $parameters -Region $region -Capabilities CAPABILITY_IAM -DisableRollback $True))
+    $masterStacks.Add($region,(New-CFNStack -ProfileName $Profile -Stackname "$StackName-$AMIType" -TemplateURL "$TemplateURLBase/templates/sios-datakeeper-master.template" -Parameters $parameters -Region $region -Capabilities CAPABILITY_IAM -DisableRollback $True))
 }
 
 # $jobHT = [ordered]@{}
