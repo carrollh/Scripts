@@ -17,7 +17,10 @@ Param(
     [string] $TargetNode = $Null,
 
     [Parameter(Mandatory=$True, Position=3)]
-    [string] $NewInstanceType = $Null
+    [string] $NewInstanceType = $Null,
+
+    [Parameter(Mandatory=$False)]
+    [switch] $Lambda
 )
 
 # BEGIN
@@ -53,31 +56,43 @@ $region = invoke-command -ComputerName $TargetNode -ArgumentList $token -ScriptB
     (Invoke-RestMethod -Headers @{"X-aws-ec2-metadata-token" = $token} -Method GET -Uri http://169.254.169.254/latest/dynamic/instance-identity/document ).region
 }
 
-Write-Verbose "Stopping $TargetNode..."
-aws ec2 stop-instances --region $region --instance-ids $instanceId --output json > $Null
-$status = "running"
-while (-Not ($status -like "stopped")) {
-    Start-Sleep 5
-    $json = aws ec2 describe-instances --region $region --instance-ids $instanceId --output json | ConvertFrom-Json
-    $status = $json.Reservations.Instances.State.Name
-}
+if($Lambda) {
 
-Write-Verbose "Resizing $TargetNode"
-$typejson = "{`"Value`": `"$NewInstanceType`"}" | ConvertTo-Json
-aws ec2 modify-instance-attribute --region $region --instance-id $instanceId --instance-type $typejson --output json > $Null
-$type = $json.Reservations.Instances.InstanceType
-while (-Not ($type -like $NewInstanceType)) {
-    Start-Sleep 5
-    $type = (aws ec2 describe-instances --region $region --instance-ids $instanceId | ConvertFrom-Json).Reservations.Instances.InstanceType
-}
+    $payload = @{
+        InstanceId = $instanceId
+        Region = $region
+        Type = $type
+    } | ConvertTo-Json
 
-Write-Verbose "Restarting $TargetNode..."
-aws ec2 start-instances --region $region --instance-ids $instanceId --output json > $Null
-while (-Not ($status -like "running")) {
-    Start-Sleep 5
-    $json = aws ec2 describe-instances --region $region --instance-ids $instanceId --output json | ConvertFrom-Json
-    $status = $json.Reservations.Instances.State.Name
-}
+    Invoke-LMFunction -FunctionName Set-TargetNodeType -Region $region -InvocationType Event -Payload $payload
 
-Write-Verbose "$TargetNode running as type $type"
+} else {
+    Write-Verbose "Stopping $TargetNode..."
+    aws ec2 stop-instances --region $region --instance-ids $instanceId --output json > $Null
+    $status = "running"
+    while (-Not ($status -like "stopped")) {
+        Start-Sleep 5
+        $json = aws ec2 describe-instances --region $region --instance-ids $instanceId --output json | ConvertFrom-Json
+        $status = $json.Reservations.Instances.State.Name
+    }
+
+    Write-Verbose "Resizing $TargetNode"
+    $typejson = "{`"Value`": `"$NewInstanceType`"}" | ConvertTo-Json
+    aws ec2 modify-instance-attribute --region $region --instance-id $instanceId --instance-type $typejson --output json > $Null
+    $type = $json.Reservations.Instances.InstanceType
+    while (-Not ($type -like $NewInstanceType)) {
+        Start-Sleep 5
+        $type = (aws ec2 describe-instances --region $region --instance-ids $instanceId | ConvertFrom-Json).Reservations.Instances.InstanceType
+    }
+
+    Write-Verbose "Restarting $TargetNode..."
+    aws ec2 start-instances --region $region --instance-ids $instanceId --output json > $Null
+    while (-Not ($status -like "running")) {
+        Start-Sleep 5
+        $json = aws ec2 describe-instances --region $region --instance-ids $instanceId --output json | ConvertFrom-Json
+        $status = $json.Reservations.Instances.State.Name
+    }
+
+    Write-Verbose "$TargetNode running as type $type"
+}
 exit 0
