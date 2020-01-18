@@ -24,26 +24,37 @@ Param(
 )
 
 # BEGIN
+Start-Transcript "C:\Users\siosadmin\Desktop\Set-AWSTargetNodeType.log"
 $role = Get-ClusterGroup $ClusterRole
 $resources = $role | Get-ClusterResource | Where-Object { $_.ResourceType -eq "DataKeeper Volume" }
 $volResource = $resources | Where-Object { $_.Name -like "DataKeeper Volume $MirrorVol" }
 
 if($volResource -eq $Null) {
     Write-Error "DataKeeper Volume resource for mirror volume $MirrorVol not found in cluster role $ClusterRole"
-    exit 1
+    Stop-Transcript
+	exit 1
 }
 
 if($role.OwnerNode -like $TargetNode) {
     Write-Error "The specified target node is the current source. Move the cluster resource to proceed."
-    exit 1
+    Stop-Transcript
+	exit 1
 }
 
-if(-Not (($volResource | Get-ClusterOwnerNode).OwnerNodes.Name.Contains($TargetNode.ToUpper()))) { 
+if((($role | Get-ClusterOwnerNode).OwnerNodes | Where-Object Name -like $TargetNode).Count -eq 0) {
     Write-Error "The specified target node is not a potential owner for the cluster role $ClusterRole"
-    exit 1
+	Write-Host "Potential Owners for $ClusterRole are " ($role | Get-ClusterOwnerNode).OwnerNodes.Name
+	
+    Stop-Transcript
+	exit 1
 }
 
-# if we're here then the target is valid for the mirror vol
+# The following two sections require granting the local computer "Full Control" on the remote machine. This can 
+# be done by running 'Set-PSSessionConfiguration -ShowSecurityDescriptorUI -Name Microsoft.PowerShell' and 
+# adding the permissions by hand on each system.
+# THEY ALSO REQUIRE SOMETHING ELSE APPARENTLY BUT I KNOW LONGER CARE!
+<#
+# If we're here then the target is valid for the mirror vol
 Write-Verbose "Querying $TargetNode for its instance id"
 $instanceId = invoke-command -ComputerName $TargetNode -ArgumentList $token -ScriptBlock {
     $token = Invoke-RestMethod -Headers @{"X-aws-ec2-metadata-token-ttl-seconds" = "10"} -Method PUT -Uri http://169.254.169.254/latest/api/token
@@ -55,17 +66,19 @@ $region = invoke-command -ComputerName $TargetNode -ArgumentList $token -ScriptB
     $token = Invoke-RestMethod -Headers @{"X-aws-ec2-metadata-token-ttl-seconds" = "10"} -Method PUT -Uri http://169.254.169.254/latest/api/token
     (Invoke-RestMethod -Headers @{"X-aws-ec2-metadata-token" = $token} -Method GET -Uri http://169.254.169.254/latest/dynamic/instance-identity/document ).region
 }
+#>
+$instanceId = "i-08cc8a59a520d2c5c"
+$region = "us-east-1"
 
 if($Lambda) {
 
     $payload = @{
         InstanceId = $instanceId
         Region = $region
-        Type = $type
+        Type = $NewInstanceType
     } | ConvertTo-Json
 
     Invoke-LMFunction -FunctionName Set-TargetNodeType -Region $region -InvocationType Event -Payload $payload
-
 } else {
     Write-Verbose "Stopping $TargetNode..."
     aws ec2 stop-instances --region $region --instance-ids $instanceId --output json > $Null
@@ -95,4 +108,5 @@ if($Lambda) {
 
     Write-Verbose "$TargetNode running as type $type"
 }
+Stop-Transcript
 exit 0

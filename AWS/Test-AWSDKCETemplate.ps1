@@ -12,7 +12,6 @@
 
 [CmdletBinding()]
 Param(
-    [string]   $Profile = "currentgen",
     [string]   $ParameterFilePath = $Null,
     [string]   $StackName = "HAC-DKCE",
     [string]   $TemplateURLBase = "https://s3.amazonaws.com/quickstart-sios-datakeeper",
@@ -21,7 +20,8 @@ Param(
     [string]   $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_joe_user_joe_user_2019-11-22_DKCE/",
     [string]   $SQLServerVersion = "2014SP1",
     [string[]] $Regions = $Null,
-    [string]   $Branch = $Null
+    [string]   $Branch = $Null,
+    [string]   $Profile = $Null
 )
 
 function Get-ParametersFromURL() {
@@ -110,7 +110,12 @@ foreach ($region in $Regions) {
     }
 
     $parameters
-    $masterStacks.Add($region,(New-CFNStack -ProfileName $Profile -Stackname "$StackName-$AMIType" -TemplateURL "$TemplateURLBase/templates/sios-datakeeper-master.template" -Parameters $parameters -Region $region -Capabilities CAPABILITY_IAM -DisableRollback $True))
+
+    if($Profile) {
+        $masterStacks.Add($region,(New-CFNStack -Stackname "$StackName-$AMIType" -TemplateURL "$TemplateURLBase/templates/sios-datakeeper-master.template" -Parameters $parameters -Region $region -Capabilities CAPABILITY_IAM -DisableRollback $True -ProfileName $Profile))
+    } else {
+        $masterStacks.Add($region,(New-CFNStack -Stackname "$StackName-$AMIType" -TemplateURL "$TemplateURLBase/templates/sios-datakeeper-master.template" -Parameters $parameters -Region $region -Capabilities CAPABILITY_IAM -DisableRollback $True))
+    }
 }
 
 # $jobHT = [ordered]@{}

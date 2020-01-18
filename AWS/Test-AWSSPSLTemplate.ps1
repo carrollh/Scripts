@@ -14,7 +14,8 @@ Param(
     [string]   $AMIType = "BYOL",
     [string]   $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_Joe_User_joeuser_2019-10-01_SPSLinux/",
     [string[]] $Regions = @("us-east-1"),
-    [string]   $Branch = $Null
+    [string]   $Branch = $Null,
+    [string]   $Profile = $Null
 )
 
 if ($Regions -like "all") {
@@ -91,7 +92,11 @@ $masterStacks = [ordered]@{}
 foreach ($region in $Regions) {
     ($parameters | Where-Object -Property ParameterKey -like AvailabilityZones).ParameterValue = $region+"a,"+$region+"b"
     $parameters | Format-Table | Out-String -Stream | Write-Verbose
-    $masterStacks.Add($region,(New-CFNStack -Stackname $StackName -TemplateURL "$TemplateURLBase/templates/sios-protection-suite-master.template" -Parameters $parameters -Region $region -Capabilities CAPABILITY_IAM -DisableRollback $True))
+    if($Profile) {
+        $masterStacks.Add($region,(New-CFNStack -Stackname $StackName -TemplateURL "$TemplateURLBase/templates/sios-protection-suite-master.template" -Parameters $parameters -Region $region -Capabilities CAPABILITY_IAM -DisableRollback $True -ProfileName $Profile))
+    } else {
+        $masterStacks.Add($region,(New-CFNStack -Stackname $StackName -TemplateURL "$TemplateURLBase/templates/sios-protection-suite-master.template" -Parameters $parameters -Region $region -Capabilities CAPABILITY_IAM -DisableRollback $True))
+    }
 }
 
 # $jobHT = [ordered]@{}
