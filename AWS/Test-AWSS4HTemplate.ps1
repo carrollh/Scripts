@@ -11,7 +11,7 @@ Param(
     [string]   $ParameterFilePath = $Null,
     [string]   $StackName = $Null,
     [string]   $TemplateURLBase = "https://s3.amazonaws.com/",
-    [string]   $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_Joe_User_joeuser_2020-01-18_SPSLinux/",
+    [string]   $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_Joe_User_joeuser_2020-01-27_SPSLinux/",
     [string[]] $Regions = @("us-east-1"),
     [string]   $Branch = $Null,
     [string]   $Profile = "default"
@@ -100,6 +100,7 @@ $rac = (Invoke-WebRequest itomation.ca/mypublicip).Content + "/32"
 ($parameters | Where-Object -Property ParameterKey -like SAPInstallMediaKeyPrefix).ParameterValue = "sap"
 ($parameters | Where-Object -Property ParameterKey -like HANAInstallMediaKeyPrefix).ParameterValue = "hana/HANA-DB-2.0-SPS04"
 ($parameters | Where-Object -Property ParameterKey -like QSS3BucketName).ParameterValue = $bucket
+($parameters | Where-Object -Property ParameterKey -like OptionalRDPInstanceType).ParameterValue = "t2.small"
 
 if($Branch) {
     ($parameters | Where-Object -Property ParameterKey -like QSS3KeyPrefix).ParameterValue = "$Branch/"
@@ -115,9 +116,9 @@ foreach ($region in $Regions) {
 
     if($PSCmdlet.ShouldProcess($StackName)) {
         if($Profile) {
-            $masterStacks.Add($region,(New-CFNStack -Stackname $StackName -TemplateURL "$TemplateURLBase/templates/$repo-master.template" -Parameters $parameters -Region $region -Capabilities CAPABILITY_IAM -DisableRollback $True -ProfileName $Profile))
+            $masterStacks.Add($region,(New-CFNStack -Stackname $StackName -TemplateURL "$TemplateURLBase/templates/$repo-master.yaml" -Parameters $parameters -Region $region -Capabilities CAPABILITY_IAM -DisableRollback $True -ProfileName $Profile))
         } else {
-            $masterStacks.Add($region,(New-CFNStack -Stackname $StackName -TemplateURL "$TemplateURLBase/templates/$repo-master.template" -Parameters $parameters -Region $region -Capabilities CAPABILITY_IAM -DisableRollback $True))
+            $masterStacks.Add($region,(New-CFNStack -Stackname $StackName -TemplateURL "$TemplateURLBase/templates/$repo-master.yaml" -Parameters $parameters -Region $region -Capabilities CAPABILITY_IAM -DisableRollback $True))
         }
     }
 }

@@ -17,7 +17,7 @@ Param(
     [string]   $TemplateURLBase = "https://s3.amazonaws.com/quickstart-sios-datakeeper",
     [string]   $OSVersion = "WS2019",
     [string]   $AMIType = "BYOL",
-    [string]   $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_joe_user_joe_user_2019-11-22_DKCE/",
+    [string]   $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_Joe_User_joeuser_2020-01-27_DKCE/",
     [string]   $SQLServerVersion = "2014SP1",
     [string[]] $Regions = $Null,
     [string]   $Branch = $Null,
@@ -109,7 +109,7 @@ foreach ($region in $Regions) {
         }
     }
 
-    $parameters
+    $parameters | Format-Table | Out-String -Stream | Write-Verbose
 
     if($Profile) {
         $masterStacks.Add($region,(New-CFNStack -Stackname "$StackName-$AMIType" -TemplateURL "$TemplateURLBase/templates/sios-datakeeper-master.template" -Parameters $parameters -Region $region -Capabilities CAPABILITY_IAM -DisableRollback $True -ProfileName $Profile))
