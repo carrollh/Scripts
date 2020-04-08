@@ -6,8 +6,9 @@
 # down to only one result per region.
 #
 # Examples running this command:
-# PS> Get-AWSAMIIds dev 9.4.0 -Linux
-# PS> Get-AWSAMIIds -Profile dev -Version 8.7.0 
+# PS> $ht = [System.Collections.Hashtable]@{}
+# PS> $ht = .\Get-AWSAMIIds -Profile dev -Version 9.4.1 -OSversions "RHEL 7.7" -Linux -Verbose
+# PS> $ht = .\Get-AWSAMIIds -Profile dev -Version 8.7.0 -OSversions all -Verbose
 ################################################################################
 
 [CmdletBinding()]
@@ -73,13 +74,15 @@ if( -Not $Version ) {
 }
 
 if( $OSVersions -like "all" ) {
-    if( -Not $Linux ) {
-        $OSVersions = @("2012R2","2012R2 BYOL","2016","2016 BYOL","2019","2019 BYOL")
+    if( $Linux ) {
+        $OSVersions = @("RHEL 7.7","SLES 15")
+    } else {
+        $OSVersions = @("2012R2","2016","2019")
     }
 }
 
 if( -Not $Regions -Or $Regions -like "all") {
-    $Regions = @("ap-northeast-1","ap-northeast-2","ap-south-1","ap-southeast-1","ap-southeast-2","ca-central-1","eu-central-1","eu-north-1","eu-west-1","eu-west-2","eu-west-3","sa-east-1","us-east-1","us-east-2","us-west-1","us-west-2")
+    $Regions = @("ap-northeast-2","ap-south-1","ap-southeast-1","ap-southeast-2","ca-central-1","eu-central-1","eu-north-1","eu-west-1","eu-west-2","eu-west-3","sa-east-1","us-east-1","us-east-2","us-west-1","us-west-2")
 }
 
 $amiRegionMapping = [System.Collections.Hashtable]@{}
@@ -90,13 +93,35 @@ foreach ($region in $Regions) {
     $amiOSVersionMapping = [System.Collections.Hashtable]@{}
     foreach ($osVersion in $OSVersions) {
         if ($Linux) {
-            $namePattern = "^SIOS Protection Suite for Linux v$Version on $osVersion-.*"
-        } else {
-            $namePattern = "^SIOS DataKeeper v$Version on $osVersion-.*"
-        }
+            $ver = $Version.Replace(".", "`.")
+            $byolPattern = "^SIOS Protection Suite for Linux $ver on $osVersion BYOL.*"
+            $pattern = "^SIOS Protection Suite for Linux $ver on $osVersion.*"
+            $ws2016Pattern = "^Windows_Server-2016-English-Full-Base*"
 
-        $ami = $amis | Where-Object Name -Match $namePattern
-        $amiOSVersionMapping.Add($osVersion.Replace(" ",""),$ami.ImageId)
+            $byolAMI = $amis | Where-Object Name -Match $byolPattern
+            write-Verbose ("byol = " + $byolAMI.ImageId)
+            $paygAMI = $amis | Where-Object Name -Match $pattern | Where-Object ImageId -ne $byolAMI.ImageId
+            write-Verbose ("payg = " + $paygAMI.ImageId)
+            $ws2016AMI = (Get-EC2Image -Owner amazon -ProfileName $Profile -Region $region | Where-Object Name -Match $ws2016Pattern | Sort-Object -Property CreationDate -Descending)[0]
+            write-Verbose ("ws2016 = " + $paygAMI.ImageId)
+
+            $amiOSVersionMapping.Add("SPSLRHEL",$paygAMI.ImageId) > $Null
+            $amiOSVersionMapping.Add("SPSLRHELBYOL",$byolAMI.ImageId) > $Null
+            $amiOSVersionMapping.Add("WS2016FULLBASE",$ws2016AMI.ImageId) > $Null
+        } else {
+            $ver = $Version.Replace(".", "`.")
+            $byolPattern = "^SIOS DataKeeper v$ver on $osVersion BYOL.*"
+            $pattern = "^SIOS DataKeeper v$ver on $osVersion.*"
+
+            $byolAMI = $amis | Where-Object Name -Match $byolPattern
+            write-Verbose ("byol = " + $byolAMI.ImageId)
+            $paygAMI = $amis | Where-Object Name -Match $pattern | Where-Object ImageId -ne $byolAMI.ImageId
+            write-Verbose ("payg = " + $paygAMI.ImageId)
+
+            $ver = $osversion.Replace(" ","")
+            $amiOSVersionMapping.Add("SDKCEWIN" + $ver,$paygAMI.ImageId) > $Null
+            $amiOSVersionMapping.Add("SDKCEWIN" + $ver +"BYOL",$byolAMI.ImageId) > $Null
+        }
     }
 
     $amiRegionMapping.Add($region, $amiOSVersionMapping)

@@ -12,7 +12,7 @@ Param(
     [string]   $StackName = "SPSL",
     [string]   $TemplateURLBase = "https://s3.amazonaws.com/quickstart-sios-protection-suite",
     [string]   $AMIType = "BYOL",
-    [string]   $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_Joe_User_joeuser_2019-10-01_SPSLinux/",
+    [string]   $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_Joe_User_joeuser_2020-01-27_SPSLinux/",
     [string[]] $Regions = @("us-east-1"),
     [string]   $Branch = $Null,
     [string]   $Profile = $Null

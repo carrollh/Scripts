@@ -11,7 +11,7 @@ Param(
     [string]   $ParameterFilePath = $Null,
     [string]   $StackName = $Null,
     [string]   $TemplateURLBase = "https://s3.amazonaws.com/",
-    [string]   $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_Joe_User_joeuser_2020-01-27_SPSLinux/",
+    [string]   $SIOSLicenseKeyFtpURL = "http://ftp.us.sios.com/pickup/EVAL_heath_carroll_hcarroll_2020-02-10_SPSLinux/",
     [string[]] $Regions = @("us-east-1"),
     [string]   $Branch = $Null,
     [string]   $Profile = "default"
@@ -70,8 +70,8 @@ if($index -lt 0) {
     exit $index
 }
 
-$accessKey = (($content[$index+1] | Select-String -Pattern '^aws_access_key_id = (.+)$').Matches.Groups[1]).Value
-$secretKey = (($content[$index+2] | Select-String -Pattern '^aws_secret_access_key = (.+)$').Matches.Groups[1]).Value
+#$accessKey = (($content[$index+1] | Select-String -Pattern '^aws_access_key_id = (.+)$').Matches.Groups[1]).Value
+#$secretKey = (($content[$index+2] | Select-String -Pattern '^aws_secret_access_key = (.+)$').Matches.Groups[1]).Value
 
 if (-Not $ParameterFilePath) {
     # using RHEL-RHEL until SLES versions are viable
@@ -91,8 +91,8 @@ if( -Not $parameters ) {
 $rac = (Invoke-WebRequest itomation.ca/mypublicip).Content + "/32"
 ($parameters | Where-Object -Property ParameterKey -like RemoteAccessCIDR).ParameterValue = $rac
 ($parameters | Where-Object -Property ParameterKey -like SIOSLicenseKeyFtpURL).ParameterValue = $SIOSLicenseKeyFtpURL
-($parameters | Where-Object -Property ParameterKey -like AWSAccessKeyID).ParameterValue = $accessKey
-($parameters | Where-Object -Property ParameterKey -like AWSSecretAccessKey).ParameterValue = $secretKey
+#($parameters | Where-Object -Property ParameterKey -like AWSAccessKeyID).ParameterValue = $accessKey
+#($parameters | Where-Object -Property ParameterKey -like AWSSecretAccessKey).ParameterValue = $secretKey
 ($parameters | Where-Object -Property ParameterKey -like NewRootPassword).ParameterValue = "SIOS!5105?sios"
 ($parameters | Where-Object -Property ParameterKey -like HANAMasterPass).ParameterValue = "SIOS5105sios"
 ($parameters | Where-Object -Property ParameterKey -like KeyPairName).ParameterValue = "AUTOMATION"
@@ -111,7 +111,10 @@ if($Branch) {
 $masterStacks = [ordered]@{}
 
 foreach ($region in $Regions) {
-    ($parameters | Where-Object -Property ParameterKey -like AvailabilityZones).ParameterValue = $region+"a,"+$region+"b"
+    #($parameters | Where-Object -Property ParameterKey -like AvailabilityZones).ParameterValue = $region+"a,"+$region+"b"
+    #($parameters | Where-Object -Property ParameterKey -like OptionalWitnessAvailabilityZone).ParameterValue = "No"
+    ($parameters | Where-Object -Property ParameterKey -like AvailabilityZones).ParameterValue = $region+"a,"+$region+"b,"+$region+"c"
+    ($parameters | Where-Object -Property ParameterKey -like OptionalWitnessAvailabilityZone).ParameterValue = "Yes"
     $parameters | Format-Table | Out-String -Stream | Write-Verbose
 
     if($PSCmdlet.ShouldProcess($StackName)) {
