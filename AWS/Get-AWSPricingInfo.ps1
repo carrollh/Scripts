@@ -64,57 +64,57 @@ if($enaSupport) {
     $tempTypes = [System.Collections.ArrayList]@()
     $types | % { if( -Not($_.NetworkInfo.EnaSupport -Like "unsupported") ) { $tempTypes.Add($_) > $Null } }
     $types = $tempTypes
-} 
+}
 
 # remove types larger than this one or smaller than small
 $currentSize = [Ec2Size]::("s_" + $typeSize).value__
 $tempTypes = [System.Collections.ArrayList]@()
 $types | % {
-    $tempSize = [Ec2Size]::("s_" + $_.InstanceType.Substring(3)).value__
+    $tempSize = [Ec2Size]::("s_" + $_.InstanceType.Split(".")[1]).value__
     # add the type if its size is between small and the current size, inclusive
     if( ($tempSize -ge 0) -And ($tempSize -le $currentSize) ) {
         $tempTypes.Add($_) > $Null
-    }
+    } 
 }
 $types = $tempTypes
 
 # verify all of these types can be launched in this region
 $tempTypes = [System.Collections.ArrayList]@()
 $types | % {
-	#Write-Host $_.InstanceTYpe
+    #Write-Host $_.InstanceTYpe
     #$cmd = 'aws ec2 run-instances --instance-type $_ --dry-run --image-id $imageId --subnet-id $subnetId --region $region'
-	$pinfo = New-Object System.Diagnostics.ProcessStartInfo 
-	$pinfo.FileName = "aws.exe" 
-	$pinfo.Arguments = ("ec2 run-instances --instance-type " + $_.InstanceType + " --dry-run --image-id $imageId --subnet-id $subnetId --region $region")
-	$pinfo.UseShellExecute = $false 
-	$pinfo.CreateNoWindow = $true 
-	$pinfo.RedirectStandardOutput = $true 
-	$pinfo.RedirectStandardError = $true
-	
-	# Create a process object using the startup info
-	$process= New-Object System.Diagnostics.Process 
-	$process.StartInfo = $pinfo
-	
-	# Start the process 
-	$process.Start() | Out-Null 
-	# Wait a while for the process to do something 
-	sleep -Seconds 5 
-	# If the process is still active kill it 
-	if (!$process.HasExited) 
-	{ 
-		$process.Kill() 
-	}
-	
-	$stderr=$process.StandardError.ReadToEnd()
-	if ($stderr.Contains("Request would have succeeded")) 
-	{ 
-		#Write-Host "Request would have succeeded"
-		$tempTypes.Add($_) > $Null
-	}
+    $pinfo = New-Object System.Diagnostics.ProcessStartInfo 
+    $pinfo.FileName = "aws.exe" 
+    $pinfo.Arguments = ("ec2 run-instances --instance-type " + $_.InstanceType + " --dry-run --image-id $imageId --subnet-id $subnetId --region $region")
+    $pinfo.UseShellExecute = $false 
+    $pinfo.CreateNoWindow = $true 
+    $pinfo.RedirectStandardOutput = $true 
+    $pinfo.RedirectStandardError = $true
+    
+    # Create a process object using the startup info
+    $process= New-Object System.Diagnostics.Process 
+    $process.StartInfo = $pinfo
+    
+    # Start the process 
+    $process.Start() | Out-Null 
+    # Wait a while for the process to do something 
+    sleep -Seconds 5 
+    # If the process is still active kill it 
+    if (!$process.HasExited) 
+    { 
+        $process.Kill() 
+    }
+    
+    $stderr=$process.StandardError.ReadToEnd()
+    if ($stderr.Contains("Request would have succeeded")) 
+    { 
+        #Write-Host "Request would have succeeded"
+        $tempTypes.Add($_) > $Null
+    }
 }
-
 # contains instance types we should allow
 $types = $tempTypes
+
 
 ### PART 2 - Lookup cost info for *all* baseline instance types in the current region
 # find the prices for all valid instance types in this region
@@ -128,24 +128,30 @@ $priceList | % {
     $offer = ($_.terms.OnDemand.$sku.priceDimensions | Get-Member -MemberType NoteProperty).Name
     $cost = $_.terms.OnDemand.$sku.priceDimensions.$offer.pricePerUnit.USD
 
-	# debugging. There *should* be only one cost entry for each instance type, but filters may be off
-	if( $ht[$_.product.attributes.instanceType] -ne $Null ) {
-		$_.product.attributes.instanceType + " $cost" >> .\output.txt
-		$_.product.attributes >> .\output.txt
-	}
-	else {
-		"STORING:`n" + $_.product.attributes.instanceType >> .\output.txt
-		$_.product.attributes  >> .\output.txt
-		$ht.Add([string]$_.product.attributes.instanceType, [decimal]$cost) > $Null
-	}
+    # debugging. There *should* be only one cost entry for each instance type, but filters may be off
+    if( $ht[$_.product.attributes.instanceType] -ne $Null ) {
+        $_.product.attributes.instanceType + " $cost" >> .\output.txt
+        $_.product.attributes >> .\output.txt
+    }
+    else {
+        "STORING:`n" + $_.product.attributes.instanceType >> .\output.txt
+        $_.product.attributes  >> .\output.txt
+        $ht.Add([string]$_.product.attributes.instanceType, [decimal]$cost) > $Null
+    }
 }
 # at this point $ht contains a single cost for each instance type in this region.
 
+
 ### Part 3 - output only allowed instance types and their annual costs
 $output = [hashtable]@{}
-$types | % { 
-	#Write-Host ($_.InstanceType + " " + [math]::Round($ht[$_.InstanceType] * 8766, 2))
-	$output.Add($_.InstanceType, [math]::Round($ht[$_.InstanceType] * 8766, 2)) > $Null
+ $types | % {
+    #$output.Add($_.InstanceType, [math]::Round($ht[$_.InstanceType] * 8766, 2)) > $Null
 }
+$output.GetEnumerator() | Sort -Property Name
 
-return $output
+<### debug - the below code will display the full pricelist for this region, sorted.
+$ht.Keys | % {
+    $output.Add($_, [math]::Round($ht[$_] * 8766, 2)) > $Null
+}
+$output.GetEnumerator() | Sort -Property Name
+#>
