@@ -1,0 +1,38 @@
+[
+  {
+    "Type": "TERM_MATCH",
+    "Field": "ServiceCode",
+    "Value": "AmazonEC2"
+  },
+  {
+    "Type": "TERM_MATCH",
+    "Field": "location",
+    "Value": "US East (Ohio)"
+  },
+  {
+    "Type": "TERM_MATCH",
+    "Field": "operatingSystem",
+    "Value": "Windows"
+  },
+  {
+    "Type": "TERM_MATCH",
+    "Field": "tenancy",
+    "Value": "Shared"
+  },
+  {
+    "Type": "TERM_MATCH",
+    "Field": "capacityStatus",
+    "Value": "Used"
+  },
+  {
+    "Type": "TERM_MATCH",
+    "Field": "preInstalledSw",
+    "Value": "NA"
+  },
+  {
+    "Type": "TERM_MATCH",
+    "Field": "licenseModel",
+    "Value": "No License required"
+  }
+  
+]
