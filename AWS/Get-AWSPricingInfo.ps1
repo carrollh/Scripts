@@ -215,7 +215,7 @@ $types | % {
 $output.GetEnumerator() | Sort -Property Name
 
 $inst = [string]$typeFamily + "." + $typeSize
-Write-Host "`nCurrent annual cost for the local VM at size $inst is " + ([math]::Round($ht[$inst] * 8766, 2)) + " USD.`n"
+Write-Host "`nCurrent annual cost for the local VM at size $inst is $"([math]::Round($ht[$inst] * 8766, 2)) "`n"
 
 ### debug - the below code will display the full pricelist for this region, sorted.
 Write-Verbose "Hourly costs for all possible instance types in this region"
