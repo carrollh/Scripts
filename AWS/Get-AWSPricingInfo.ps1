@@ -67,7 +67,6 @@ else {
 }
 if(-Not (Test-Path $filters)){
     Write-Host "Filters file cannot be found. By default we look in the local directory for 'filters.json' but a different location/filename can be specified using the -FiltersFilePath flag."
-    exit $False
 }
 
 Write-Verbose "Gathering AWS metadata for localhost..."
