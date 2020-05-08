@@ -209,11 +209,13 @@ $priceList | % {
 ### Part 3 - output only allowed instance types and their annual costs
 Write-Host "Allowed instance types and their annual costs:"
 $output = [hashtable]@{}
- $types | % {
+$types | % {
     $output.Add($_.InstanceType, [math]::Round($ht[$_.InstanceType] * 8766, 2)) > $Null
 }
 $output.GetEnumerator() | Sort -Property Name
-Write-Host "Annual cost for local VM is currently " + $output[($typeFamily + "." + $typeFamily)] + " USD.`n"
+
+$inst = [string]$typeFamily + "." + $typeSize
+Write-Host "`nCurrent annual cost for the local VM at size $inst is " + ([math]::Round($ht[$inst] * 8766, 2)) + " USD.`n"
 
 ### debug - the below code will display the full pricelist for this region, sorted.
 Write-Verbose "Hourly costs for all possible instance types in this region"
