@@ -188,6 +188,8 @@ $priceList = $prices.PriceList | ConvertFrom-Json
 # store all valid cost values in a hashtable of <instanceType, cost> pairs
 $ht = [hashtable]@{}
 $priceList | % { 
+    $_
+    exit
     $sku = ($_.terms.OnDemand | Get-Member -MemberType NoteProperty).Name
     $offer = ($_.terms.OnDemand.$sku.priceDimensions | Get-Member -MemberType NoteProperty).Name
     $cost = $_.terms.OnDemand.$sku.priceDimensions.$offer.pricePerUnit.USD

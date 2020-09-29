@@ -1,111 +1,78 @@
 ﻿# Test-AWSDeployment.ps1
 # 
 # Example call: 
-#    Test-AWSDeployment.ps1 -Template sap-syb753-abap
-#    Test-AWSDeployment.ps1 -Template sios-protection-suite-for-sap-optimized
-#    Test-AWSDeployment.ps1 -Template sios-protection-suite-no-cluster -OSVersion RHEL76
+#   .\Test-AWSDeployment.ps1 -Profile qa -Branch develop -Linux -Verbose
 #
 # Notes:
-#   
+#   There aren't any /ci/payg-*.json files in this repo as AWS can't/doesn't test them, so 
+#   you'll need to provide a local path to a parameters file. You can use '.\' for ParameterFilePath,
+#   and it will grab the included sios-datakeeper-master-parameters.json file. The second example 
+#   above works with that file.
+
 [CmdletBinding()]
 Param(
-    [Parameter(Mandatory=$true)]
-    [ValidateSet("sap-syb753-abap","no-cluster", "for-sap-optimized")]
-    [String] $Template = $Null,
-
-    [Parameter(Mandatory=$false)]
-    [ValidateSet("SLES12SP1","SLES12SP2","SLES12SP3","SLES12SP4","SLES15","SLES15SP1","RHEL74","RHEL75","RHEL76","RHEL80")]
-    [String] $OSVersion = $Null,
-
-    [Parameter(Mandatory=$false)]
-    [String] $Label = $Null
+    [string[]] $Regions = $Null,
+    [string]   $Branch = "",
+    [string]   $Profile = "",
+    [string[]] $OSVersions = $Null,
+    [Switch]   $Windows,
+    [Switch]   $Linux
 )
 
-function Get-ParametersFromURL() {
-    Param(
-        [Parameter(Mandatory=$False,Position=0)]
-        [string] $URL
-    )
-    
-    return Invoke-WebRequest -Uri $URL | ConvertFrom-Json
-}
-
-function Get-ParametersFromFile() {
-    Param(
-        [Parameter(Mandatory=$False,Position=0)]
-        [string] $Path
-    )
-    
-    return Get-Content $Path | Out-String | ConvertFrom-Json
-}
-
-### MAIN ##############################################################################
-[string]   $templateURLBase = "https://s3.amazonaws.com/quickstart-sios-protection-suite-$Template/test"
-[string]   $templateURL = "$templateURLBase/templates/sios-protection-suite-$Template-master.template"
-[string[]] $LinuxOSVersions = "SLES12SP1","SLES12SP2","SLES12SP3","SLES12SP4","SLES15","SLES15SP1","RHEL74","RHEL75","RHEL76","RHEL80"
-if($Template -eq "sios-protection-suite-no-cluster" -AND -Not $LinuxOSVersions.Contains($OSVersion)) {
-        Write-Error "USAGE`nNew-AWSDeployment.ps1 -Region us-east-1 -Template sios-protection-suite-no-cluster -OSversion <SLES12SP1|SLES12SP2|SLES12SP3|SLES12SP4|SLES15|SLES15SP1|RHEL74|RHEL75|RHEL76|RHEL80> -Verbose"
-        return 1
-}
-
-# look up common params from ci file
-$ParameterFilePath = $TemplateURLBase + "/ci/byol.json"
-$parameters = [System.Collections.ArrayList] (Get-ParametersFromURL -URL $ParameterFilePath)
-
-# bork out if parameters not set
-if( -Not $parameters ) {
-    Write-Error "Failed to parse parameters"
-    return 1
+if ($Branch -ne "") {
+    $TemplateURLBase += "/$Branch"
 } else {
-    Write-Verbose "Parameters parsed successfully"
+    $TemplateURLBase += "/test"
 }
 
-# lookup aws access and secret keys from local user creds
-$accessKey = ((Select-String -Path ~\.aws\credentials -Pattern '^aws_access_key_id = (.+)$').Matches[6].Groups[1]).Value
-$secretKey = ((Select-String -Path ~\.aws\credentials -Pattern '^aws_secret_access_key = (.+)$').Matches[6].Groups[1]).Value
-
-# update params
-($parameters | Where-Object -Property ParameterKey -like AvailabilityZones).ParameterValue = $region+"a,"+$region+"b"
-($parameters | Where-Object -Property ParameterKey -like AWSAccessKeyID).ParameterValue = $accessKey
-($parameters | Where-Object -Property ParameterKey -like AWSSecretAccessKey).ParameterValue = $secretKey
-$kpn = ($parameters | Where-Object -Property ParameterKey -like KeyPairName).ParameterValue
-$npw = ($parameters | Where-Object -Property ParameterKey -like NewRootPassword).ParameterValue
-$slu = ($parameters | Where-Object -Property ParameterKey -like SIOSLicenseKeyFtpURL).ParameterValue
-$rac = ($parameters | Where-Object -Property ParameterKey -like RemoteAccessCIDR).ParameterValue
-
-$parameters | Format-Table | Out-String -Stream | Write-Verbose
-
-# create label using username
-$customLabel = ""
-if($Label -ne $Null) {
-    $customLabel = $Label.ToUpper();
+if (-Not $Regions -Or $Regions -like "all") {
+    $Regions = @("ap-northeast-1","ap-northeast-2","ap-south-1","ap-southeast-1","ap-southeast-2","ca-central-1","eu-central-1","eu-north-1","eu-west-1","eu-west-2","eu-west-3","sa-east-1","us-east-1","us-east-2","us-west-1","us-west-2")
 }
-else {
-    $customLabel = & "whoami"
-    $customLabel = $customLabel.ToUpper().Replace("STEELEYE\","")
-    if($Template -eq "sios-protection-suite-no-cluster") {
-        $customLabel += "-$OSVersion-QA"
+
+if(-Not $OSVersions) {
+    $OSVersions = [System.Collections.ArrayList]@()
+    if($Windows) {
+        $OSVersions.Add("WS2012") > $Null
+        $OSVersions.Add("WS2012R2") > $Null
+        $OSVersions.Add("WS2016") > $Null
+        $OSVersions.Add("WS2019") > $Null
+    }
+    if($Linux) {
+        $OSVersions.Add("SLES12SP1") > $Null
+        $OSVersions.Add("SLES12SP2") > $Null
+        $OSVersions.Add("SLES12SP3") > $Null
+        $OSVersions.Add("SLES12SP4") > $Null
+        $OSVersions.Add("SLES12SP5") > $Null
+        $OSVersions.Add("SLES15") > $Null
+        $OSVersions.Add("SLES15SP1") > $Null
+        $OSVersions.Add("RHEL74") > $Null
+        $OSVersions.Add("RHEL75") > $Null
+        $OSVersions.Add("RHEL76") > $Null
+        $OSVersions.Add("RHEL77") > $Null
+        $OSVersions.Add("RHEL78") > $Null
+        $OSVersions.Add("RHEL80") > $Null
+        $OSVersions.Add("RHEL81") > $Null
+        $OSVersions.Add("RHEL82") > $Null
+    }
+}
+
+$i = 0
+$masterStacks = [ordered]@{}
+foreach ($region in $Regions) {
+    $i %= $Regions.Count
+    if($OSVersions[$i] -like "WS*") {
+        if($Profile) {
+            $masterStacks.Add($region,(C:\GitHub\quickstart-sios-qa\New-AWSDeployment.ps1 -OSVersion $OSVersions[$i] -DKVersion latestbuild -Verbose -ProfileName $Profile -Region $region -Branch $Branch))
+        } else {
+            $masterStacks.Add($region,(C:\GitHub\quickstart-sios-qa\New-AWSDeployment.ps1 -OSVersion $OSVersions[$i] -DKVersion latestbuild -Verbose -Region $region -Branch $Branch))
+        }
     } else {
-        $customLabel += "-SPSL-QA"
+        if($Profile) {
+            $masterStacks.Add($region,(C:\GitHub\quickstart-sios-qa\New-AWSDeployment.ps1 -OSVersion $OSVersions[$i] -SPSLVersion latestbuild -Verbose -ProfileName $Profile -Region $region -Branch $Branch))
+        } else {
+            $masterStacks.Add($region,(C:\GitHub\quickstart-sios-qa\New-AWSDeployment.ps1 -OSVersion $OSVersions[$i] -SPSLVersion latestbuild -Verbose -Region $region -Branch $Branch))
+        }
     }
+    $i += 1
 }
-
-# launch deployment
-Write-Verbose $templateURL
-
-Switch ($Template) {
-    "sap-syb753-abap" {
-        & "aws" cloudformation create-stack --profile currentgen --region us-east-1 --stack-name $customLabel --template-url $templateURL --parameters ParameterKey=AWSAccessKeyID,ParameterValue=$accessKey ParameterKey=AWSSecretAccessKey,ParameterValue=$secretKey ParameterKey=AvailabilityZones,ParameterValue="us-east-1a\,us-east-1b" ParameterKey=RemoteAccessCIDR,ParameterValue=$rac --capabilities CAPABILITY_IAM
-        break
-    }
-    "for-sap-optimized" {
-        & "aws" cloudformation create-stack --profile currentgen --disable-rollback --region us-east-1 --stack-name $customLabel --template-url $templateURL --parameters ParameterKey=AWSAccessKeyID,ParameterValue=$accessKey ParameterKey=AWSSecretAccessKey,ParameterValue=$secretKey ParameterKey=AvailabilityZones,ParameterValue="us-east-1a\,us-east-1b" ParameterKey=RemoteAccessCIDR,ParameterValue=$rac ParameterKey=KeyPairName,ParameterValue=$kpn ParameterKey=NewRootPassword,ParameterValue=$npw ParameterKey=SIOSLicenseKeyFtpURL,ParameterValue=$slu --capabilities CAPABILITY_IAM
-        break
-    }
-    "no-cluster" {
-        & "aws" cloudformation create-stack --profile currentgen --region us-east-1 --stack-name $customLabel --template-url $templateURL --parameters ParameterKey=AWSAccessKeyID,ParameterValue=$accessKey ParameterKey=AWSSecretAccessKey,ParameterValue=$secretKey ParameterKey=AvailabilityZones,ParameterValue="us-east-1a\,us-east-1b" ParameterKey=RemoteAccessCIDR,ParameterValue=$rac --capabilities CAPABILITY_IAM
-        break
-    }
-}
-
-return $results
+return $masterStacks

@@ -7,7 +7,7 @@
   {
     "Type": "TERM_MATCH",
     "Field": "location",
-    "Value": "US East (Ohio)"
+    "Value": "US West (N. California)"
   },
   {
     "Type": "TERM_MATCH",
