@@ -7,7 +7,7 @@
 #     $ec2info = .\Get-EC2InstanceSummary.ps1 -Profile $p
 #     foreach($r in $rs){
 #         "`n$r" >> "$outfile\${p}_instances"
-#         echo $ec2info["$r"] >> "$outfile\${p}_instances"
+#         echo $ec2info["$r"] | ft >> "$outfile\${p}_instances"
 #     }
 # }
 
@@ -32,6 +32,7 @@ foreach ($region in $Regions) {
         }
         $obj = [PSCustomObject]@{
             InstanceId      = $_.InstanceId
+            InstanceType    = $_.InstanceType
             InstanceNameTag = $nametag
             LaunchTime      = $_.LaunchTime
             State           = $_.State.Name

@@ -32,6 +32,7 @@ foreach ($region in $Regions) {
         }
         $obj = [PSCustomObject]@{
             VolumeId        = $_.VolumeId
+            VolumeSize      = $_.Size
             InstanceNameTag = $nametag
             InstanceId      = $_.Attachments.InstanceId
             CreateTime      = $_.CreateTime
