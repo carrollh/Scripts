@@ -11,7 +11,7 @@
 [CmdletBinding()]
 Param(
     [Parameter(Mandatory=$False)]
-    [string] $Profile = $Null,
+    [string] $Profile = '',
 
     [Parameter(Mandatory=$True)]
     [string] $Region,
@@ -32,17 +32,22 @@ function Set-Tags() {
     Write-Verbose "Setting tags on $Resource"
 
     # format the tags passed in as needed for the aws command
-    $tagString  = ""
     foreach ($key in $Tags.Keys) {
-        $tagString += "Key=$key,Value=" + $Tags[$key] + " "
-    }
-    aws ec2 create-tags --profile $Profile --region $Region --resources $Resource --tags $tagString
+        $tagString = "Key=$key,Value=" + $Tags[$key]
 
-    # indicate success or failure if -Verbose flag passed
-    if( $? ) {
-        Write-Verbose "Successfully set tags ($tagString) on $Resource"
-    } else {
-        Write-Verbose "Failed to set tags ($tagString) on $Resource with error code $LastExitCode"
+        if($Profile -ne '') {
+            aws ec2 create-tags --profile $Profile --region $Region --resources $Resource --tags $tagString
+        }
+        else {
+            aws ec2 create-tags --region $Region --resources $Resource --tags $tagString
+        }
+
+        # indicate success or failure if -Verbose flag passed
+        if( $? ) {
+            Write-Verbose "Successfully set tags ($tagString) on $Resource"
+        } else {
+            Write-Verbose "Failed to set tags ($tagString) on $Resource with error code $LastExitCode"
+        }
     }
 }
 
@@ -51,7 +56,13 @@ foreach ($instanceId in $InstanceIds) {
     Set-Tags -Resource $instanceId
 
     # lookup all volumes associated with this instance
-    $volumes = (aws ec2 describe-volumes --profile $Profile --region $Region --filters Name=attachment.instance-id,Values=$instanceId | ConvertFrom-Json).Volumes
+    if($Profile -ne '') {
+        $volumes = (aws ec2 describe-volumes --profile $Profile --region $Region --filters Name=attachment.instance-id,Values=$instanceId | ConvertFrom-Json).Volumes
+    }
+    else {
+        $volumes = (aws ec2 describe-volumes --region $Region --filters Name=attachment.instance-id,Values=$instanceId | ConvertFrom-Json).Volumes
+    }
+    
     if ($volumes.Count -lt 1) {
         Write-Verbose ("No volumes attached to $instanceId") 
     }
@@ -62,7 +73,12 @@ foreach ($instanceId in $InstanceIds) {
         Set-Tags -Resource $volumeId
 
         # lookup all snapshots associated with this volume
-        $snapshots = (aws ec2 describe-snapshots --profile $Profile --region $Region --filters Name=volume-id,Values=$volumeId | ConvertFrom-Json).Snapshots
+        if($Profile -ne '') {
+            $snapshots = (aws ec2 describe-snapshots --profile $Profile --region $Region --filters Name=volume-id,Values=$volumeId | ConvertFrom-Json).Snapshots
+        }
+        else {
+            $snapshots = (aws ec2 describe-snapshots --region $Region --filters Name=volume-id,Values=$volumeId | ConvertFrom-Json).Snapshots
+        }
 
         if ($snapshots.Count -lt 1) {
             Write-Verbose "No snapshots associated with $volumeId"
