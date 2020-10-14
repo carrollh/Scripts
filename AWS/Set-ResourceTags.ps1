@@ -3,10 +3,11 @@
 # of tags (key-value pairs) to be used as input.
 #
 # Example use:
+#     $instances = @("i-1234567890","i-0987654321")
 #     [Hashtable]$ht = @{}
 #     $ht.Add("Owner","hcarroll")
-#     $ht.Add("Purpose","Testing")
-#     .\Set-ResourceTags.ps1 -InstanceIds i-00cdea02749c1150a -Tags $ht -Region us-east-1 -Profile currentgen -Verbose
+#     $ht.Add("Purpose","Case 123456")
+#     .\Set-ResourceTags.ps1 -InstanceIds $instances -Tags $ht -Region us-east-1 -Verbose
 
 [CmdletBinding()]
 Param(
