@@ -80,7 +80,8 @@ foreach ($region in $Regions) {
     if( $AMIType -Like "BYOL" -AND $SIOSLicenseKeyFtpURL ) {
         ($parameters | Where-Object -Property ParameterKey -like SIOSLicenseKeyFtpURL).ParameterValue = $SIOSLicenseKeyFtpURL
     }
-    
+
+    ($parameters | Where-Object -Property ParameterKey -like NumberOfRDGWHosts).ParameterValue = 1
     ($parameters | Where-Object -Property ParameterKey -like AMIType).ParameterValue = $AMIType
     ($parameters | Where-Object -Property ParameterKey -like KeyPairName).ParameterValue = "AUTOMATION"
     ($parameters | Where-Object -Property ParameterKey -like ClusterNodeOSServerVersion).ParameterValue = $OSVersion
@@ -94,6 +95,7 @@ foreach ($region in $Regions) {
     ($parameters | Where-Object -Property ParameterKey -like SQLServiceAccountPassword).ParameterValue = "SIOS!5105?sios"
 
     ($parameters | Where-Object -Property ParameterKey -like QSS3BucketName).ParameterValue = "quickstart-sios-datakeeper"
+    ($parameters | Where-Object -Property ParameterKey -like QSS3BucketRegion).ParameterValue = 'us-east-1'
 
     if(($parameters | Where-Object -Property ParameterKey -like QSS3KeyPrefix) -eq $Null) {
         if($Branch) {

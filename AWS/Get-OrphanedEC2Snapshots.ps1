@@ -20,25 +20,33 @@ Param(
     [string] $Profile = '',
 
     [Parameter(Mandatory=$False)]
-    [string[]] $Regions = @("ap-east-1","ap-northeast-1","ap-northeast-2","ap-south-1","ap-southeast-1","ap-southeast-2","ca-central-1","eu-central-1","eu-north-1","eu-west-1","eu-west-2","eu-west-3","me-south-1","sa-east-1","us-east-1","us-east-2","us-west-1","us-west-2"),
+    [string[]] $Regions = $Null,
 
     [Parameter(Mandatory=$False)]
     [switch] $Delete
 )
 
+
+if ($Regions -eq $Null) {
+    $TargetRegions = (&"aws" ec2 describe-regions --profile $Profile --region us-east-1 --output json | ConvertFrom-Json).Regions.RegionName
+} else {
+    $TargetRegions = $Regions
+}
+Write-Verbose ("Scanning " + $TargetRegions.Count + " regions.")
+
 $self = (&"aws" sts get-caller-identity --profile $Profile --region us-east-1 --output json | ConvertFrom-Json).Account
 
 $snapshotTable = [Ordered]@{}
-foreach ($region in $Regions) {
+foreach ($region in $TargetRegions) {
     if($Profile -eq '') {
-        $amis = (&"aws" ec2 describe-images --region $Region --filters "Name=owner-id,Values=$self" --output json | ConvertFrom-Json).Images
-        $volumes = (& "aws" ec2 describe-volumes --region $Region --output json | ConvertFrom-Json).Volumes
-        $snapshots = (&"aws" ec2 describe-snapshots --region $Region --filters "Name=owner-id,Values=$self" --output json | ConvertFrom-Json).Snapshots
+        $amis = (&"aws" ec2 describe-images --region $region --filters "Name=owner-id,Values=$self" --output json | ConvertFrom-Json).Images
+        $volumes = (& "aws" ec2 describe-volumes --region $region --output json | ConvertFrom-Json).Volumes
+        $snapshots = (&"aws" ec2 describe-snapshots --region $region --filters "Name=owner-id,Values=$self" --output json | ConvertFrom-Json).Snapshots
     }
     else {
-        $amis = (&"aws" ec2 describe-images --profile $Profile --region $Region --filters "Name=owner-id,Values=$self" --output json | ConvertFrom-Json).Images
-        $volumes = (& "aws" ec2 describe-volumes --profile $Profile --region $Region --output json | ConvertFrom-Json).Volumes
-        $snapshots = (&"aws" ec2 describe-snapshots --profile $Profile --region $Region --filters "Name=owner-id,Values=$self" --output json | ConvertFrom-Json).Snapshots
+        $amis = (&"aws" ec2 describe-images --profile $Profile --region $region --filters "Name=owner-id,Values=$self" --output json | ConvertFrom-Json).Images
+        $volumes = (& "aws" ec2 describe-volumes --profile $Profile --region $region --output json | ConvertFrom-Json).Volumes
+        $snapshots = (&"aws" ec2 describe-snapshots --profile $Profile --region $region --filters "Name=owner-id,Values=$self" --output json | ConvertFrom-Json).Snapshots
     }
     $toKeep = [System.Collections.ArrayList]@()
     $toDelete = [System.Collections.ArrayList]@()

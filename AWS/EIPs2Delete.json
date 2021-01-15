@@ -1,0 +1,1277 @@
+﻿{
+    "automation":  null,
+    "currentgen":  [
+                       {
+                           "AllocationId":  "eipalloc-0ae09ab3f718a79c5",
+                           "AssociationId":  null,
+                           "CarrierIp":  null,
+                           "CustomerOwnedIp":  null,
+                           "CustomerOwnedIpv4Pool":  null,
+                           "Domain":  {
+                                          "Value":  "vpc"
+                                      },
+                           "InstanceId":  null,
+                           "NetworkBorderGroup":  "eu-west-2",
+                           "NetworkInterfaceId":  null,
+                           "NetworkInterfaceOwnerId":  null,
+                           "PrivateIpAddress":  null,
+                           "PublicIp":  "18.133.203.245",
+                           "PublicIpv4Pool":  "amazon",
+                           "Tags":  [
+
+                                    ]
+                       },
+                       {
+                           "AllocationId":  "eipalloc-093f04c2942867f8e",
+                           "AssociationId":  null,
+                           "CarrierIp":  null,
+                           "CustomerOwnedIp":  null,
+                           "CustomerOwnedIpv4Pool":  null,
+                           "Domain":  {
+                                          "Value":  "vpc"
+                                      },
+                           "InstanceId":  null,
+                           "NetworkBorderGroup":  "eu-west-2",
+                           "NetworkInterfaceId":  null,
+                           "NetworkInterfaceOwnerId":  null,
+                           "PrivateIpAddress":  null,
+                           "PublicIp":  "18.134.36.141",
+                           "PublicIpv4Pool":  "amazon",
+                           "Tags":  [
+
+                                    ]
+                       },
+                       {
+                           "AllocationId":  "eipalloc-02be40fafa2bb3e12",
+                           "AssociationId":  null,
+                           "CarrierIp":  null,
+                           "CustomerOwnedIp":  null,
+                           "CustomerOwnedIpv4Pool":  null,
+                           "Domain":  {
+                                          "Value":  "vpc"
+                                      },
+                           "InstanceId":  null,
+                           "NetworkBorderGroup":  "eu-west-2",
+                           "NetworkInterfaceId":  null,
+                           "NetworkInterfaceOwnerId":  null,
+                           "PrivateIpAddress":  null,
+                           "PublicIp":  "3.9.101.213",
+                           "PublicIpv4Pool":  "amazon",
+                           "Tags":  [
+
+                                    ]
+                       },
+                       {
+                           "AllocationId":  "eipalloc-0a703b0e260c1566c",
+                           "AssociationId":  null,
+                           "CarrierIp":  null,
+                           "CustomerOwnedIp":  null,
+                           "CustomerOwnedIpv4Pool":  null,
+                           "Domain":  {
+                                          "Value":  "vpc"
+                                      },
+                           "InstanceId":  null,
+                           "NetworkBorderGroup":  "ap-northeast-1",
+                           "NetworkInterfaceId":  null,
+                           "NetworkInterfaceOwnerId":  null,
+                           "PrivateIpAddress":  null,
+                           "PublicIp":  "52.68.214.133",
+                           "PublicIpv4Pool":  "amazon",
+                           "Tags":  [
+                                        {
+                                            "Key":  "Name",
+                                            "Value":  "eip_bb_2"
+                                        }
+                                    ]
+                       },
+                       {
+                           "AllocationId":  "eipalloc-0e6ab1c3ae435d93e",
+                           "AssociationId":  null,
+                           "CarrierIp":  null,
+                           "CustomerOwnedIp":  null,
+                           "CustomerOwnedIpv4Pool":  null,
+                           "Domain":  {
+                                          "Value":  "vpc"
+                                      },
+                           "InstanceId":  null,
+                           "NetworkBorderGroup":  "ap-northeast-1",
+                           "NetworkInterfaceId":  null,
+                           "NetworkInterfaceOwnerId":  null,
+                           "PrivateIpAddress":  null,
+                           "PublicIp":  "52.68.227.202",
+                           "PublicIpv4Pool":  "amazon",
+                           "Tags":  [
+                                        {
+                                            "Key":  "Name",
+                                            "Value":  "eip_bb_1"
+                                        }
+                                    ]
+                       },
+                       {
+                           "AllocationId":  "eipalloc-018450a128e229f0e",
+                           "AssociationId":  null,
+                           "CarrierIp":  null,
+                           "CustomerOwnedIp":  null,
+                           "CustomerOwnedIpv4Pool":  null,
+                           "Domain":  {
+                                          "Value":  "vpc"
+                                      },
+                           "InstanceId":  null,
+                           "NetworkBorderGroup":  "ca-central-1",
+                           "NetworkInterfaceId":  null,
+                           "NetworkInterfaceOwnerId":  null,
+                           "PrivateIpAddress":  null,
+                           "PublicIp":  "15.222.161.192",
+                           "PublicIpv4Pool":  "amazon",
+                           "Tags":  [
+
+                                    ]
+                       },
+                       {
+                           "AllocationId":  "eipalloc-0509022db0bc1f764",
+                           "AssociationId":  null,
+                           "CarrierIp":  null,
+                           "CustomerOwnedIp":  null,
+                           "CustomerOwnedIpv4Pool":  null,
+                           "Domain":  {
+                                          "Value":  "vpc"
+                                      },
+                           "InstanceId":  null,
+                           "NetworkBorderGroup":  "ca-central-1",
+                           "NetworkInterfaceId":  null,
+                           "NetworkInterfaceOwnerId":  null,
+                           "PrivateIpAddress":  null,
+                           "PublicIp":  "3.96.73.11",
+                           "PublicIpv4Pool":  "amazon",
+                           "Tags":  [
+
+                                    ]
+                       },
+                       {
+                           "AllocationId":  "eipalloc-01415fa197910d770",
+                           "AssociationId":  null,
+                           "CarrierIp":  null,
+                           "CustomerOwnedIp":  null,
+                           "CustomerOwnedIpv4Pool":  null,
+                           "Domain":  {
+                                          "Value":  "vpc"
+                                      },
+                           "InstanceId":  null,
+                           "NetworkBorderGroup":  "us-east-1",
+                           "NetworkInterfaceId":  null,
+                           "NetworkInterfaceOwnerId":  null,
+                           "PrivateIpAddress":  null,
+                           "PublicIp":  "52.203.115.200",
+                           "PublicIpv4Pool":  "amazon",
+                           "Tags":  [
+                                        {
+                                            "Key":  "aws:cloudformation:stack-name",
+                                            "Value":  "CF-test-RDGWStack-5EI26NDIYWMI"
+                                        },
+                                        {
+                                            "Key":  "aws:cloudformation:stack-id",
+                                            "Value":  "arn:aws:cloudformation:us-east-1:881352791487:stack/CF-test-RDGWStack-5EI26NDIYWMI/c0767b40-3e78-11eb-a6ed-1201663355d3"
+                                        },
+                                        {
+                                            "Key":  "aws:cloudformation:logical-id",
+                                            "Value":  "EIP1"
+                                        }
+                                    ]
+                       },
+                       {
+                           "AllocationId":  "eipalloc-0500d1b783ad8f534",
+                           "AssociationId":  null,
+                           "CarrierIp":  null,
+                           "CustomerOwnedIp":  null,
+                           "CustomerOwnedIpv4Pool":  null,
+                           "Domain":  {
+                                          "Value":  "vpc"
+                                      },
+                           "InstanceId":  null,
+                           "NetworkBorderGroup":  "us-east-2",
+                           "NetworkInterfaceId":  null,
+                           "NetworkInterfaceOwnerId":  null,
+                           "PrivateIpAddress":  null,
+                           "PublicIp":  "3.17.195.255",
+                           "PublicIpv4Pool":  "amazon",
+                           "Tags":  [
+                                        {
+                                            "Key":  "Name",
+                                            "Value":  "jbc_eip_1"
+                                        }
+                                    ]
+                       },
+                       {
+                           "AllocationId":  "eipalloc-03d33212ebac25c94",
+                           "AssociationId":  null,
+                           "CarrierIp":  null,
+                           "CustomerOwnedIp":  null,
+                           "CustomerOwnedIpv4Pool":  null,
+                           "Domain":  {
+                                          "Value":  "vpc"
+                                      },
+                           "InstanceId":  null,
+                           "NetworkBorderGroup":  "us-east-2",
+                           "NetworkInterfaceId":  null,
+                           "NetworkInterfaceOwnerId":  null,
+                           "PrivateIpAddress":  null,
+                           "PublicIp":  "3.17.210.82",
+                           "PublicIpv4Pool":  "amazon",
+                           "Tags":  [
+                                        {
+                                            "Key":  "Name",
+                                            "Value":  "jbc_eip_2"
+                                        }
+                                    ]
+                       },
+                       {
+                           "AllocationId":  "eipalloc-014da97ac5ad958fa",
+                           "AssociationId":  null,
+                           "CarrierIp":  null,
+                           "CustomerOwnedIp":  null,
+                           "CustomerOwnedIpv4Pool":  null,
+                           "Domain":  {
+                                          "Value":  "vpc"
+                                      },
+                           "InstanceId":  null,
+                           "NetworkBorderGroup":  "us-west-2",
+                           "NetworkInterfaceId":  null,
+                           "NetworkInterfaceOwnerId":  null,
+                           "PrivateIpAddress":  null,
+                           "PublicIp":  "52.11.41.92",
+                           "PublicIpv4Pool":  "amazon",
+                           "Tags":  [
+                                        {
+                                            "Key":  "Name",
+                                            "Value":  "JBC_MAX3"
+                                        }
+                                    ]
+                       },
+                       {
+                           "AllocationId":  "eipalloc-0dbe836c14779b66c",
+                           "AssociationId":  null,
+                           "CarrierIp":  null,
+                           "CustomerOwnedIp":  null,
+                           "CustomerOwnedIpv4Pool":  null,
+                           "Domain":  {
+                                          "Value":  "vpc"
+                                      },
+                           "InstanceId":  null,
+                           "NetworkBorderGroup":  "us-west-2",
+                           "NetworkInterfaceId":  null,
+                           "NetworkInterfaceOwnerId":  null,
+                           "PrivateIpAddress":  null,
+                           "PublicIp":  "52.38.241.144",
+                           "PublicIpv4Pool":  "amazon",
+                           "Tags":  [
+                                        {
+                                            "Key":  "Name",
+                                            "Value":  "JBC-MAX1"
+                                        }
+                                    ]
+                       },
+                       {
+                           "AllocationId":  "eipalloc-0603dc7efad60568e",
+                           "AssociationId":  null,
+                           "CarrierIp":  null,
+                           "CustomerOwnedIp":  null,
+                           "CustomerOwnedIpv4Pool":  null,
+                           "Domain":  {
+                                          "Value":  "vpc"
+                                      },
+                           "InstanceId":  null,
+                           "NetworkBorderGroup":  "us-west-2",
+                           "NetworkInterfaceId":  null,
+                           "NetworkInterfaceOwnerId":  null,
+                           "PrivateIpAddress":  null,
+                           "PublicIp":  "54.189.30.198",
+                           "PublicIpv4Pool":  "amazon",
+                           "Tags":  [
+                                        {
+                                            "Key":  "Name",
+                                            "Value":  "JBC-MAX2"
+                                        }
+                                    ]
+                       }
+                   ],
+    "dev":  [
+                {
+                    "AllocationId":  "eipalloc-05cb590a02e373aed",
+                    "AssociationId":  null,
+                    "CarrierIp":  null,
+                    "CustomerOwnedIp":  null,
+                    "CustomerOwnedIpv4Pool":  null,
+                    "Domain":  {
+                                   "Value":  "vpc"
+                               },
+                    "InstanceId":  null,
+                    "NetworkBorderGroup":  "ap-south-1",
+                    "NetworkInterfaceId":  null,
+                    "NetworkInterfaceOwnerId":  null,
+                    "PrivateIpAddress":  null,
+                    "PublicIp":  "15.206.39.213",
+                    "PublicIpv4Pool":  "amazon",
+                    "Tags":  [
+                                 {
+                                     "Key":  "aws:cloudformation:stack-id",
+                                     "Value":  "arn:aws:cloudformation:ap-south-1:171925695631:stack/HAC-DK-2012R2-SQL-BYOL-BYOL-RDGWStack-JQST2J8E6FXF/ae2a02d0-7a07-11ea-a50a-0aa78e4848ba"
+                                 },
+                                 {
+                                     "Key":  "aws:cloudformation:stack-name",
+                                     "Value":  "HAC-DK-2012R2-SQL-BYOL-BYOL-RDGWStack-JQST2J8E6FXF"
+                                 },
+                                 {
+                                     "Key":  "aws:cloudformation:logical-id",
+                                     "Value":  "EIP1"
+                                 }
+                             ]
+                },
+                {
+                    "AllocationId":  "eipalloc-05337f66c89e6d9e5",
+                    "AssociationId":  null,
+                    "CarrierIp":  null,
+                    "CustomerOwnedIp":  null,
+                    "CustomerOwnedIpv4Pool":  null,
+                    "Domain":  {
+                                   "Value":  "vpc"
+                               },
+                    "InstanceId":  null,
+                    "NetworkBorderGroup":  "eu-west-2",
+                    "NetworkInterfaceId":  null,
+                    "NetworkInterfaceOwnerId":  null,
+                    "PrivateIpAddress":  null,
+                    "PublicIp":  "3.11.54.11",
+                    "PublicIpv4Pool":  "amazon",
+                    "Tags":  [
+                                 {
+                                     "Key":  "aws:cloudformation:stack-name",
+                                     "Value":  "HAC-DK-2019-SQL-PAYG-PAYG-RDGWStack-11O8ZMYGMF1XQ"
+                                 },
+                                 {
+                                     "Key":  "aws:cloudformation:logical-id",
+                                     "Value":  "EIP1"
+                                 },
+                                 {
+                                     "Key":  "aws:cloudformation:stack-id",
+                                     "Value":  "arn:aws:cloudformation:eu-west-2:171925695631:stack/HAC-DK-2019-SQL-PAYG-PAYG-RDGWStack-11O8ZMYGMF1XQ/1e2fd640-7a08-11ea-b8f7-0a7f7081acf8"
+                                 }
+                             ]
+                },
+                {
+                    "AllocationId":  "eipalloc-0d3af2e7d7a792e80",
+                    "AssociationId":  null,
+                    "CarrierIp":  null,
+                    "CustomerOwnedIp":  null,
+                    "CustomerOwnedIpv4Pool":  null,
+                    "Domain":  {
+                                   "Value":  "vpc"
+                               },
+                    "InstanceId":  null,
+                    "NetworkBorderGroup":  "ap-northeast-1",
+                    "NetworkInterfaceId":  null,
+                    "NetworkInterfaceOwnerId":  null,
+                    "PrivateIpAddress":  null,
+                    "PublicIp":  "13.114.111.180",
+                    "PublicIpv4Pool":  "amazon",
+                    "Tags":  [
+                                 {
+                                     "Key":  "Name",
+                                     "Value":  "eip_ew_2"
+                                 }
+                             ]
+                },
+                {
+                    "AllocationId":  "eipalloc-0dffad5a5c0b9d1a4",
+                    "AssociationId":  null,
+                    "CarrierIp":  null,
+                    "CustomerOwnedIp":  null,
+                    "CustomerOwnedIpv4Pool":  null,
+                    "Domain":  {
+                                   "Value":  "vpc"
+                               },
+                    "InstanceId":  null,
+                    "NetworkBorderGroup":  "ap-northeast-1",
+                    "NetworkInterfaceId":  null,
+                    "NetworkInterfaceOwnerId":  null,
+                    "PrivateIpAddress":  null,
+                    "PublicIp":  "52.194.173.193",
+                    "PublicIpv4Pool":  "amazon",
+                    "Tags":  [
+                                 {
+                                     "Key":  "Name",
+                                     "Value":  "eip_ew_1"
+                                 }
+                             ]
+                },
+                {
+                    "AllocationId":  "eipalloc-0becd82b7fe16c1ba",
+                    "AssociationId":  null,
+                    "CarrierIp":  null,
+                    "CustomerOwnedIp":  null,
+                    "CustomerOwnedIpv4Pool":  null,
+                    "Domain":  {
+                                   "Value":  "vpc"
+                               },
+                    "InstanceId":  null,
+                    "NetworkBorderGroup":  "ca-central-1",
+                    "NetworkInterfaceId":  null,
+                    "NetworkInterfaceOwnerId":  null,
+                    "PrivateIpAddress":  null,
+                    "PublicIp":  "15.223.19.79",
+                    "PublicIpv4Pool":  "amazon",
+                    "Tags":  [
+                                 {
+                                     "Key":  "aws:cloudformation:logical-id",
+                                     "Value":  "EIP1"
+                                 },
+                                 {
+                                     "Key":  "aws:cloudformation:stack-name",
+                                     "Value":  "DLI-DKCE-RDGWStack-1TZJ81T0LLQSA"
+                                 },
+                                 {
+                                     "Key":  "aws:cloudformation:stack-id",
+                                     "Value":  "arn:aws:cloudformation:ca-central-1:171925695631:stack/DLI-DKCE-RDGWStack-1TZJ81T0LLQSA/ddfe7620-ace9-11ea-a23f-0e05939fd42e"
+                                 }
+                             ]
+                },
+                {
+                    "AllocationId":  "eipalloc-0a04d36a4e2e27b24",
+                    "AssociationId":  null,
+                    "CarrierIp":  null,
+                    "CustomerOwnedIp":  null,
+                    "CustomerOwnedIpv4Pool":  null,
+                    "Domain":  {
+                                   "Value":  "vpc"
+                               },
+                    "InstanceId":  null,
+                    "NetworkBorderGroup":  "us-east-1",
+                    "NetworkInterfaceId":  null,
+                    "NetworkInterfaceOwnerId":  null,
+                    "PrivateIpAddress":  null,
+                    "PublicIp":  "3.92.168.77",
+                    "PublicIpv4Pool":  "amazon",
+                    "Tags":  [
+                                 {
+                                     "Key":  "Name",
+                                     "Value":  "eip_ew_2"
+                                 }
+                             ]
+                },
+                {
+                    "AllocationId":  "eipalloc-0d97d7a0015f5d75b",
+                    "AssociationId":  null,
+                    "CarrierIp":  null,
+                    "CustomerOwnedIp":  null,
+                    "CustomerOwnedIpv4Pool":  null,
+                    "Domain":  {
+                                   "Value":  "vpc"
+                               },
+                    "InstanceId":  null,
+                    "NetworkBorderGroup":  "us-east-1",
+                    "NetworkInterfaceId":  null,
+                    "NetworkInterfaceOwnerId":  null,
+                    "PrivateIpAddress":  null,
+                    "PublicIp":  "34.201.234.23",
+                    "PublicIpv4Pool":  "amazon",
+                    "Tags":  [
+                                 {
+                                     "Key":  "Name",
+                                     "Value":  "eip_ew_1"
+                                 }
+                             ]
+                },
+                {
+                    "AllocationId":  "eipalloc-093b9bb5e8ea45354",
+                    "AssociationId":  null,
+                    "CarrierIp":  null,
+                    "CustomerOwnedIp":  null,
+                    "CustomerOwnedIpv4Pool":  null,
+                    "Domain":  {
+                                   "Value":  "vpc"
+                               },
+                    "InstanceId":  null,
+                    "NetworkBorderGroup":  "us-east-1",
+                    "NetworkInterfaceId":  null,
+                    "NetworkInterfaceOwnerId":  null,
+                    "PrivateIpAddress":  null,
+                    "PublicIp":  "34.226.177.234",
+                    "PublicIpv4Pool":  "amazon",
+                    "Tags":  [
+                                 {
+                                     "Key":  "Name",
+                                     "Value":  "AG_DL_HANA2"
+                                 }
+                             ]
+                },
+                {
+                    "AllocationId":  "eipalloc-0f249d3ea91edcf16",
+                    "AssociationId":  null,
+                    "CarrierIp":  null,
+                    "CustomerOwnedIp":  null,
+                    "CustomerOwnedIpv4Pool":  null,
+                    "Domain":  {
+                                   "Value":  "vpc"
+                               },
+                    "InstanceId":  null,
+                    "NetworkBorderGroup":  "us-east-1",
+                    "NetworkInterfaceId":  null,
+                    "NetworkInterfaceOwnerId":  null,
+                    "PrivateIpAddress":  null,
+                    "PublicIp":  "52.7.4.224",
+                    "PublicIpv4Pool":  "amazon",
+                    "Tags":  [
+                                 {
+                                     "Key":  "Name",
+                                     "Value":  "AG_DL_HANA1"
+                                 }
+                             ]
+                },
+                {
+                    "AllocationId":  "eipalloc-0fb28d8dde1b4122f",
+                    "AssociationId":  null,
+                    "CarrierIp":  null,
+                    "CustomerOwnedIp":  null,
+                    "CustomerOwnedIpv4Pool":  null,
+                    "Domain":  {
+                                   "Value":  "vpc"
+                               },
+                    "InstanceId":  null,
+                    "NetworkBorderGroup":  "us-east-1",
+                    "NetworkInterfaceId":  null,
+                    "NetworkInterfaceOwnerId":  null,
+                    "PrivateIpAddress":  null,
+                    "PublicIp":  "54.158.106.227",
+                    "PublicIpv4Pool":  "amazon",
+                    "Tags":  [
+
+                             ]
+                },
+                {
+                    "AllocationId":  "eipalloc-00c486464f680c777",
+                    "AssociationId":  null,
+                    "CarrierIp":  null,
+                    "CustomerOwnedIp":  null,
+                    "CustomerOwnedIpv4Pool":  null,
+                    "Domain":  {
+                                   "Value":  "vpc"
+                               },
+                    "InstanceId":  null,
+                    "NetworkBorderGroup":  "us-east-1",
+                    "NetworkInterfaceId":  null,
+                    "NetworkInterfaceOwnerId":  null,
+                    "PrivateIpAddress":  null,
+                    "PublicIp":  "54.162.77.152",
+                    "PublicIpv4Pool":  "amazon",
+                    "Tags":  [
+
+                             ]
+                },
+                {
+                    "AllocationId":  "eipalloc-08f9c6e78390e5be7",
+                    "AssociationId":  null,
+                    "CarrierIp":  null,
+                    "CustomerOwnedIp":  null,
+                    "CustomerOwnedIpv4Pool":  null,
+                    "Domain":  {
+                                   "Value":  "vpc"
+                               },
+                    "InstanceId":  null,
+                    "NetworkBorderGroup":  "us-east-2",
+                    "NetworkInterfaceId":  null,
+                    "NetworkInterfaceOwnerId":  null,
+                    "PrivateIpAddress":  null,
+                    "PublicIp":  "3.137.72.101",
+                    "PublicIpv4Pool":  "amazon",
+                    "Tags":  [
+                                 {
+                                     "Key":  "Name",
+                                     "Value":  "jbb_recovery"
+                                 }
+                             ]
+                },
+                {
+                    "AllocationId":  "eipalloc-08874a6ce59ecc04d",
+                    "AssociationId":  null,
+                    "CarrierIp":  null,
+                    "CustomerOwnedIp":  null,
+                    "CustomerOwnedIpv4Pool":  null,
+                    "Domain":  {
+                                   "Value":  "vpc"
+                               },
+                    "InstanceId":  null,
+                    "NetworkBorderGroup":  "us-east-2",
+                    "NetworkInterfaceId":  null,
+                    "NetworkInterfaceOwnerId":  null,
+                    "PrivateIpAddress":  null,
+                    "PublicIp":  "3.14.2.21",
+                    "PublicIpv4Pool":  "amazon",
+                    "Tags":  [
+                                 {
+                                     "Key":  "Name",
+                                     "Value":  "Amol_Test_VM_1 jbcsap1"
+                                 }
+                             ]
+                },
+                {
+                    "AllocationId":  "eipalloc-09bc2d6ce42135bb5",
+                    "AssociationId":  null,
+                    "CarrierIp":  null,
+                    "CustomerOwnedIp":  null,
+                    "CustomerOwnedIpv4Pool":  null,
+                    "Domain":  {
+                                   "Value":  "vpc"
+                               },
+                    "InstanceId":  null,
+                    "NetworkBorderGroup":  "us-east-2",
+                    "NetworkInterfaceId":  null,
+                    "NetworkInterfaceOwnerId":  null,
+                    "PrivateIpAddress":  null,
+                    "PublicIp":  "3.16.184.252",
+                    "PublicIpv4Pool":  "amazon",
+                    "Tags":  [
+                                 {
+                                     "Key":  "Name",
+                                     "Value":  "SLES_11_T2 jbcsap2"
+                                 }
+                             ]
+                },
+                {
+                    "AllocationId":  "eipalloc-08b5ad259403eb390",
+                    "AssociationId":  null,
+                    "CarrierIp":  null,
+                    "CustomerOwnedIp":  null,
+                    "CustomerOwnedIpv4Pool":  null,
+                    "Domain":  {
+                                   "Value":  "vpc"
+                               },
+                    "InstanceId":  null,
+                    "NetworkBorderGroup":  "us-east-2",
+                    "NetworkInterfaceId":  null,
+                    "NetworkInterfaceOwnerId":  null,
+                    "PrivateIpAddress":  null,
+                    "PublicIp":  "3.17.245.39",
+                    "PublicIpv4Pool":  "amazon",
+                    "Tags":  [
+                                 {
+                                     "Key":  "Name",
+                                     "Value":  "Amol__2 jbcsp3"
+                                 }
+                             ]
+                },
+                {
+                    "AllocationId":  "eipalloc-0cde694d3f2151b03",
+                    "AssociationId":  null,
+                    "CarrierIp":  null,
+                    "CustomerOwnedIp":  null,
+                    "CustomerOwnedIpv4Pool":  null,
+                    "Domain":  {
+                                   "Value":  "vpc"
+                               },
+                    "InstanceId":  null,
+                    "NetworkBorderGroup":  "us-west-1",
+                    "NetworkInterfaceId":  null,
+                    "NetworkInterfaceOwnerId":  null,
+                    "PrivateIpAddress":  null,
+                    "PublicIp":  "52.8.214.182",
+                    "PublicIpv4Pool":  "amazon",
+                    "Tags":  [
+                                 {
+                                     "Key":  "Name",
+                                     "Value":  "jbc_sap1"
+                                 }
+                             ]
+                },
+                {
+                    "AllocationId":  "eipalloc-067ffe194562e2068",
+                    "AssociationId":  null,
+                    "CarrierIp":  null,
+                    "CustomerOwnedIp":  null,
+                    "CustomerOwnedIpv4Pool":  null,
+                    "Domain":  {
+                                   "Value":  "vpc"
+                               },
+                    "InstanceId":  null,
+                    "NetworkBorderGroup":  "us-west-1",
+                    "NetworkInterfaceId":  null,
+                    "NetworkInterfaceOwnerId":  null,
+                    "PrivateIpAddress":  null,
+                    "PublicIp":  "52.9.85.119",
+                    "PublicIpv4Pool":  "amazon",
+                    "Tags":  [
+                                 {
+                                     "Key":  "Name",
+                                     "Value":  "jbc_sap2"
+                                 }
+                             ]
+                },
+                {
+                    "AllocationId":  "eipalloc-0afc2afe0187fb32d",
+                    "AssociationId":  null,
+                    "CarrierIp":  null,
+                    "CustomerOwnedIp":  null,
+                    "CustomerOwnedIpv4Pool":  null,
+                    "Domain":  {
+                                   "Value":  "vpc"
+                               },
+                    "InstanceId":  null,
+                    "NetworkBorderGroup":  "us-west-1",
+                    "NetworkInterfaceId":  null,
+                    "NetworkInterfaceOwnerId":  null,
+                    "PrivateIpAddress":  null,
+                    "PublicIp":  "54.241.235.196",
+                    "PublicIpv4Pool":  "amazon",
+                    "Tags":  [
+                                 {
+                                     "Key":  "aws:cloudformation:stack-name",
+                                     "Value":  "COSKREY-DKCE-SQL-PAYG-PAYG-RDGWStack-1058RXG97A34V"
+                                 },
+                                 {
+                                     "Key":  "aws:cloudformation:stack-id",
+                                     "Value":  "arn:aws:cloudformation:us-west-1:171925695631:stack/COSKREY-DKCE-SQL-PAYG-PAYG-RDGWStack-1058RXG97A34V/16e663e0-c06c-11ea-bff2-025feafd00d3"
+                                 },
+                                 {
+                                     "Key":  "Name",
+                                     "Value":  "jbc_sap3"
+                                 },
+                                 {
+                                     "Key":  "aws:cloudformation:logical-id",
+                                     "Value":  "EIP1"
+                                 }
+                             ]
+                },
+                {
+                    "AllocationId":  "eipalloc-04fa86387fa94f8b0",
+                    "AssociationId":  null,
+                    "CarrierIp":  null,
+                    "CustomerOwnedIp":  null,
+                    "CustomerOwnedIpv4Pool":  null,
+                    "Domain":  {
+                                   "Value":  "vpc"
+                               },
+                    "InstanceId":  null,
+                    "NetworkBorderGroup":  "us-west-2",
+                    "NetworkInterfaceId":  null,
+                    "NetworkInterfaceOwnerId":  null,
+                    "PrivateIpAddress":  null,
+                    "PublicIp":  "54.184.199.152",
+                    "PublicIpv4Pool":  "amazon",
+                    "Tags":  [
+                                 {
+                                     "Key":  "Name",
+                                     "Value":  "ewilliams_sap_maxdb_1"
+                                 }
+                             ]
+                }
+            ],
+    "ps":  null,
+    "qa":  [
+               {
+                   "AllocationId":  "eipalloc-00ecc9c4958508431",
+                   "AssociationId":  null,
+                   "CarrierIp":  null,
+                   "CustomerOwnedIp":  null,
+                   "CustomerOwnedIpv4Pool":  null,
+                   "Domain":  {
+                                  "Value":  "vpc"
+                              },
+                   "InstanceId":  null,
+                   "NetworkBorderGroup":  "ca-central-1",
+                   "NetworkInterfaceId":  null,
+                   "NetworkInterfaceOwnerId":  null,
+                   "PrivateIpAddress":  null,
+                   "PublicIp":  "52.60.164.152",
+                   "PublicIpv4Pool":  "amazon",
+                   "Tags":  [
+
+                            ]
+               },
+               {
+                   "AllocationId":  "eipalloc-0e0fc1e016f56a486",
+                   "AssociationId":  null,
+                   "CarrierIp":  null,
+                   "CustomerOwnedIp":  null,
+                   "CustomerOwnedIpv4Pool":  null,
+                   "Domain":  {
+                                  "Value":  "vpc"
+                              },
+                   "InstanceId":  null,
+                   "NetworkBorderGroup":  "ca-central-1",
+                   "NetworkInterfaceId":  null,
+                   "NetworkInterfaceOwnerId":  null,
+                   "PrivateIpAddress":  null,
+                   "PublicIp":  "99.79.156.229",
+                   "PublicIpv4Pool":  "amazon",
+                   "Tags":  [
+
+                            ]
+               },
+               {
+                   "AllocationId":  "eipalloc-046d1da77bd941aa1",
+                   "AssociationId":  null,
+                   "CarrierIp":  null,
+                   "CustomerOwnedIp":  null,
+                   "CustomerOwnedIpv4Pool":  null,
+                   "Domain":  {
+                                  "Value":  "vpc"
+                              },
+                   "InstanceId":  null,
+                   "NetworkBorderGroup":  "us-east-1",
+                   "NetworkInterfaceId":  null,
+                   "NetworkInterfaceOwnerId":  null,
+                   "PrivateIpAddress":  null,
+                   "PublicIp":  "18.204.200.237",
+                   "PublicIpv4Pool":  "amazon",
+                   "Tags":  [
+                                {
+                                    "Key":  "Name",
+                                    "Value":  "eip_dtd_sap3"
+                                }
+                            ]
+               },
+               {
+                   "AllocationId":  "eipalloc-0369c8fc3939767a0",
+                   "AssociationId":  null,
+                   "CarrierIp":  null,
+                   "CustomerOwnedIp":  null,
+                   "CustomerOwnedIpv4Pool":  null,
+                   "Domain":  {
+                                  "Value":  "vpc"
+                              },
+                   "InstanceId":  null,
+                   "NetworkBorderGroup":  "us-east-1",
+                   "NetworkInterfaceId":  null,
+                   "NetworkInterfaceOwnerId":  null,
+                   "PrivateIpAddress":  null,
+                   "PublicIp":  "3.214.165.23",
+                   "PublicIpv4Pool":  "amazon",
+                   "Tags":  [
+                                {
+                                    "Key":  "Name",
+                                    "Value":  "eip_dtd_sap2"
+                                }
+                            ]
+               },
+               {
+                   "AllocationId":  "eipalloc-0e4c59e611aafc23c",
+                   "AssociationId":  null,
+                   "CarrierIp":  null,
+                   "CustomerOwnedIp":  null,
+                   "CustomerOwnedIpv4Pool":  null,
+                   "Domain":  {
+                                  "Value":  "vpc"
+                              },
+                   "InstanceId":  null,
+                   "NetworkBorderGroup":  "us-east-1",
+                   "NetworkInterfaceId":  null,
+                   "NetworkInterfaceOwnerId":  null,
+                   "PrivateIpAddress":  null,
+                   "PublicIp":  "3.218.167.95",
+                   "PublicIpv4Pool":  "amazon",
+                   "Tags":  [
+                                {
+                                    "Key":  "Name",
+                                    "Value":  "eip_dtd_sap1"
+                                }
+                            ]
+               },
+               {
+                   "AllocationId":  "eipalloc-0467f4098b6ba3e5a",
+                   "AssociationId":  null,
+                   "CarrierIp":  null,
+                   "CustomerOwnedIp":  null,
+                   "CustomerOwnedIpv4Pool":  null,
+                   "Domain":  {
+                                  "Value":  "vpc"
+                              },
+                   "InstanceId":  null,
+                   "NetworkBorderGroup":  "us-east-1",
+                   "NetworkInterfaceId":  null,
+                   "NetworkInterfaceOwnerId":  null,
+                   "PrivateIpAddress":  null,
+                   "PublicIp":  "3.230.80.150",
+                   "PublicIpv4Pool":  "amazon",
+                   "Tags":  [
+                                {
+                                    "Key":  "Name",
+                                    "Value":  "jbc_eip2"
+                                }
+                            ]
+               },
+               {
+                   "AllocationId":  "eipalloc-05414b66bbf654c14",
+                   "AssociationId":  null,
+                   "CarrierIp":  null,
+                   "CustomerOwnedIp":  null,
+                   "CustomerOwnedIpv4Pool":  null,
+                   "Domain":  {
+                                  "Value":  "vpc"
+                              },
+                   "InstanceId":  null,
+                   "NetworkBorderGroup":  "us-east-2",
+                   "NetworkInterfaceId":  null,
+                   "NetworkInterfaceOwnerId":  null,
+                   "PrivateIpAddress":  null,
+                   "PublicIp":  "18.190.0.169",
+                   "PublicIpv4Pool":  "amazon",
+                   "Tags":  [
+
+                            ]
+               },
+               {
+                   "AllocationId":  "eipalloc-001ac213e16b34501",
+                   "AssociationId":  null,
+                   "CarrierIp":  null,
+                   "CustomerOwnedIp":  null,
+                   "CustomerOwnedIpv4Pool":  null,
+                   "Domain":  {
+                                  "Value":  "vpc"
+                              },
+                   "InstanceId":  null,
+                   "NetworkBorderGroup":  "us-east-2",
+                   "NetworkInterfaceId":  null,
+                   "NetworkInterfaceOwnerId":  null,
+                   "PrivateIpAddress":  null,
+                   "PublicIp":  "18.216.205.87",
+                   "PublicIpv4Pool":  "amazon",
+                   "Tags":  [
+
+                            ]
+               },
+               {
+                   "AllocationId":  "eipalloc-0bb05c39a1318e09d",
+                   "AssociationId":  null,
+                   "CarrierIp":  null,
+                   "CustomerOwnedIp":  null,
+                   "CustomerOwnedIpv4Pool":  null,
+                   "Domain":  {
+                                  "Value":  "vpc"
+                              },
+                   "InstanceId":  null,
+                   "NetworkBorderGroup":  "us-east-2",
+                   "NetworkInterfaceId":  null,
+                   "NetworkInterfaceOwnerId":  null,
+                   "PrivateIpAddress":  null,
+                   "PublicIp":  "18.217.46.84",
+                   "PublicIpv4Pool":  "amazon",
+                   "Tags":  [
+
+                            ]
+               },
+               {
+                   "AllocationId":  "eipalloc-0e7e61a46dd4e7bfe",
+                   "AssociationId":  null,
+                   "CarrierIp":  null,
+                   "CustomerOwnedIp":  null,
+                   "CustomerOwnedIpv4Pool":  null,
+                   "Domain":  {
+                                  "Value":  "vpc"
+                              },
+                   "InstanceId":  null,
+                   "NetworkBorderGroup":  "us-east-2",
+                   "NetworkInterfaceId":  null,
+                   "NetworkInterfaceOwnerId":  null,
+                   "PrivateIpAddress":  null,
+                   "PublicIp":  "18.218.220.8",
+                   "PublicIpv4Pool":  "amazon",
+                   "Tags":  [
+                                {
+                                    "Key":  "aws:cloudformation:stack-id",
+                                    "Value":  "arn:aws:cloudformation:us-east-2:705913476943:stack/Test-StackPW-1714-BastionStack-1S62FBIKTZ9AE/a1c92840-58d3-11ea-9655-0247ef85be9c"
+                                },
+                                {
+                                    "Key":  "aws:cloudformation:logical-id",
+                                    "Value":  "EIP1"
+                                },
+                                {
+                                    "Key":  "aws:cloudformation:stack-name",
+                                    "Value":  "Test-StackPW-1714-BastionStack-1S62FBIKTZ9AE"
+                                }
+                            ]
+               },
+               {
+                   "AllocationId":  "eipalloc-091c3fc46c23c65f9",
+                   "AssociationId":  null,
+                   "CarrierIp":  null,
+                   "CustomerOwnedIp":  null,
+                   "CustomerOwnedIpv4Pool":  null,
+                   "Domain":  {
+                                  "Value":  "vpc"
+                              },
+                   "InstanceId":  null,
+                   "NetworkBorderGroup":  "us-east-2",
+                   "NetworkInterfaceId":  null,
+                   "NetworkInterfaceOwnerId":  null,
+                   "PrivateIpAddress":  null,
+                   "PublicIp":  "3.12.101.101",
+                   "PublicIpv4Pool":  "amazon",
+                   "Tags":  [
+
+                            ]
+               },
+               {
+                   "AllocationId":  "eipalloc-09d136d83c57840f5",
+                   "AssociationId":  null,
+                   "CarrierIp":  null,
+                   "CustomerOwnedIp":  null,
+                   "CustomerOwnedIpv4Pool":  null,
+                   "Domain":  {
+                                  "Value":  "vpc"
+                              },
+                   "InstanceId":  null,
+                   "NetworkBorderGroup":  "us-east-2",
+                   "NetworkInterfaceId":  null,
+                   "NetworkInterfaceOwnerId":  null,
+                   "PrivateIpAddress":  null,
+                   "PublicIp":  "3.13.252.141",
+                   "PublicIpv4Pool":  "amazon",
+                   "Tags":  [
+                                {
+                                    "Key":  "Name",
+                                    "Value":  "jbc_sap_12_0_eip"
+                                }
+                            ]
+               },
+               {
+                   "AllocationId":  "eipalloc-0f4565fff7e324d8a",
+                   "AssociationId":  null,
+                   "CarrierIp":  null,
+                   "CustomerOwnedIp":  null,
+                   "CustomerOwnedIpv4Pool":  null,
+                   "Domain":  {
+                                  "Value":  "vpc"
+                              },
+                   "InstanceId":  null,
+                   "NetworkBorderGroup":  "us-east-2",
+                   "NetworkInterfaceId":  null,
+                   "NetworkInterfaceOwnerId":  null,
+                   "PrivateIpAddress":  null,
+                   "PublicIp":  "3.14.36.143",
+                   "PublicIpv4Pool":  "amazon",
+                   "Tags":  [
+
+                            ]
+               },
+               {
+                   "AllocationId":  "eipalloc-05417175bb0a8d67a",
+                   "AssociationId":  null,
+                   "CarrierIp":  null,
+                   "CustomerOwnedIp":  null,
+                   "CustomerOwnedIpv4Pool":  null,
+                   "Domain":  {
+                                  "Value":  "vpc"
+                              },
+                   "InstanceId":  null,
+                   "NetworkBorderGroup":  "us-east-2",
+                   "NetworkInterfaceId":  null,
+                   "NetworkInterfaceOwnerId":  null,
+                   "PrivateIpAddress":  null,
+                   "PublicIp":  "3.20.15.240",
+                   "PublicIpv4Pool":  "amazon",
+                   "Tags":  [
+
+                            ]
+               },
+               {
+                   "AllocationId":  "eipalloc-0127a0c2fc0924907",
+                   "AssociationId":  null,
+                   "CarrierIp":  null,
+                   "CustomerOwnedIp":  null,
+                   "CustomerOwnedIpv4Pool":  null,
+                   "Domain":  {
+                                  "Value":  "vpc"
+                              },
+                   "InstanceId":  null,
+                   "NetworkBorderGroup":  "us-east-2",
+                   "NetworkInterfaceId":  null,
+                   "NetworkInterfaceOwnerId":  null,
+                   "PrivateIpAddress":  null,
+                   "PublicIp":  "3.20.241.136",
+                   "PublicIpv4Pool":  "amazon",
+                   "Tags":  [
+
+                            ]
+               },
+               {
+                   "AllocationId":  "eipalloc-083a6c3a72e0353d7",
+                   "AssociationId":  null,
+                   "CarrierIp":  null,
+                   "CustomerOwnedIp":  null,
+                   "CustomerOwnedIpv4Pool":  null,
+                   "Domain":  {
+                                  "Value":  "vpc"
+                              },
+                   "InstanceId":  null,
+                   "NetworkBorderGroup":  "us-west-1",
+                   "NetworkInterfaceId":  null,
+                   "NetworkInterfaceOwnerId":  null,
+                   "PrivateIpAddress":  null,
+                   "PublicIp":  "13.52.2.115",
+                   "PublicIpv4Pool":  "amazon",
+                   "Tags":  [
+                                {
+                                    "Key":  "aws:cloudformation:logical-id",
+                                    "Value":  "EIP1"
+                                },
+                                {
+                                    "Key":  "aws:cloudformation:stack-name",
+                                    "Value":  "BWALKER-PAYG-RDGWStack-16MSFXHDO2HSE"
+                                },
+                                {
+                                    "Key":  "aws:cloudformation:stack-id",
+                                    "Value":  "arn:aws:cloudformation:us-west-1:705913476943:stack/BWALKER-PAYG-RDGWStack-16MSFXHDO2HSE/940e77d0-9aac-11ea-b2ec-06c580cb832b"
+                                }
+                            ]
+               },
+               {
+                   "AllocationId":  "eipalloc-05540149aaee8aa08",
+                   "AssociationId":  null,
+                   "CarrierIp":  null,
+                   "CustomerOwnedIp":  null,
+                   "CustomerOwnedIpv4Pool":  null,
+                   "Domain":  {
+                                  "Value":  "vpc"
+                              },
+                   "InstanceId":  null,
+                   "NetworkBorderGroup":  "us-west-2",
+                   "NetworkInterfaceId":  null,
+                   "NetworkInterfaceOwnerId":  null,
+                   "PrivateIpAddress":  null,
+                   "PublicIp":  "44.231.27.12",
+                   "PublicIpv4Pool":  "amazon",
+                   "Tags":  [
+
+                            ]
+               },
+               {
+                   "AllocationId":  "eipalloc-092c225c902a90360",
+                   "AssociationId":  null,
+                   "CarrierIp":  null,
+                   "CustomerOwnedIp":  null,
+                   "CustomerOwnedIpv4Pool":  null,
+                   "Domain":  {
+                                  "Value":  "vpc"
+                              },
+                   "InstanceId":  null,
+                   "NetworkBorderGroup":  "us-west-2",
+                   "NetworkInterfaceId":  null,
+                   "NetworkInterfaceOwnerId":  null,
+                   "PrivateIpAddress":  null,
+                   "PublicIp":  "44.234.4.255",
+                   "PublicIpv4Pool":  "amazon",
+                   "Tags":  [
+
+                            ]
+               },
+               {
+                   "AllocationId":  "eipalloc-083465ec580985094",
+                   "AssociationId":  null,
+                   "CarrierIp":  null,
+                   "CustomerOwnedIp":  null,
+                   "CustomerOwnedIpv4Pool":  null,
+                   "Domain":  {
+                                  "Value":  "vpc"
+                              },
+                   "InstanceId":  null,
+                   "NetworkBorderGroup":  "us-west-2",
+                   "NetworkInterfaceId":  null,
+                   "NetworkInterfaceOwnerId":  null,
+                   "PrivateIpAddress":  null,
+                   "PublicIp":  "54.149.240.230",
+                   "PublicIpv4Pool":  "amazon",
+                   "Tags":  [
+                                {
+                                    "Key":  "aws:cloudformation:stack-id",
+                                    "Value":  "arn:aws:cloudformation:us-west-2:705913476943:stack/STACI-PAYG-RDGWStack-KU17GTT1MGAV/25ff6820-9aa8-11ea-83c8-02e0f8292e0e"
+                                },
+                                {
+                                    "Key":  "aws:cloudformation:logical-id",
+                                    "Value":  "EIP1"
+                                },
+                                {
+                                    "Key":  "aws:cloudformation:stack-name",
+                                    "Value":  "STACI-PAYG-RDGWStack-KU17GTT1MGAV"
+                                }
+                            ]
+               },
+               {
+                   "AllocationId":  "eipalloc-064b44b3d6db97d33",
+                   "AssociationId":  null,
+                   "CarrierIp":  null,
+                   "CustomerOwnedIp":  null,
+                   "CustomerOwnedIpv4Pool":  null,
+                   "Domain":  {
+                                  "Value":  "vpc"
+                              },
+                   "InstanceId":  null,
+                   "NetworkBorderGroup":  "us-west-2",
+                   "NetworkInterfaceId":  null,
+                   "NetworkInterfaceOwnerId":  null,
+                   "PrivateIpAddress":  null,
+                   "PublicIp":  "54.185.100.209",
+                   "PublicIpv4Pool":  "amazon",
+                   "Tags":  [
+
+                            ]
+               },
+               {
+                   "AllocationId":  "eipalloc-0b2eddeeccdf04802",
+                   "AssociationId":  null,
+                   "CarrierIp":  null,
+                   "CustomerOwnedIp":  null,
+                   "CustomerOwnedIpv4Pool":  null,
+                   "Domain":  {
+                                  "Value":  "vpc"
+                              },
+                   "InstanceId":  null,
+                   "NetworkBorderGroup":  "us-west-2",
+                   "NetworkInterfaceId":  null,
+                   "NetworkInterfaceOwnerId":  null,
+                   "PrivateIpAddress":  null,
+                   "PublicIp":  "54.189.155.240",
+                   "PublicIpv4Pool":  "amazon",
+                   "Tags":  [
+
+                            ]
+               }
+           ],
+    "support":  {
+                    "AllocationId":  "eipalloc-08c6c9263a7f34050",
+                    "AssociationId":  null,
+                    "CarrierIp":  null,
+                    "CustomerOwnedIp":  null,
+                    "CustomerOwnedIpv4Pool":  null,
+                    "Domain":  {
+                                   "Value":  "vpc"
+                               },
+                    "InstanceId":  null,
+                    "NetworkBorderGroup":  "us-east-2",
+                    "NetworkInterfaceId":  null,
+                    "NetworkInterfaceOwnerId":  null,
+                    "PrivateIpAddress":  null,
+                    "PublicIp":  "3.12.72.30",
+                    "PublicIpv4Pool":  "amazon",
+                    "Tags":  [
+
+                             ]
+                },
+    "ts":  {
+               "AllocationId":  "eipalloc-03ded04997c2b803f",
+               "AssociationId":  null,
+               "CarrierIp":  null,
+               "CustomerOwnedIp":  null,
+               "CustomerOwnedIpv4Pool":  null,
+               "Domain":  {
+                              "Value":  "vpc"
+                          },
+               "InstanceId":  null,
+               "NetworkBorderGroup":  "us-east-2",
+               "NetworkInterfaceId":  null,
+               "NetworkInterfaceOwnerId":  null,
+               "PrivateIpAddress":  null,
+               "PublicIp":  "18.188.33.171",
+               "PublicIpv4Pool":  "amazon",
+               "Tags":  [
+
+                        ]
+           }
+}

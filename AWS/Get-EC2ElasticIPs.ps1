@@ -1,13 +1,13 @@
-# Get-AncientEC2Volumes.ps1
+# Get-EC2ElasticIPs.ps1
 #
 # Example 1:
-# .\Get-AncientEC2Volumes.ps1 -Region us-east-1 -Profile currentgen -ToDelete -Verbose
+# .\Get-EC2ElasticIPs.ps1 -Region us-east-1 -Profile currentgen -ToDelete -Verbose
 #
 # Example 2:
 # $profiles = @("automation","currentgen","dev","ps","qa","support","ts")
 # $toDelete = [ordered]@{}
 # foreach ($profile in $profiles) {
-#     $del = .\Get-AncientEC2Volumes.ps1 -Profile $profile -ToDelete
+#     $del = .\Get-EC2ElasticIPs.ps1 -Profile $profile -ToDelete
 #     $toDelete.Add($profile,$del)
 # }
 
@@ -35,22 +35,19 @@ if ($Regions -eq $Null) {
 Write-Verbose ("Scanning " + $TargetRegions.Count + " regions.")
 $keep = [System.Collections.ArrayList]@()
 $delete = [System.Collections.ArrayList]@()
-$volumes = [System.Collections.ArrayList]@()
+$elasticIPs = [System.Collections.ArrayList]@()
 foreach ($region in $TargetRegions) {
-    $vols = Get-EC2Volume -Region $region -ProfileName $Profile
-    Write-Verbose $volumes.Count
+    $eips = Get-EC2Address -Region $region -ProfileName $Profile
+    Write-Verbose $eips.Count
 
-    $today = Get-Date
-    $vols | % {
-        if($_.Attachments.Count -eq 0) {
-            if($today -lt $_.CreateTime.AddMonths(6)) {
-                $delete.Add($_) > $Null
-            }
+    $eips | % {
+        if($_.AssociationId -eq $Null) {
+            $delete.Add($_) > $Null
         }
         else {
             $keep.Add($_) > $Null
         }
-        $volumes.Add($_) > $Null
+        $elasticIPs.Add($_) > $Null
     }
 }
 if($ToDelete) {
@@ -59,5 +56,5 @@ if($ToDelete) {
 if($ToKeep) {
     return $keep
 }
-return $volumes
+return $elasticIPs
 # END

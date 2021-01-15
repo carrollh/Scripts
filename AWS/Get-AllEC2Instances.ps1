@@ -1,21 +1,9 @@
 # Get-AllEC2Instances.ps1
-# Relies on the AWS CLI, which should be installed and configured to point to our CurrentGen account.
-# 
-# The following commands were run to create a secure text password file. The password and username
-# used are for an account on the smtp server used. There are better ways to do this that don't require
-# having a hashed password file somewhere on the system. This is just a proof of concept. 
-#
-#    $password = "********"
-#    $securePassword = ConvertTo-SecureString $password -AsPlainText -Force 
-#    $securePassword | ConvertFrom-SecureString | Set-Content "C:\password.txt" 
-#
-# $securePasswordFilePath should be created using method above, and 
-# the "********" should be the password for the $hancockUser profile 
 
 [CmdletBinding()]
 Param(
     [Parameter(Mandatory=$False)]
-    [string[]]$Profiles = @("dev","support","qa","ps","ts","currentgen"),
+    [string[]]$profiles = @("dev","support","qa","ps","ts","currentgen","automation"),
 
     [Parameter(Mandatory=$False)]
     [string[]] $Regions = $Null
@@ -25,60 +13,68 @@ Param(
 
 # loop over regions looking for instances
 $finalTable = @{}
-foreach ( $p in $Profiles ) {
-    Write-Verbose ("Scanning the " + $p.ToUpper() + " profile")
+foreach ( $profile in $profilerofiles ) {
+    Write-Verbose ("Scanning the " + $profile.ToUpper() + " profile")
 
     if ($Regions -eq $Null) {
-        $TargetRegions = $(aws ec2 describe-regions --profile $p --output json | ConvertFrom-Json).Regions.RegionName
+        $TargetRegions = $(aws ec2 describe-regions --profile $profile --region us-east-1 --output json | ConvertFrom-Json).Regions.RegionName
     } else {
         $TargetRegions = $Regions
     }
+    Write-Verbose ("Scanning " + $TargetRegions.Count + " regions.")
 
     $instanceTable = @{}
     foreach ( $region in $TargetRegions ) {
-        $reservations= (aws ec2 describe-instances --profile $p --region $region --output json | ConvertFrom-Json).Reservations
-        $instanceTable.add($region, $reservations) > $null
+        $reservations = $(aws ec2 describe-instances --profile $profile --region $region --output json | ConvertFrom-Json).Reservations
+        $instanceTable.add($region, $reservations) > $Null
     }
 
-    [System.Collections.ArrayList]$customList = @()
+    $regionTable = @{}
     foreach ( $regionKey in $instanceTable.Keys ) {
+        [System.Collections.ArrayList]$customList = @()
+        Write-Verbose "Scanning $regionKey..."
         foreach ( $reservation in $instanceTable[$regionKey] ) {
             $instances = $reservation.Instances
-            foreach ($instance in $instances) {
+            for ($i=0; $i -lt $instances.Count; $i+=1) {
                 $epochTime = [DateTimeOffset]::Now.ToUnixTimeSeconds()
                 $startTime = $epochTime - 3600
-                if($instance.Platform -eq "windows") {
-                    $costs = aws ec2 describe-spot-price-history --profile $p --region $regionKey --start-time $startTime --end-time $epochTime --product-descriptions="Windows (Amazon VPC)" --instance-types $instanceType --output json | ConvertFrom-Json
+                if($instances[$i].Platform -eq "windows") {
+                    $costs = aws ec2 describe-spot-price-history --profile $profile --region $regionKey --start-time $startTime --end-time $epochTime --product-descriptions="Windows (Amazon VPC)" --instance-types $instanceType --output json | ConvertFrom-Json
                 } else {
-                    $costs = aws ec2 describe-spot-price-history --profile $p --region $regionKey --start-time $startTime --end-time $epochTime --product-descriptions="Linux/UNIX (Amazon VPC)" --instance-types $instanceType --output json | ConvertFrom-Json
+                    $costs = aws ec2 describe-spot-price-history --profile $profile --region $regionKey --start-time $startTime --end-time $epochTime --product-descriptions="Linux/UNIX (Amazon VPC)" --instance-types $instanceType --output json | ConvertFrom-Json
                 }
                 $monthlyCost = [Math]::Round([float]($costs.SpotPriceHistory | Where-Object AvailabilityZone -eq $instances[$i].AvailabilityZone).SpotPrice * 3000, 2)
 
-                $instanceId = $instance.InstanceId
-                $instanceTags = $(aws ec2 describe-tags --profile $p --region $regionKey --filters "Name=resource-id,Values=$instanceId" | ConvertFrom-Json).Tags
-                if($instanceTags.Key.Contains("Name")) {
-                    $nameTag = ($instanceTags | Where-Object Key -eq "Name").Value
-                    $instances[$i] | Add-Member -NotePropertyName "NameTag" -NotePropertyValue $nameTag -Force
-                    $instances[$i] | Add-Member -NotePropertyName "Identifier" -NotePropertyValue $nameTag -Force
-                } else {
-                    $instances[$i] | Add-Member -NotePropertyName "NameTag" -NotePropertyValue "Not defined" -Force
-                    $instances[$i] | Add-Member -NotePropertyName "Identifier" -NotePropertyValue $instanceId -Force
+                $instanceId = $instances[$i].InstanceId
+                $instanceTags = $(aws ec2 describe-tags --profile $profile --region $regionKey --filters "Name=resource-id,Values=$instanceId" | ConvertFrom-Json).Tags
+                if($instanceTags.Count -gt 0) {
+                    if($instanceTags.Key.Contains("Name")) {
+                        $nameTag = ($instanceTags | Where-Object Key -eq "Name").Value
+                        $instances[$i] | Add-Member -NotePropertyName "NameTag" -NotePropertyValue $nameTag -Force
+                        $instances[$i] | Add-Member -NotePropertyName "Identifier" -NotePropertyValue $nameTag -Force
+                    } else {
+                        $instances[$i] | Add-Member -NotePropertyName "NameTag" -NotePropertyValue "Not defined" -Force
+                        $instances[$i] | Add-Member -NotePropertyName "Identifier" -NotePropertyValue $instanceId -Force
+                    }
+                    if($instanceTags.Key.Contains("ShutdownStrategy")) {
+                        $shutdownTag = ($instanceTags | Where-Object Key -eq "ShutdownStrategy").Value
+                        $instances[$i] | Add-Member -NotePropertyName "ShutdownStrategy" -NotePropertyValue $shutdownTag -Force
+                    }
+                    $instances[$i] | Add-Member -NotePropertyName "InstanceType" -NotePropertyValue $instanceType -Force
+                    $instances[$i] | Add-Member -NotePropertyName "AMI" -NotePropertyValue $instances[$i].ImageId -Force
+                    $instances[$i] | Add-Member -NotePropertyName "MonthlyCost" -NotePropertyValue $monthlyCost -Force
                 }
-                if($instanceTags.Key.Contains("ShutdownStrategy")) {
-                    $shutdownTag = ($instanceTags | Where-Object Key -eq "ShutdownStrategy").Value
-                    $instances[$i] | Add-Member -NotePropertyName "ShutdownStrategy" -NotePropertyValue $shutdownTag -Force
-                }
-
-                $instances[$i] | Add-Member -NotePropertyName "InstanceType" -NotePropertyValue $instanceType -Force
-                $instances[$i] | Add-Member -NotePropertyName "AMI" -NotePropertyValue $instance.ImageId -Force
-                $instances[$i] | Add-Member -NotePropertyName "MonthlyCost" -NotePropertyValue $monthlyCost -Force
-
                 $customList.Add($instances[$i]) > $Null
             }
         }
+
+        $regionTable.Add($regionKey, $customList) > $Null
+        if($customList.Count -gt 0) {
+            Write-Verbose ("Found " + $customList.Count + " instances in $regionKey.")
+        }
     }
 
-    $finalTable.add($p, $customList) > $null
+    $finalTable.add($profile, $regionTable) > $Null
 }
 
 return $finalTable

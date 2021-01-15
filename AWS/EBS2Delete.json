@@ -1,0 +1,259 @@
+﻿{
+    "automation":  null,
+    "currentgen":  [
+                       {
+                           "Attachments":  [
+
+                                           ],
+                           "AvailabilityZone":  "eu-west-2b",
+                           "CreateTime":  "\/Date(1604343932729)\/",
+                           "Encrypted":  false,
+                           "FastRestored":  false,
+                           "Iops":  100,
+                           "KmsKeyId":  null,
+                           "MultiAttachEnabled":  false,
+                           "OutpostArn":  null,
+                           "Size":  5,
+                           "SnapshotId":  null,
+                           "State":  {
+                                         "Value":  "available"
+                                     },
+                           "Tags":  [
+                                        {
+                                            "Key":  "Name",
+                                            "Value":  "WSFCNode2-Vol2"
+                                        }
+                                    ],
+                           "VolumeId":  "vol-04cbfc97f12604a45",
+                           "VolumeType":  {
+                                              "Value":  "gp2"
+                                          }
+                       },
+                       {
+                           "Attachments":  [
+
+                                           ],
+                           "AvailabilityZone":  "eu-west-2a",
+                           "CreateTime":  "\/Date(1604343912808)\/",
+                           "Encrypted":  false,
+                           "FastRestored":  false,
+                           "Iops":  100,
+                           "KmsKeyId":  null,
+                           "MultiAttachEnabled":  false,
+                           "OutpostArn":  null,
+                           "Size":  5,
+                           "SnapshotId":  null,
+                           "State":  {
+                                         "Value":  "available"
+                                     },
+                           "Tags":  [
+                                        {
+                                            "Key":  "Name",
+                                            "Value":  "WSFCNode1-Vol2"
+                                        }
+                                    ],
+                           "VolumeId":  "vol-090797b1ce0d7a457",
+                           "VolumeType":  {
+                                              "Value":  "gp2"
+                                          }
+                       }
+                   ],
+    "dev":  [
+                {
+                    "Attachments":  [
+
+                                    ],
+                    "AvailabilityZone":  "us-east-1b",
+                    "CreateTime":  "\/Date(1603381157650)\/",
+                    "Encrypted":  false,
+                    "FastRestored":  false,
+                    "Iops":  100,
+                    "KmsKeyId":  null,
+                    "MultiAttachEnabled":  false,
+                    "OutpostArn":  null,
+                    "Size":  10,
+                    "SnapshotId":  null,
+                    "State":  {
+                                  "Value":  "available"
+                              },
+                    "Tags":  [
+                                 {
+                                     "Key":  "Name",
+                                     "Value":  "StaciNode1VolE"
+                                 }
+                             ],
+                    "VolumeId":  "vol-0be4fc2bc83de22c4",
+                    "VolumeType":  {
+                                       "Value":  "gp2"
+                                   }
+                },
+                {
+                    "Attachments":  [
+
+                                    ],
+                    "AvailabilityZone":  "us-east-1b",
+                    "CreateTime":  "\/Date(1603381234583)\/",
+                    "Encrypted":  false,
+                    "FastRestored":  false,
+                    "Iops":  100,
+                    "KmsKeyId":  null,
+                    "MultiAttachEnabled":  false,
+                    "OutpostArn":  null,
+                    "Size":  10,
+                    "SnapshotId":  null,
+                    "State":  {
+                                  "Value":  "available"
+                              },
+                    "Tags":  [
+                                 {
+                                     "Key":  "Name",
+                                     "Value":  "StaciNode2VolE"
+                                 }
+                             ],
+                    "VolumeId":  "vol-07d0f419015679484",
+                    "VolumeType":  {
+                                       "Value":  "gp2"
+                                   }
+                },
+                {
+                    "Attachments":  [
+
+                                    ],
+                    "AvailabilityZone":  "us-east-2a",
+                    "CreateTime":  "\/Date(1597697277216)\/",
+                    "Encrypted":  false,
+                    "FastRestored":  false,
+                    "Iops":  100,
+                    "KmsKeyId":  null,
+                    "MultiAttachEnabled":  false,
+                    "OutpostArn":  null,
+                    "Size":  1,
+                    "SnapshotId":  null,
+                    "State":  {
+                                  "Value":  "available"
+                              },
+                    "Tags":  [
+                                 {
+                                     "Key":  "Name",
+                                     "Value":  "jbb_rhel_82_lvm_1"
+                                 }
+                             ],
+                    "VolumeId":  "vol-061e559533a7a4349",
+                    "VolumeType":  {
+                                       "Value":  "gp2"
+                                   }
+                },
+                {
+                    "Attachments":  [
+
+                                    ],
+                    "AvailabilityZone":  "us-east-2a",
+                    "CreateTime":  "\/Date(1597697295482)\/",
+                    "Encrypted":  false,
+                    "FastRestored":  false,
+                    "Iops":  100,
+                    "KmsKeyId":  null,
+                    "MultiAttachEnabled":  false,
+                    "OutpostArn":  null,
+                    "Size":  1,
+                    "SnapshotId":  null,
+                    "State":  {
+                                  "Value":  "available"
+                              },
+                    "Tags":  [
+                                 {
+                                     "Key":  "Name",
+                                     "Value":  "jbb_rhel_82_lvm_2"
+                                 }
+                             ],
+                    "VolumeId":  "vol-07bf4c808686ab197",
+                    "VolumeType":  {
+                                       "Value":  "gp2"
+                                   }
+                },
+                {
+                    "Attachments":  [
+
+                                    ],
+                    "AvailabilityZone":  "us-west-1a",
+                    "CreateTime":  "\/Date(1597171600723)\/",
+                    "Encrypted":  false,
+                    "FastRestored":  false,
+                    "Iops":  100,
+                    "KmsKeyId":  null,
+                    "MultiAttachEnabled":  false,
+                    "OutpostArn":  null,
+                    "Size":  1,
+                    "SnapshotId":  null,
+                    "State":  {
+                                  "Value":  "available"
+                              },
+                    "Tags":  [
+                                 {
+                                     "Key":  "Name",
+                                     "Value":  "jbc_tmp_xfs1"
+                                 }
+                             ],
+                    "VolumeId":  "vol-0f1182658a024503e",
+                    "VolumeType":  {
+                                       "Value":  "gp2"
+                                   }
+                },
+                {
+                    "Attachments":  [
+
+                                    ],
+                    "AvailabilityZone":  "us-west-1a",
+                    "CreateTime":  "\/Date(1597171613468)\/",
+                    "Encrypted":  false,
+                    "FastRestored":  false,
+                    "Iops":  300,
+                    "KmsKeyId":  null,
+                    "MultiAttachEnabled":  false,
+                    "OutpostArn":  null,
+                    "Size":  100,
+                    "SnapshotId":  null,
+                    "State":  {
+                                  "Value":  "available"
+                              },
+                    "Tags":  [
+                                 {
+                                     "Key":  "Name",
+                                     "Value":  "jbc_tmp_xfs2"
+                                 }
+                             ],
+                    "VolumeId":  "vol-06bf9624539d1eef3",
+                    "VolumeType":  {
+                                       "Value":  "gp2"
+                                   }
+                }
+            ],
+    "ps":  null,
+    "qa":  null,
+    "support":  null,
+    "ts":  {
+               "Attachments":  [
+
+                               ],
+               "AvailabilityZone":  "us-east-1a",
+               "CreateTime":  "\/Date(1597873115698)\/",
+               "Encrypted":  false,
+               "FastRestored":  false,
+               "Iops":  0,
+               "KmsKeyId":  null,
+               "MultiAttachEnabled":  false,
+               "OutpostArn":  null,
+               "Size":  512,
+               "SnapshotId":  null,
+               "State":  {
+                             "Value":  "available"
+                         },
+               "Tags":  [
+
+                        ],
+               "VolumeId":  "vol-080747cb360f3774d",
+               "VolumeType":  {
+                                  "Value":  "st1"
+                              }
+           }
+}

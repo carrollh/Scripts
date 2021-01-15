@@ -9,7 +9,7 @@
 [CmdletBinding()]
 Param(
     [Parameter(Mandatory=$True, ValueFromPipeline, Position=0)]
-    [System.Collections.HashTable]  $Stacks = $Null,
+    [Object[]]  $Stacks = $Null,
 
     [Parameter(Mandatory=$False, Position=1)]
     [string]   $Profile = $Null
@@ -17,13 +17,12 @@ Param(
 
 $i = 0
 $Stacks.Keys | %{
-    $i += 1
     if($Profile) {
-        Remove-CFNStack -Region $_ -ProfileName $Profile -StackName $Stacks[$_] -Force 
+        Remove-CFNStack -Region $_ -ProfileName $Profile -StackName $stacks[$i][$_] -Force
     }
     else {
-        Remove-CFNStack -Region $_ -StackName $Stacks[$_] -Force
+        Remove-CFNStack -Region $_ -StackName $stacks[$i][$_] -Force
     }
-
-    Write-Progress -Activity "Removing CFN Stacks" -Status ("Regions Completed: ($i/" + $Stacks.Keys.Count + ")") -PercentComplete ($i / $Stacks.Keys.Count*100)
+    $i++
+    Write-Progress -Activity "Removing CFN Stacks" -Status ("Regions Completed: ($i/" + $Stacks.Count + ")") -PercentComplete ($i / $Stacks.Count*100)
 }
