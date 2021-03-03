@@ -4,10 +4,10 @@
 #   This script relies on two others to generate a hashtable of instance data, sorted
 #   by total volume size.
 #
-# Example1:
+# Example 1:
 # Get-EC2HighVolumeInstances.ps1 -Profile dev -Region ca-central-1
 #
-# Example2:
+# Example 2 (get 2 regions worth of data from 2 profiles):
 # $profiles = @("dev","currentgen")
 # $regions = @("ca-central-1","us-east-1")
 # $output = @{}
@@ -18,6 +18,14 @@
 #       $profileOutput.Add($region, $regionOutput)
 #    }
 #    $output.Add($profile, $profileOutput)
+# }
+# 
+# Example 3 (get all sorted summaries in all regions for all accounts):
+# $profiles = @("dev","qa","support","ts","ps","currentgen","automation")
+# $output = @{}
+# foreach($profile in $profiles){
+#     $profileOutput = .\Get-EC2HighVolumeInstances.ps1 -Profile $profile
+#     $output.Add($profile, $profileOutput)
 # }
 
 [CmdletBinding()]
