@@ -13,7 +13,7 @@
 
 [CmdletBinding()]
 Param(
-    [Parameter(Mandatory=$True)]
+    [Parameter(Mandatory=$False)]
     [string] $Profile = $Null,
 
     [Parameter(Mandatory=$False)]
@@ -22,8 +22,17 @@ Param(
 
 $instanceTable = [Ordered]@{}
 foreach ($region in $Regions) {
-    $instances = (& "aws" ec2 describe-instances --region $region --profile $Profile --output json | convertfrom-json).Reservations.Instances
-    $tags = (& "aws" ec2 describe-tags --region $region --profile $Profile --filters "Name=resource-type,Values=instance" "Name=key,Values=Name" --output json | convertfrom-json).Tags
+    $instances = $Null
+    $tags = $Null
+    if($Profile) {
+        $instances = (& "aws" ec2 describe-instances --region $region --profile $Profile --output json | convertfrom-json).Reservations.Instances
+        $tags = (& "aws" ec2 describe-tags --region $region --profile $Profile --filters "Name=resource-type,Values=instance" "Name=key,Values=Name" --output json | convertfrom-json).Tags
+    }
+    else {
+        $instances = (& "aws" ec2 describe-instances --region $region --output json | convertfrom-json).Reservations.Instances
+        $tags = (& "aws" ec2 describe-tags --region $region --filters "Name=resource-type,Values=instance" "Name=key,Values=Name" --output json | convertfrom-json).Tags
+    }
+
     $instanceInfo = [System.Collections.ArrayList]@()
     $instances | %{
         $nametag = ($tags | Where-Object -Property ResourceId -like ($_.InstanceId)).Value

@@ -10,10 +10,13 @@
 #         echo $volinfo["$r"] >> "$outfile\${p}_volumes"
 #     }
 # }
+#
+# Example 2 (find unattached volumes in a specific region and account)
+# .\Get-EC2VolumeSummary.ps1 -Region "us-east-1" -Profile "currentgen" | Where-Object -Property InstanceId -like ""
 
 [CmdletBinding()]
 Param(
-    [Parameter(Mandatory=$True)]
+    [Parameter(Mandatory=$False)]
     [string] $Profile = $Null,
 
     [Parameter(Mandatory=$False)]
@@ -22,8 +25,17 @@ Param(
 
 $volTable = [Ordered]@{}
 foreach ($region in $Regions) {
-    $volumes = (& "aws" ec2 describe-volumes --region $region --profile $Profile --output json | convertfrom-json).Volumes
-    $tags = (& "aws" ec2 describe-tags --region $region --profile $Profile --filters "Name=resource-type,Values=instance" "Name=key,Values=Name" --output json | convertfrom-json).Tags
+    $volumes = $Null
+    $tags = $Null
+    if($Profile) {
+        $volumes = (& "aws" ec2 describe-volumes --region $region --profile $Profile --output json | convertfrom-json).Volumes
+        $tags = (& "aws" ec2 describe-tags --region $region --profile $Profile --filters "Name=resource-type,Values=instance" "Name=key,Values=Name" --output json | convertfrom-json).Tags
+    }
+    else {
+        $volumes = (& "aws" ec2 describe-volumes --region $region --output json | convertfrom-json).Volumes
+        $tags = (& "aws" ec2 describe-tags --region $region --filters "Name=resource-type,Values=instance" "Name=key,Values=Name" --output json | convertfrom-json).Tags
+    }
+    
     $volinfo = [System.Collections.ArrayList]@()
     $volumes | %{
         $nametag = ($tags | Where-Object -Property ResourceId -like ($_.Attachments.InstanceId)).Value
