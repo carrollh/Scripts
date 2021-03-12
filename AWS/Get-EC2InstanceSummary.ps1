@@ -50,11 +50,12 @@ foreach ($region in $Regions) {
             $nametag = "N/A"
         }
         $obj = [PSCustomObject]@{
-            InstanceId      = $_.InstanceId
-            InstanceType    = $_.InstanceType
-            InstanceNameTag = $nametag
-            LaunchTime      = $_.LaunchTime
-            State           = $_.State.Name
+            InstanceId       = $_.InstanceId
+            InstanceType     = $_.InstanceType
+            InstanceNameTag  = $nametag
+            LaunchTime       = $_.LaunchTime
+            State            = $_.State.Name
+            TransitionReason = $_.StateTransitionReason
         }
         $instanceInfo.Add($obj) > $Null
     }

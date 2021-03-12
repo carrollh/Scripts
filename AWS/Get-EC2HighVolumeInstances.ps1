@@ -30,7 +30,7 @@
 
 [CmdletBinding()]
 Param(
-    [Parameter(Mandatory=$True)]
+    [Parameter(Mandatory=$False)]
     [string] $Profile = $Null,
 
     [Parameter(Mandatory=$False)]
@@ -45,15 +45,19 @@ $PsBoundParameters.Keys | foreach {
 $outputTable = [Ordered]@{}
 foreach ($region in $Regions) {
     Write-Verbose "`t$region"
-    $volumeSummary = (.\Get-EC2VolumeSummary.ps1 -Profile $Profile -Region $region) | Sort -Property "VolumeSize" -Descending
-    $instanceSummary = .\Get-EC2InstanceSummary.ps1 -Profile $Profile -Region $region
 
+    $volumeSummary = $Null
+    $instanceSummary = $Null
     $instances = $Null
     if($Profile) {
+        $volumeSummary = (.\Get-EC2VolumeSummary.ps1 -Profile $Profile -Region $region) | Sort -Property "VolumeSize" -Descending
+        $instanceSummary = .\Get-EC2InstanceSummary.ps1 -Profile $Profile -Region $region
         Write-Verbose "---`taws ec2 describe-instances --region $region --profile $Profile --output json"
         $instances = (& "aws" ec2 describe-instances --region $region --profile $Profile | ConvertFrom-Json).Reservations.Instances
     }
     else {
+        $volumeSummary = (.\Get-EC2VolumeSummary.ps1 -Region $region) | Sort -Property "VolumeSize" -Descending
+        $instanceSummary = .\Get-EC2InstanceSummary.ps1 -Region $region
         Write-Verbose "---`taws ec2 describe-instances --region $region --output json"
         $instances = (& "aws" ec2 describe-instances --region $region | ConvertFrom-Json).Reservations.Instances
     }
