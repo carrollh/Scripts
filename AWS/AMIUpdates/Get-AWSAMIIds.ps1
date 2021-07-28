@@ -14,172 +14,62 @@
 [CmdletBinding()]
 Param(
     [Parameter(Mandatory=$True, Position=0)]
-    [string] $Profile = $Null,
+    [string] $Profile = '',
 
-    [Parameter(Mandatory=$False, Position=1)]
-    [string[]] $Version = $Null,
+    [Parameter(Mandatory=$True, Position=1)]
+    [ValidateSet('DKCE','SPSL')]
+    [string] $Template = '',
 
-    [Parameter(Mandatory=$True, Position=2)]
-    [string[]] $OSVersions = $Null,
-
-    [Parameter(Mandatory=$False, Position=3)]
-    [string[]] $Regions = $Null,
-    
-    [Parameter(Mandatory=$False)]
-    [Switch] $Linux
+    [Parameter(Mandatory=$False, Position=2)]
+    [string[]] $Regions = $Null
 )
 
 If ($PSBoundParameters['Debug']) {
     $DebugPreference = 'Continue'
 }
 
-function ConvertTo-OrderedHashtable {
-    param (
-        [Parameter(ValueFromPipeline)]
-        [PSCustomObject]$InputObject
-    )
-
-    process {
-        if ($null -eq $InputObject) { return $null }
-
-        if ($InputObject -is [System.Collections.IEnumerable] -and $InputObject -isnot [string]) {
-            $collection = @(
-                foreach ($object in $InputObject) { $object | ConvertTo-OrderedHashtable }
-            )
-            Write-Output -NoEnumerate $collection
-        }
-        elseif ($InputObject -is [psobject]) {
-            $properties = $InputObject.PSObject.Properties | Out-String
-            if ($properties.Contains("Length")) {
-                return $InputObject
-            }
-            $hash = [ordered]@{}
-
-            foreach ($property in $InputObject.PSObject.Properties) {
-                $hash[$property.Name] = $property.Value | ConvertTo-OrderedHashtable
-            }
-
-            return $hash
-        }
-        else {
-            return $InputObject
-        }
-    }
-}
-
 ################################################################################
-if( -Not $Version ) {
-    Write-Host "Software version needed!`nUsage: Get-AWSAMIIds -Version <ver> ...`n"
-    return;
-}
-
-if( $OSVersions -like "all" ) {
-    if( $Linux ) {
-        $OSVersions = @("RHEL 7.7","SLES 15")
-    } else {
-        $OSVersions = @("2012R2","2016","2019")
-    }
-}
-
 if( -Not $Regions -Or $Regions -like "all") {
     $Regions = @("ap-northeast-2","ap-south-1","ap-southeast-1","ap-southeast-2","ca-central-1","eu-central-1","eu-north-1","eu-west-1","eu-west-2","eu-west-3","sa-east-1","us-east-1","us-east-2","us-west-1","us-west-2")
 }
 
-$amiRegionMapping = [System.Collections.Hashtable]@{}
+$amiRegionMapping = [Ordered]@{}
+$output = "  AWSAMIRegionMap:`n"
 foreach ($region in $Regions) {
     Write-Verbose $region
-    $amis = Get-EC2Image -Owner 679593333241 -ProfileName $Profile -Region $region
+    $amiOSVersionMapping = [Ordered]@{}
+    if ( $Template -eq 'DKCE' ) {
+        $ws2012r2paygAMI = ((aws ec2 describe-images --owners aws-marketplace --region $region --profile $Profile --output json --filters "Name=product-code,Values=dvw0k1cslwup93kxyf85trjxm" | ConvertFrom-json).Images | Sort -Property CreationDate -Descending)[0]
+        $ws2012r2byolAMI = ((aws ec2 describe-images --owners aws-marketplace --region $region --profile $Profile --output json --filters "Name=product-code,Values=14oj75sfcidvzwqizi8lzs7c2" | ConvertFrom-json).Images | Sort -Property CreationDate -Descending)[0]
+        $ws2016paygAMI = ((aws ec2 describe-images --owners aws-marketplace --region $region --profile $Profile --output json --filters "Name=product-code,Values=39ui2evyq6bmfxwhpwyci6l06" | ConvertFrom-json).Images | Sort -Property CreationDate -Descending)[0]
+        $ws2016byolAMI = ((aws ec2 describe-images --owners aws-marketplace --region $region --profile $Profile --output json --filters "Name=product-code,Values=959g9sxo7jo9axg7au8fjxvmi" | ConvertFrom-json).Images | Sort -Property CreationDate -Descending)[0]
+        $ws2019paygAMI = ((aws ec2 describe-images --owners aws-marketplace --region $region --profile $Profile --output json --filters "Name=product-code,Values=4751lqgr72zqz6fwj12p82x8s" | ConvertFrom-json).Images | Sort -Property CreationDate -Descending)[0]
+        $ws2019byolAMI = ((aws ec2 describe-images --owners aws-marketplace --region $region --profile $Profile --output json --filters "Name=product-code,Values=4em0o0s00hf8yye81sq8d619d" | ConvertFrom-json).Images | Sort -Property CreationDate -Descending)[0]
 
-    $amiOSVersionMapping = [System.Collections.Hashtable]@{}
-    foreach ($osVersion in $OSVersions) {
-        if ($Linux) {
-            $ver = $Version.Replace(".", "`.")
-            $byolPattern = "^SIOS Protection Suite for Linux $ver on $osVersion BYOL.*"
-            $pattern = "^SIOS Protection Suite for Linux $ver on $osVersion.*"
-            $ws2016Pattern = "^Windows_Server-2016-English-Full-Base*"
+        $amiOSVersionMapping.Add("SDKCEWIN2012R2",$ws2012r2paygAMI.ImageId) > $Null
+        $amiOSVersionMapping.Add("SDKCEWIN2012R2BYOL",$ws2012r2byolAMI.ImageId) > $Null
+        $amiOSVersionMapping.Add("SDKCEWIN2016",$ws2016paygAMI.ImageId) > $Null
+        $amiOSVersionMapping.Add("SDKCEWIN2016BYOL",$ws2016byolAMI.ImageId) > $Null
+        $amiOSVersionMapping.Add("SDKCEWIN2019",$ws2019paygAMI.ImageId) > $Null
+        $amiOSVersionMapping.Add("SDKCEWIN2019BYOL",$ws2019byolAMI.ImageId) > $Null
+    }
+    elseif ( $Template -eq 'SPSL' ) {
+        $byolAMI = ((aws ec2 describe-images --owners aws-marketplace --region $region --profile $Profile --output json --filters "Name=product-code,Values=7axs50cedfvb18mqwotd482s" | ConvertFrom-json).Images | Sort -Property CreationDate -Descending)[0]
+        $paygAMI = ((aws ec2 describe-images --owners aws-marketplace --region $region --profile $Profile --output json --filters "Name=product-code,Values=2blt83b3g52sgw0zaufvu4exh" | ConvertFrom-json).Images | Sort -Property CreationDate -Descending)[0]
 
-            $byolAMI = $amis | Where-Object Name -Match $byolPattern
-            write-Verbose ("byol = " + $byolAMI.ImageId)
-            $paygAMI = $amis | Where-Object Name -Match $pattern | Where-Object ImageId -ne $byolAMI.ImageId
-            write-Verbose ("payg = " + $paygAMI.ImageId)
-            $ws2016AMI = (Get-EC2Image -Owner amazon -ProfileName $Profile -Region $region | Where-Object Name -Match $ws2016Pattern | Sort-Object -Property CreationDate -Descending)[0]
-            write-Verbose ("ws2016 = " + $paygAMI.ImageId)
-
-            $amiOSVersionMapping.Add("SPSLRHEL",$paygAMI.ImageId) > $Null
-            $amiOSVersionMapping.Add("SPSLRHELBYOL",$byolAMI.ImageId) > $Null
-            $amiOSVersionMapping.Add("WS2016FULLBASE",$ws2016AMI.ImageId) > $Null
-        } else {
-            $ver = $Version.Replace(".", "`.")
-            $byolPattern = "^SIOS DataKeeper v$ver on $osVersion BYOL.*"
-            $pattern = "^SIOS DataKeeper v$ver on $osVersion.*"
-
-            $byolAMI = $amis | Where-Object Name -Match $byolPattern
-            write-Verbose ("byol = " + $byolAMI.ImageId)
-            $paygAMI = $amis | Where-Object Name -Match $pattern | Where-Object ImageId -ne $byolAMI.ImageId
-            write-Verbose ("payg = " + $paygAMI.ImageId)
-
-            $ver = $osversion.Replace(" ","")
-            $amiOSVersionMapping.Add("SDKCEWIN" + $ver,$paygAMI.ImageId) > $Null
-            $amiOSVersionMapping.Add("SDKCEWIN" + $ver +"BYOL",$byolAMI.ImageId) > $Null
-        }
+        $amiOSVersionMapping.Add("SPSLRHEL",$paygAMI.ImageId) > $Null
+        $amiOSVersionMapping.Add("SPSLRHELBYOL",$byolAMI.ImageId) > $Null
     }
 
     $amiRegionMapping.Add($region, $amiOSVersionMapping)
 }
 
-return $amiRegionMapping
-
-<#
-if( -Not $ProductIDs ) {
-    if( $Linux ) {
-        $ProductIDs = @("273a5693-de58-4437-87fa-d3b56f714e95","036d4d80-182d-460e-b9cc-01ebc2f842e4")
-    } else {
-        $ProductIDs = @("ea8c4f6b-0676-4494-90e9-d595a7444eaa","131676ee-31be-464b-8ae0-ba2495e88b22","374b4000-5f0b-4005-92e5-119d4836d1d6","9a7d70de-0121-4ecf-b190-10e31dd8ad5a")
+foreach ( $region in $Regions ) {
+    $output += "    $($region):`n"
+    $map = $amiRegionMapping[$region]
+    foreach ( $label in $map.Keys ) {
+    $output += "      $($label): $($map[$($label)])`n"
     }
 }
 
-$AMIRegionMapping = [System.Collections.Hashtable]@{}
-if( $Linux ) {
-    $AmiNames = @("SIOS Protection Suite for Linux $Version on RHEL 7.6","SIOS Protection Suite for Linux $Version on RHEL 7.6 BYOL")
-    $AMIRegionMapping.Add($AmiNames[0],"SPSLRHEL")
-    $AMIRegionMapping.Add($AmiNames[1],"SPSLRHELBYOL")
-} else {
-    $AmiNames = @("SIOS DataKeeper v$Version on 2012R2","SIOS DataKeeper v$Version on 2012R2 BYOL","SIOS DataKeeper v$Version on 2016","SIOS DataKeeper v$Version on 2016 BYOL")
-    $AMIRegionMapping.Add($AmiNames[0],"SIOS2012R2") > $Null
-    $AMIRegionMapping.Add($AmiNames[1],"SIOS2012R2BYOL") > $Null
-    $AMIRegionMapping.Add($AmiNames[2],"SIOS2016") > $Null
-    $AMIRegionMapping.Add($AmiNames[3],"SIOS2016BYOL") > $Null
-}
-
-if( $Linux ) {
-    $Description = "SIOS Protection Suite makes Linux clusters easy to build, easy to use, and easy to own. You get out-of-the-box protection for SAP, Oracle, and other business-critical applications. Create a high availability SAN or SANless cluster quickly and easily."
-} else {
-    $Description = "SIOS DataKeeper provides high Availability (HA) and disaster recovery (DR) in AWS. Simply add SIOS DataKeeper software as an ingredient to your Windows Server Failover Clustering (WSFC) environment to eliminate the need for shared storage."
-}
-
-$final = [ordered]@{}
-$i = 0
-foreach ($region in $Regions) {
-    $ht = [ordered]@{}
-    Write-Progress -Activity "Querying $region" -PercentComplete ($i / $Regions.Count * 100)
-    
-    Write-Debug "Calling 'aws describe-images, this will take a second...`n"
-    $jsonString = Invoke-Command -ScriptBlock { Param($d) &'aws' ec2 describe-images --profile currentgen --region $region --owners 679593333241 --filter "Name=description,Values='$d'" } -ArgumentList $Description
-    #$jsonString = Invoke-Command -ScriptBlock { Param($a) &'aws' ec2 describe-images --region $region --owners 801119661308 --filter $a } -ArgumentList $args
-    $json = $jsonString -Join "" 
-    Write-Debug "$json`n"
-    
-    $hashtable = ConvertFrom-Json $json | ConvertTo-OrderedHashtable
-    Write-Verbose ($region)
-    (0..($AmiNames.Length-1)) | foreach { 
-        $amiId = ($hashtable."Images" | Where-Object -Property "Name" -Like ($AmiNames[$_] + "-" + $ProductIDs[$_] + "*")).ImageId
-        Write-Verbose ("`t" + $AmiNames[$_] + ": `t`t`t" + $amiId)
-        $ht.Add($AMIRegionMapping.($AmiNames[$_]), $amiID)
-    }
-    
-    $final.Add($region,$ht)
-    $i++
-}
-
-$final | ConvertTo-Json
-#>
+return $output
