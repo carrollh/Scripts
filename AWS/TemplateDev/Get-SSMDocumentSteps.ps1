@@ -35,7 +35,7 @@ $ssm.AutomationExecutionMetadataList | % {
     } 
 }
 if(-Not $doc) {
-    Write-Host "SSM Document not found. Try again later."
+    Write-Verbose "SSM Document not found. Try again later."
     return
 }
 
@@ -51,24 +51,24 @@ else {
 $steps = $results.AutomationExecution.StepExecutions
 
 if($AllSteps) {
-    $steps
+    return $steps
 }
 
 $step = $steps | Where-Object -Property StepStatus -like "Failed"
 if($step) {
-    Write-Host "FAILURE"
+    Write-Verbose "FAILURE"
 }
 else {
     $step = $steps | Where-Object -Property StepStatus -like "InProgress"
-    Write-Host "IN PROGRESS"
+    Write-Verbose "IN PROGRESS"
 }
 
-$ssm.AutomationExecutionMetadataList | Where-Object -Property DocumentName -like "$StackName*"
+$($ssm.AutomationExecutionMetadataList | Where-Object -Property DocumentName -like "$StackName*")[0]
 
 if($step) {
    return $step 
 }
 else {
-   Write-Host "SUCCESS"
-   return
+   Write-Verbose "SUCCESS"
+   return $NULL
 }
