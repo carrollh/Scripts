@@ -27,6 +27,8 @@ Write-Verbose $cfn
 $failedStacks = $cfn.Stacks | Where-Object -Property StackStatus -eq 'CREATE_FAILED'
 Write-Verbose $failedStacks.Count
 
-$stack = ($failedStacks | Sort-Object -Property CreationTime -Descending)[0]
-
-return $stack
+if($failedStacks.Count -gt 0) {
+    $stack = ($failedStacks | Sort-Object -Property CreationTime -Descending)[0]
+    return $stack
+}
+return $Null

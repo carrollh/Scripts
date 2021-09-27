@@ -20,7 +20,7 @@ Param(
     [Switch] $AllSteps
 )
 
-$steps, $executionId, $ssm, $step, $doc = $Null
+$steps, $executionId, $ssm, $step, $docs = $Null
 
 if($Profile -ne "") {
     $ssm = & "aws" ssm describe-automation-executions --region $Region --profile $Profile | convertfrom-json
@@ -29,17 +29,15 @@ else {
     $ssm = & "aws" ssm describe-automation-executions --region $Region | convertfrom-json
 }
 
-$ssm.AutomationExecutionMetadataList | % {
-    if($_.DocumentName -like "$StackName*") {
-        $doc = $_
-    } 
-}
-if(-Not $doc) {
+$docs = $ssm.AutomationExecutionMetadataList | Where-Object -Property DocumentName -like "$StackName*"
+
+if(-Not $docs) {
     Write-Verbose "SSM Document not found. Try again later."
     return
 }
 
-$executionId = $doc.AutomationExecutionId
+$executionId = $docs[0].AutomationExecutionId
+Write-Verbose "AutomationExecutionId = $executionId"
 
 if($Profile -ne "") {
     $results = & "aws" ssm get-automation-execution --automation-execution-id $executionId --region $Region --profile $Profile | convertfrom-json
