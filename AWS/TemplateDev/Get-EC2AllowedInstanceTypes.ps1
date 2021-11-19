@@ -15,7 +15,7 @@ Param(
     [string] $Profile = '',
 
     [Parameter(Mandatory=$True, Position=1)]
-    [ValidateSet('7.8','7.9','8.2','8.3')]
+    [ValidateSet('7.8','7.9','8.2','8.3','8.4')]
     [string] $RHELVersion = '7.9',
 
     [Parameter(Mandatory=$False, Position=2)]
@@ -30,13 +30,15 @@ if( -Not $Regions -Or $Regions -like "all") {
 $searchString = [ordered]@{
     '7.9' = 'RHEL-7.9_HVM_GA*x86*';
     '8.2' = 'RHEL-8.2_HVM*x86*';
+    '8.3' = 'RHEL-8.3_HVM*x86*';
+    '8.4' = 'RHEL-8.4.0_HVM*x86*';
 }
 
 $list = [System.Collections.ArrayList]@()
 
 foreach ($region in $regions) {
     Write-Verbose "Looking up ami-id for $($region)..."
-    $amiId = ((aws ec2 describe-images --region $region --profile $Profile --filters Name=name,Values=$($searchString[$RHELVersion]) --output json | ConvertFrom-Json).Images | Sort -Property CreationDate -Descending)[0].ImageId
+    $amiId = ((aws ec2 describe-images --region $region --profile $Profile --filters "Name=name,Values=$($searchString[$RHELVersion])" --output json | ConvertFrom-Json).Images | Sort -Property CreationDate -Descending)[0].ImageId
     Write-Verbose "`tFound ami-id $amiId"
 
     Write-Verbose "Retrieving all possible types for region..."

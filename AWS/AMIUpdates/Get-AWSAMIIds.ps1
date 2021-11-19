@@ -6,9 +6,7 @@
 # down to only one result per region.
 #
 # Examples running this command:
-# PS> $ht = [System.Collections.Hashtable]@{}
-# PS> $ht = .\Get-AWSAMIIds -Profile dev -Version 9.4.1 -OSversions "RHEL 7.7" -Linux -Verbose
-# PS> $ht = .\Get-AWSAMIIds -Profile dev -Version 8.7.0 -OSversions all -Verbose
+# PS> .\Get-AWSAMIIds -Profile dev -Template SPSL
 ################################################################################
 
 [CmdletBinding()]
