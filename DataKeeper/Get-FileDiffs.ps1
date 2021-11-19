@@ -16,6 +16,10 @@ if($Node1 -like $hostname) {
     Write-Warning "ABORTING - Node1 matches hostname. Running the script like this could delete the source files. NOT DOING IT!"
     return 1
 }
+if($Node2 -like $hostname) {
+    Write-Warning "ABORTING - Node2 matches hostname. Running the script like this could delete the source files. NOT DOING IT!"
+    return 1
+}
 
 if(-Not (Test-Path -Path 'C:\temp')) {
     New-Item -ItemType Directory -Path 'C:\temp' | Out-Null
