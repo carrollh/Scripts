@@ -16,7 +16,7 @@ if(-Not (Test-Path -Path 'C:\temp')) {
 
 While($True) {
     $output = ''
-
+    $corruptCount = 0
     foreach ($vol in $Volumes) {
         Write-Verbose "Checking mirror status on $vol..."
         &'emcmd' $Node2 lockvolume $vol | Out-Null
@@ -66,19 +66,28 @@ While($True) {
             }
             Write-Verbose "Found $($files.Count) files for $vol"
 
-            try {
-                foreach ($file in $files) {
-                    Write-Verbose $file
-                    $hash1 = Get-FileHash -Algorithm md5 "$file"; 
-                    $hash2 = Get-FileHash -Algorithm md5 "\\$Node2\$($file)"; 
-                    if($hash1 -ne $hash2) {
-                        Write-Verbose "CORRUPTION: $file - $hash1 vs $hash2"
-                        $output += "$file`n"
+            foreach ($file in $files) {
+                Write-Verbose $file
+                $hash1 = ''
+                $hash2 = ''
+                try {
+                    if(Test-Path -Path "$file") {
+                        $hash1 = (Get-FileHash -Algorithm md5 "$file").Hash; 
+                    }
+ 
+                    $smbfile = $file.Replace(':','$')
+                    if(Test-Path -Path "\\$Node2\$($smbfile)") {
+                        $hash2 = (Get-FileHash -Algorithm md5 "\\$Node2\$($smbfile)").Hash; 
                     }
                 }
-            }
-            catch {
-                $_
+                catch {
+                    $_
+                }
+                if($hash1 -ne $hash2) {
+                    Write-Verbose "CORRUPTION: $file - $hash1 vs $hash2"
+                    $output += "$file`n"
+                    $corruptCount += 1
+                }
             }
             
             Write-Verbose "Removing $logfile..."
@@ -98,7 +107,7 @@ While($True) {
         Write-Verbose "Mirror for $vol running"
     }
 
-    Write-Verbose "Found $($output.Length) corrupt files"
+    Write-Verbose "Found $corruptCount corrupt files"
     $output > 'C:\temp\filediffs.txt'
 
     Start-Sleep -Seconds 900
