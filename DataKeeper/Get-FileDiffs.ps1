@@ -5,8 +5,10 @@ Param(
     [Parameter(Mandatory=$False)]
     [string] $SourceNode = 'WSFCNODE1',
 
+    [Parameter(Mandatory=$False)]
     [string] $TargetNode = 'WSFCNODE2',
 
+    [Parameter(Mandatory=$False)]
     [string[]] $Volumes = @('F','G')
 )
 
