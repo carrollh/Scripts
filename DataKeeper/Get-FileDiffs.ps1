@@ -3,21 +3,21 @@
 [CmdletBinding()]
 Param(
     [Parameter(Mandatory=$False)]
-    [string] $Node1 = 'WSFCNODE1',
+    [string] $SourceNode = 'WSFCNODE1',
 
-    [string] $Node2 = 'WSFCNODE2',
+    [string] $TargetNode = 'WSFCNODE2',
 
     [string[]] $Volumes = @('F','G')
 )
 
 # guard rail
 $hostname = &'hostname'
-if($Node1 -like $hostname) {
-    Write-Warning "ABORTING - Node1 matches hostname. Running the script like this could delete the source files. NOT DOING IT!"
+if($SourceNode -like $hostname) {
+    Write-Warning "ABORTING - SourceNode matches hostname. Running the script like this could delete the source files. NOT DOING IT!"
     return 1
 }
-if($Node2 -like $hostname) {
-    Write-Warning "ABORTING - Node2 matches hostname. Running the script like this could delete the source files. NOT DOING IT!"
+if($TargetNode -like $hostname) {
+    Write-Warning "ABORTING - TargetNode matches hostname. Running the script like this could delete the source files. NOT DOING IT!"
     return 1
 }
 
@@ -30,16 +30,16 @@ While($True) {
     $corruptCount = 0
     foreach ($vol in $Volumes) {
         Write-Verbose "Checking mirror status on $vol..."
-        &'emcmd' $Node2 lockvolume $vol | Out-Null
-        $mirrorstatus = &'emcmd' $Node1 getmirrorvolinfo $vol
+        &'emcmd' $TargetNode lockvolume $vol | Out-Null
+        $mirrorstatus = &'emcmd' $SourceNode getmirrorvolinfo $vol
         $mirrorstatus = $mirrorstatus[($mirrorstatus.Length - 1)]
 
         if($mirrorstatus -ne "1") {
             Write-Verbose "Mirror for $vol NOT running, continuing mirror..."
-            &'emcmd' $Node1 continuemirror $vol | Out-Null
+            &'emcmd' $SourceNode continuemirror $vol | Out-Null
             Start-Sleep 2
             while($mirrorstatus -ne "1") {
-                $mirrorstatus = &'emcmd' $Node1 getmirrorvolinfo $vol
+                $mirrorstatus = &'emcmd' $SourceNode getmirrorvolinfo $vol
                 Start-Sleep 2
                 Write-Verbose $mirrorstatus
                 $mirrorstatus = $mirrorstatus[($mirrorstatus.Length - 1)]
@@ -49,15 +49,15 @@ While($True) {
         
         $logfile = "C:\temp\logfile$($vol).txt"
         Write-Verbose "Copying files for volume $vol. Logs going to $logfile..."
-        &'robocopy' "\\$Node1\$($vol)$" "$($vol):" /MIR /FFT /mt /R:20 /W:10 /Zb /NP /NDL /copyall "/log:$($logfile)" | Out-Null
+        &'robocopy' "\\$SourceNode\$($vol)$" "$($vol):" /MIR /FFT /mt /R:20 /W:10 /Zb /NP /NDL /copyall "/log:$($logfile)" | Out-Null
 
-        Write-Verbose "Pausing and unlocking mirrorvol $vol on $Node2 ..."
-        &'emcmd' $Node2 unlockvolume $vol | Out-Null
-        &'emcmd' $Node1 pausemirror $vol | Out-Null
+        Write-Verbose "Pausing and unlocking mirrorvol $vol on $TargetNode ..."
+        &'emcmd' $TargetNode unlockvolume $vol | Out-Null
+        &'emcmd' $SourceNode pausemirror $vol | Out-Null
         Start-Sleep 2
         $mirrorstatus = "1"
         while($mirrorstatus -ne "4") {
-            $mirrorstatus = &'emcmd' $Node1 getmirrorvolinfo $vol
+            $mirrorstatus = &'emcmd' $SourceNode getmirrorvolinfo $vol
             Write-Verbose $mirrorstatus
             $mirrorstatus = $mirrorstatus[($mirrorstatus.Length - 1)]
             Start-Sleep 2
@@ -68,7 +68,7 @@ While($True) {
             Write-Verbose "Parsing $logfile..."
             $files = [System.Collections.ArrayList]@()
             Get-Content $logfile | %{
-                if($_.Contains("\\$($Node1)\$($vol)$")) {
+                if($_.Contains("\\$($SourceNode)\$($vol)$")) {
                     $token = "$($vol):$($_.Substring($_.IndexOf('$')+1))";
                     if($token.Length -gt 3) {
                         $files.Add($token) | Out-Null
@@ -87,8 +87,8 @@ While($True) {
                     }
  
                     $smbfile = $file.Replace(':','$')
-                    if(Test-Path -Path "\\$Node2\$($smbfile)") {
-                        $hash2 = (Get-FileHash -Algorithm md5 "\\$Node2\$($smbfile)").Hash; 
+                    if(Test-Path -Path "\\$TargetNode\$($smbfile)") {
+                        $hash2 = (Get-FileHash -Algorithm md5 "\\$TargetNode\$($smbfile)").Hash; 
                     }
                 }
                 catch {
@@ -105,12 +105,12 @@ While($True) {
             Remove-Item -Force $logfile
         }
 
-        Write-Verbose "Continuing and locking mirrorvol $vol on $Node2 ..."
-        &'emcmd' $Node2 lockvolume $vol | Out-Null
-        &'emcmd' $Node1 continuemirror $vol | Out-Null
+        Write-Verbose "Continuing and locking mirrorvol $vol on $TargetNode ..."
+        &'emcmd' $TargetNode lockvolume $vol | Out-Null
+        &'emcmd' $SourceNode continuemirror $vol | Out-Null
         $mirrorstatus = "4"
         while($mirrorstatus -ne "1") {
-            $mirrorstatus = &'emcmd' $Node1 getmirrorvolinfo $vol
+            $mirrorstatus = &'emcmd' $SourceNode getmirrorvolinfo $vol
             Write-Verbose $mirrorstatus
             $mirrorstatus = $mirrorstatus[($mirrorstatus.Length - 1)]
             Start-Sleep 2
