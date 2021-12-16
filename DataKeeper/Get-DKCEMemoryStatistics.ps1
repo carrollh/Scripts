@@ -6,7 +6,7 @@ param(
     [int] $MaxSecondsToRun = 600
 )
 
-$ht = [Ordered]@{}
+#$ht = [Ordered]@{}
 $proclist = @('ExtMirrSvc', 'EMTray', 'MMC', 'RHS')
 $elapsedTime = 0
 $initialProcs = [System.Collections.ArrayList]@()
@@ -21,7 +21,7 @@ while ($elapsedTime -lt $MaxSecondsToRun) {
         }
     }
     $date = Get-Date
-    $ht.Add($date,$procs)
+    #$ht.Add($date,$procs)
 
     # display this iteration's stats
     Write-Host "#######################################`n$($date)`nCurrent Memory Usage:"
@@ -67,8 +67,4 @@ while ($elapsedTime -lt $MaxSecondsToRun) {
     $elapsedTime += $SleepSeconds
 }
 
-                    #NPM = (($ht[0] | Where-Object { ($_.ProcessName -like "$proc") -And ($_.Id -eq $id) }).NPM - ($ht[($ht.Count-1)] | Where-Object { ($_.ProcessName -like "$proc") -And ($_.Id -eq $id) }).NPM)
-                    #PM = (($ht[0] | Where-Object { ($_.ProcessName -like "$proc") -And ($_.Id -eq $id) }).PM - ($ht[($ht.Count-1)] | Where-Object { ($_.ProcessName -like "$proc") -And ($_.Id -eq $id) }).PM)
-                    #WS = (($ht[0] | Where-Object { ($_.ProcessName -like "$proc") -And ($_.Id -eq $id) }).WS - ($ht[($ht.Count-1)] | Where-Object { ($_.ProcessName -like "$proc") -And ($_.Id -eq $id) }).WS)
-                    #PrivateMemorySize = (($ht[0] | Where-Object { ($_.ProcessName -like "$proc") -And ($_.Id -eq $id) }).PrivateMemorySize - ($ht[($ht.Count-1)] | Where-Object { ($_.ProcessName -like "$proc") -And ($_.Id -eq $id) }).PrivateMemorySize)
-                    #Handles = (($ht[0] | Where-Object { ($_.ProcessName -like "$proc") -And ($_.Id -eq $id) }).Handles - ($ht[($ht.Count-1)] | Where-Object { ($_.ProcessName -like "$proc") -And ($_.Id -eq $id) }).Handles)
+#return $ht
