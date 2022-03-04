@@ -54,7 +54,11 @@ function Send-Email() {
     # password = ConvertTo-SecureString "********" -AsPlainText -Force 
     
     $credential = New-Object System.Management.Automation.PSCredential $username,$password
-    Send-MailMessage -To $recipientEmail -Subject $subject -Body $message -From ($username+"@"+$smtpServer) -SMTP $smtpServer -Credential $credential
+
+    $message = $message.Replace('`n','<br>')
+    $htmlMessage = "<body><font face='consolas'> $message </font> </body>"
+
+    Send-MailMessage -To $recipientEmail -Subject $subject -Body $htmlMessage -From ($username+"@"+$smtpServer) -SMTP $smtpServer -Credential $credential -BodyAsHtml
 }
 
 
@@ -142,7 +146,8 @@ foreach ( $p in $Profiles ) {
     $message = "Found a total of " + $totalRunningVMsFound + "(out of " + $totalVMsFound + ") VMs running across all " + $TargetRegions.Count + " regions in the " + $p.ToUpper() + " account.`n"
     $emailMessage += $message
     Write-Verbose $message
-    $message = $customList | Sort-Object MonthlyCost -Descending | Format-Table AvailabilityZone,Identifier,InstanceType,MonthlyCost,ShutdownStrategy | Out-String
+    #$message = $customList | Sort-Object MonthlyCost -Descending | Format-Table AvailabilityZone,Identifier,InstanceType,MonthlyCost,ShutdownStrategy | Out-String
+    $message = $customList | Format-Table AvailabilityZone,Identifier,InstanceType,MonthlyCost,ShutdownStrategy | Out-String
     $emailMessage += $message
     $finalTable.add($p, $customList) > $null
 

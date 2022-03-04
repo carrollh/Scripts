@@ -36,12 +36,23 @@ while ($elapsedTime -lt $MaxSecondsToRun) {
         # figure out the delta since the start of the script
         $deltas = [System.Collections.ArrayList]@()
         foreach ($procname in $proclist) {
+
             $ids = ($procs | Where-Object { $_.ProcessName -Like "$procname" }).Id
             foreach ($id in $ids) {
+
                 $oldproc = $initialProcs | Where-Object -Property Id -eq $id
                 $newProc = $procs | Where-Object -Property Id -eq $id
+
+                $name = $procname
+                if ($newProc.Modules.ModuleName -Contains "DataKeeperVolume.dll") { 
+                    $name += "(DKVol)"
+                }
+                elseif ($newProc.Modules.ModuleName -Contains "SDRClient.dll") {
+                    $name += "(DKGUI)"
+                }
+
                 $delta = [PSCustomObject]@{
-                    Name = $procname
+                    Name = $name
                     Id = $id
                     VM = ($newproc.VM - $oldproc.VM)
                     NPM = ($newproc.NPM - $oldproc.NPM)
