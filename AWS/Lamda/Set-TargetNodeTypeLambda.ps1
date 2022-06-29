@@ -34,7 +34,7 @@ while (-Not ($status -like "stopped")) {
 }
 
 Write-Host ("Changing instance type for " + $instanceId + " to " + $type)
-Edit-EC2InstanceAttribute -InstanceId $instanceId -InstanceType $type
+Edit-EC2InstanceAttribute -InstanceId $instanceId -InstanceType $type -Region $region
 
 $currentType = $instance.Instances[0].InstanceType.Value
 while (-Not ($currentType -like $type)) {
