@@ -3,7 +3,7 @@
 [CmdletBinding()]
 Param(
     [Parameter(Mandatory=$False)]
-    [string[]]$profiles = @("dev","support","qa","ps","ts","currentgen","automation"),
+    [string[]]$profiles = @("dev","support","qa","ps","ts","root","automation"),
 
     [Parameter(Mandatory=$False)]
     [string[]] $Regions = $Null
@@ -13,7 +13,7 @@ Param(
 
 # loop over regions looking for instances
 $finalTable = @{}
-foreach ( $profile in $profilerofiles ) {
+foreach ( $profile in $profiles ) {
     Write-Verbose ("Scanning the " + $profile.ToUpper() + " profile")
 
     if ($Regions -eq $Null) {

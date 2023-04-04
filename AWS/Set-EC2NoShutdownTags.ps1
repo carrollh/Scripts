@@ -10,7 +10,10 @@ Param(
     [string] $Profile = '',
 
     [Parameter(Mandatory=$True)]
-    [string] $Region
+    [string] $Region,
+
+    [Parameter(Mandatory=$False)]
+    [Switch] $DryRun = $False
 )
 
 function Set-Tags() {
@@ -32,11 +35,13 @@ function Set-Tags() {
             aws ec2 create-tags --region $Region --resources $Resource --tags $tagString
         }
 
-        # indicate success or failure if -Verbose flag passed
-        if( $? ) {
-            Write-Verbose "Successfully set tags ($tagString) on $Resource"
-        } else {
-            Write-Verbose "Failed to set tags ($tagString) on $Resource with error code $LastExitCode"
+        if(-Not $DryRun) {
+            # indicate success or failure if -Verbose flag passed
+            if( $? ) {
+                Write-Verbose "Successfully set tags ($tagString) on $Resource"
+            } else {
+                Write-Verbose "Failed to set tags ($tagString) on $Resource with error code $LastExitCode"
+            }
         }
     }
 }
@@ -44,7 +49,13 @@ function Set-Tags() {
 $tags = @{};
 $tags.Add("ShutdownStrategy","NoShutdown")
 
-$instances = (aws ec2 describe-instances --region $Region --profile dev --output json --filter "Name=instance-state-code,Values=16"|Convertfrom-json).Reservations.Instances
+# only grab running instances (state-code = 16)
+if($Profile -ne '') {
+    $instances = (aws ec2 describe-instances --region $Region --profile $Profile --output json --filter "Name=instance-state-code,Values=16"|Convertfrom-json).Reservations.Instances
+}
+else {
+    $instances = (aws ec2 describe-instances --region $Region --output json --filter "Name=instance-state-code,Values=16"|Convertfrom-json).Reservations.Instances
+}
 
 foreach ($instance in $instances) {
     # tag the instances passed in

@@ -1,4 +1,4 @@
-# Stop-RunningEC2InstancesLambda.ps1
+# Set-TargetNodeTypeLambda.ps1
 # 
 # When executing in Lambda the following variables will be predefined.
 #   $LambdaInput - A PSObject that contains the Lambda function input data.
@@ -8,6 +8,8 @@
 #
 # To include PowerShell modules with your Lambda function, like the AWSPowerShell.NetCore module, add a "#Requires" statement 
 # indicating the module and version.
+# 
+# Publish to AWS using 
 
 #Requires -Modules @{ModuleName='AWSPowerShell.NetCore';ModuleVersion='4.0.1.1'}
 

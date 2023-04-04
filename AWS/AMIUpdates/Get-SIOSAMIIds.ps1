@@ -44,6 +44,25 @@ foreach ($region in $Regions) {
         $ws2019paygAMI = ((aws ec2 describe-images --owners aws-marketplace --region $region --profile $Profile --output json --filters "Name=product-code,Values=4751lqgr72zqz6fwj12p82x8s" | ConvertFrom-json).Images | Sort -Property CreationDate -Descending)[0]
         $ws2019byolAMI = ((aws ec2 describe-images --owners aws-marketplace --region $region --profile $Profile --output json --filters "Name=product-code,Values=4em0o0s00hf8yye81sq8d619d" | ConvertFrom-json).Images | Sort -Property CreationDate -Descending)[0]
 
+        if($ws2012r2paygAMI -eq $Null) {
+            Write-Error "No image found for SDKCEWIN2012R2 in $region"
+        }
+        if($ws2012r2byolAMI -eq $Null) {
+            Write-Error "No image found for SDKCEWIN2012R2BYOL in $region"
+        }
+        if($ws2016paygAMI -eq $Null) {
+            Write-Error "No image found for SDKCEWIN2016 in $region"
+        }
+        if($ws2016byolAMI -eq $Null) {
+            Write-Error "No image found for SDKCEWIN2016BYOL in $region"
+        }
+        if($ws2019paygAMI -eq $Null) {
+            Write-Error "No image found for SDKCEWIN2019 in $region"
+        }
+        if($ws2019byolAMI -eq $Null) {
+            Write-Error "No image found for SDKCEWIN2019BYOL in $region"
+        }
+
         $amiOSVersionMapping.Add("SDKCEWIN2012R2",$ws2012r2paygAMI.ImageId) > $Null
         $amiOSVersionMapping.Add("SDKCEWIN2012R2BYOL",$ws2012r2byolAMI.ImageId) > $Null
         $amiOSVersionMapping.Add("SDKCEWIN2016",$ws2016paygAMI.ImageId) > $Null
@@ -66,7 +85,7 @@ foreach ( $region in $Regions ) {
     $output += "    $($region):`n"
     $map = $amiRegionMapping[$region]
     foreach ( $label in $map.Keys ) {
-    $output += "      $($label): $($map[$($label)])`n"
+        $output += "      $($label): $($map[$($label)])`n"
     }
 }
 
