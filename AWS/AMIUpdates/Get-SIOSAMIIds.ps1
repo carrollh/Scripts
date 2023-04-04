@@ -1,4 +1,4 @@
-# Get-AWSAMIIds.ps1 ############################################################
+# Get-SIOSAMIIds.ps1 ############################################################
 # Requires the AWS CLI to be installed and in the PATH env variable. Also 
 # requires the user running this to have access to the relevant subscription 
 # prior to running this. The ProductID is really the only param needed for this,
@@ -6,7 +6,7 @@
 # down to only one result per region.
 #
 # Examples running this command:
-# PS> .\Get-AWSAMIIds -Profile dev -Template SPSL
+# PS> .\Get-SIOSAMIIds -Profile dev -Template SPSL
 ################################################################################
 
 [CmdletBinding()]
