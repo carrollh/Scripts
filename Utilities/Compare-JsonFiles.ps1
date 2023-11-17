@@ -1,4 +1,16 @@
 # Compare-JsonFiles.ps1
+# 
+# Description:
+# # Run the following on two different paths/hosts
+# PS> .\Get-AllFilesAndMD5sFromLocalPath.ps1 <path to compare> | ConvertTo-Json | Out-File -Encoding utf8 <filename>
+# # Run the following after collecting both files above
+# PS> .\Compare-JsonFiles.ps1 -FilePath1 <filename1> -FilePath2 <filename2>
+#
+# Example:
+# (On Node1) PS> .\Get-AllFilesAndMD5sFromLocalPath.ps1 C:\LK | ConvertTo-Json | Out-File -Encoding utf8 .\hashes1.json
+# (On Node2) PS> .\Get-AllFilesAndMD5sFromLocalPath.ps1 C:\LK | ConvertTo-Json | Out-File -Encoding utf8 .\hashes2.json
+# (After copying hashes1 and hashes2 to local dir) PS> .\Compare-JsonFiles.ps1 -FilePath1 .\hashes1.json -FilePath2 .\hashes2.json
+
 [CmdletBinding()]
 param(
     [Parameter(Position=0,mandatory=$true)]
