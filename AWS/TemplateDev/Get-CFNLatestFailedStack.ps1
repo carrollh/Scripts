@@ -14,21 +14,27 @@ Param(
     [string] $Profile = ''
 )
 
-$cfn, $failedStacks, $stackName = $Null
+$stacks, $failedStacks = $Null
 
 if($Profile -ne '') {
-    $cfn = & "aws" cloudformation describe-stacks --region $Region --profile $Profile --output json | convertfrom-json
+    $stacks = (& "aws" cloudformation describe-stacks --region $Region --profile $Profile --output json | ConvertFrom-Json).Stacks
 }
 else {
-    $cfn = & "aws" cloudformation describe-stacks --region $Region --output json | convertfrom-json
+    $stacks = (& "aws" cloudformation describe-stacks --region $Region --output json | ConvertFrom-Json).Stacks
 }
-Write-Verbose $cfn
 
-$failedStacks = $cfn.Stacks | Where-Object -Property StackStatus -eq 'CREATE_FAILED'
-Write-Verbose $failedStacks.Count
-
-if($failedStacks.Count -gt 0) {
-    $stack = ($failedStacks | Sort-Object -Property CreationTime -Descending)[0]
-    return $stack
+if ($Null -eq $stacks) {
+    Write-Verbose "No stacks found?!"
 }
-return $Null
+else {
+    Write-Verbose "Found $($stacks.Count) stacks"
+}
+
+$failedStacks = $stacks | Where-Object -Property StackStatus -like "CREATE_FAILED"
+
+if($Null -eq $failedStacks) {
+    return $Null
+}
+
+$stack = ($failedStacks | Sort-Object -Property CreationTime -Descending)[0]
+return $stack
