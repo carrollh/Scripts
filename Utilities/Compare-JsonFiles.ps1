@@ -56,6 +56,7 @@ Try {
 
 
     ### process data
+    $dt = [Hashtable]@{}
 
     if ($ht1.Count -ne $ht2.Count) {
         Write-Host "Collections differ in size..."
@@ -65,7 +66,10 @@ Try {
     # check if ht1 is missing any items from ht2
     $ht2.Keys | ForEach {
         if(-Not ($ht1.ContainsKey($_))) {
-            Write-HOST -ForegroundColor Red "$_ MISSING from first collection"
+            Write-Host -ForegroundColor Red "$_ MISSING from first collection"
+            if (-Not ($dt.ContainsKey($_))) {
+                $dt.Add($_, 'MissingFrom1')
+            }
             $exitcode = 1
         }
     }
@@ -73,7 +77,10 @@ Try {
     # check if ht2 is missing any items from ht1
     $ht1.Keys | ForEach {
         if (-Not ($ht2.ContainsKey($_))) {
-            Write-HOST -ForegroundColor Red "$_ MISSING from second collection"
+            Write-Host -ForegroundColor Red "$_ MISSING from second collection"
+            if (-Not ($dt.ContainsKey($_))) {
+                $dt.Add($_, 'MissingFrom2')
+            }
             $exitcode = 1
         }
     }
@@ -86,6 +93,9 @@ Try {
         }
         else {
             Write-Host -ForegroundColor Red "$_ does NOT match"
+            if (-Not ($dt.ContainsKey($_))) {
+                $dt.Add($_, 'Differenent')
+            }
             $exitcode = 1
         }
 
@@ -94,13 +104,17 @@ Try {
 
     $ht2.Keys | ForEach {
         if ($comparedItems.Contains($_)) { $Continue }
-
-        if ($ht2[$_] -like $ht1[$_]) {
-            Write-Host "MATCH $_"
-        }
-        else {
-            Write-Host -ForegroundColor Red "$_ does NOT match"
-            $exitcode = 1
+        if (-Not ($Null -like $ht2[$_]) -Or ($Null -like $ht1[$_])) {
+            if ($ht2[$_] -like $ht1[$_]) {
+                Write-Host "MATCH $_"
+            }
+            else {
+                Write-Host -ForegroundColor Red "$_ does NOT match"
+                if (-Not ($dt.ContainsKey($_))) {
+                    $dt.Add($_, 'Differenent')
+                }
+                $exitcode = 1
+            }
         }
     }
 }
@@ -109,4 +123,5 @@ Catch {
     $exitcode = 1
 }
 
+return $dt
 exit $exitcode

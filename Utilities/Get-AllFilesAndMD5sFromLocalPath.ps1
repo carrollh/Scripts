@@ -15,4 +15,4 @@ $items | foreach {
     $hashes.Add($_.FullName, (Get-FileHash -Path $_.FullName).Hash)
 }
 
-return $hashes
+return [System.Collections.SortedList] $hashes
