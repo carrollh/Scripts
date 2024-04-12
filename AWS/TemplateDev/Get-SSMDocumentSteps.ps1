@@ -29,7 +29,7 @@ else {
     $ssm = & "aws" ssm describe-automation-executions --region $Region | convertfrom-json
 }
 
-$docs = $ssm.AutomationExecutionMetadataList | Where-Object -Property DocumentName -like "$StackName*"
+$docs = $ssm.AutomationExecutionMetadataList | Where-Object -Property DocumentName -like "$StackName"
 
 if(-Not $docs) {
     Write-Verbose "SSM Document not found. Try again later."
